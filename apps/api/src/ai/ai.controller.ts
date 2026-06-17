@@ -1,25 +1,25 @@
 import { Controller, Post, Body, UseGuards, Request } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import { AiService } from './ai.service'
-import { IsString, IsArray, IsEnum } from 'class-validator'
+import { IsString, IsArray } from 'class-validator'
 
 class SpeakingTurnDto {
   @IsString()
-  scenario: string
+  scenario!: string
 
   @IsString()
-  userMessage: string
+  userMessage!: string
 
   @IsArray()
-  history: Array<{ role: 'user' | 'assistant'; content: string }>
+  history!: Array<{ role: 'user' | 'assistant'; content: string }>
 }
 
 class ExplainGrammarDto {
   @IsString()
-  rule: string
+  rule!: string
 
   @IsString()
-  example: string
+  example!: string
 }
 
 @UseGuards(AuthGuard('jwt'))

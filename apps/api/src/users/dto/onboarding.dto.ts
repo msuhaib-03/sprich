@@ -3,16 +3,16 @@ import { GermanLevel, UserGoal, UserProfile } from '@prisma/client'
 
 export class OnboardingDto {
   @IsEnum(GermanLevel)
-  level: GermanLevel
+  level!: GermanLevel
 
   @IsEnum(UserProfile)
-  profile: UserProfile
+  profile!: UserProfile
 
   @IsEnum(UserGoal)
-  goal: UserGoal
+  goal!: UserGoal
 
   @IsInt()
   @Min(15)
   @Max(120)
-  dailyMinutes: number
+  dailyMinutes!: number
 }
