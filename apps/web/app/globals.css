@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+:root {
+  /* Sprich Brand Colors */
+  --brand-black: #0a0a0a;
+  --brand-white: #fafafa;
+  --brand-gold: #d4a843;
+  --brand-gold-light: #f0c96a;
+  --brand-gold-dark: #a07820;
+  --brand-gray-900: #111111;
+  --brand-gray-800: #1a1a1a;
+  --brand-gray-700: #2a2a2a;
+  --brand-gray-600: #3a3a3a;
+  --brand-gray-400: #888888;
+  --brand-gray-200: #d4d4d4;
+  --brand-gray-100: #f0f0f0;
+
+  /* Grammar Color Coding — used in lesson breakdowns */
+  --nominative: #3b82f6;
+  --accusative: #f97316;
+  --dative: #10b981;
+  --genitive: #8b5cf6;
+
+  /* Article gender colors */
+  --masculine: #3b82f6;
+  --feminine: #ec4899;
+  --neuter: #10b981;
+
+  --background: var(--brand-black);
+  --foreground: var(--brand-white);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background-color: var(--brand-black);
+  color: var(--brand-white);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Grammar highlighting */
+.nom { color: var(--nominative); font-weight: 600; }
+.acc { color: var(--accusative); font-weight: 600; }
+.dat { color: var(--dative);     font-weight: 600; }
+.gen { color: var(--genitive);   font-weight: 600; }
+
+/* Article gender */
+.der { color: var(--masculine); font-weight: 700; }
+.die { color: var(--feminine);  font-weight: 700; }
+.das { color: var(--neuter);    font-weight: 700; }
+
+.gold-gradient {
+  background: linear-gradient(135deg, var(--brand-gold-dark), var(--brand-gold), var(--brand-gold-light));
+}
+
+.gold-text {
+  background: linear-gradient(135deg, var(--brand-gold), var(--brand-gold-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+a, button { transition: all 0.15s ease; }

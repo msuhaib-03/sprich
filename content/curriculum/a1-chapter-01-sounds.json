@@ -1,0 +1,166 @@
+{
+  "level": "A1",
+  "chapter": 1,
+  "title": "Your First German Sounds",
+  "description": "German sounds different — but there are rules. Learn them once and every word becomes pronounceable.",
+  "lessons": [
+    {
+      "order": 1,
+      "title": "The German Alphabet",
+      "subtitle": "26 letters + 4 special characters. You already know 20.",
+      "type": "vocabulary",
+      "estimatedMinutes": 8,
+      "xpReward": 50,
+      "isPremium": false,
+      "hook": "Here's something Duolingo never tells you: German spelling is almost perfectly phonetic. Once you know the sounds, you can read ANY German word out loud — even words you've never seen. English can't say that.",
+      "explain": "German has consistent pronunciation rules. Unlike English where 'ough' is pronounced differently in 'though', 'through', 'rough', and 'thought' — in German, each letter combination always sounds the same. This means you only need to learn the rules once.",
+      "examples": [
+        {
+          "german": "Guten Morgen",
+          "english": "Good morning",
+          "breakdown": [
+            { "word": "Guten", "role": "adjective (accusative)", "color": "#f97316" },
+            { "word": "Morgen", "role": "noun (masculine)", "color": "#3b82f6" }
+          ]
+        }
+      ],
+      "vocabulary": [
+        {
+          "german": "Hallo",
+          "english": "Hello",
+          "exampleSentence": "Hallo, ich bin Maria.",
+          "exampleTranslation": "Hello, I am Maria.",
+          "memoryHook": "Sounds almost identical to English 'Hello'"
+        },
+        {
+          "german": "Tschüss",
+          "english": "Bye",
+          "exampleSentence": "Tschüss, bis morgen!",
+          "exampleTranslation": "Bye, see you tomorrow!",
+          "memoryHook": "The 'tsch' sound is like 'ch' in 'church'. Tsch-üss."
+        },
+        {
+          "german": "Ja",
+          "english": "Yes",
+          "exampleSentence": "Ja, das stimmt.",
+          "exampleTranslation": "Yes, that's right.",
+          "memoryHook": "Pronounced 'yah' — like an enthusiastic yes"
+        },
+        {
+          "german": "Nein",
+          "english": "No",
+          "exampleSentence": "Nein, danke.",
+          "exampleTranslation": "No, thank you.",
+          "memoryHook": "Sounds like 'nine' — remember: nine letters in 'nein danke'"
+        },
+        {
+          "german": "Danke",
+          "english": "Thank you",
+          "exampleSentence": "Danke schön!",
+          "exampleTranslation": "Thank you very much!",
+          "memoryHook": "Rhymes with 'Yankee' without the Y"
+        },
+        {
+          "german": "Bitte",
+          "english": "Please / You're welcome",
+          "exampleSentence": "Ein Kaffee, bitte.",
+          "exampleTranslation": "One coffee, please.",
+          "memoryHook": "Bitte means BOTH please AND you're welcome — context tells you which"
+        }
+      ],
+      "exercises": [
+        {
+          "type": "multiple_choice",
+          "order": 1,
+          "prompt": "How do you say 'Hello' in German?",
+          "options": ["Tschüss", "Danke", "Hallo", "Bitte"],
+          "correctAnswer": "Hallo",
+          "explanation": "Hallo is the standard informal greeting in German, used throughout the day."
+        },
+        {
+          "type": "multiple_choice",
+          "order": 2,
+          "prompt": "Someone gives you a gift. You say 'Danke'. They reply ___",
+          "options": ["Hallo", "Bitte", "Nein", "Ja"],
+          "correctAnswer": "Bitte",
+          "explanation": "Bitte serves double duty: 'please' when asking, and 'you're welcome' when responding to thanks. Context always makes it clear."
+        },
+        {
+          "type": "translate",
+          "order": 3,
+          "prompt": "Translate to German: 'No, thank you.'",
+          "correctAnswer": "Nein, danke.",
+          "explanation": "Nein (no) + danke (thank you). The comma and period matter — German uses them the same way as English here."
+        }
+      ]
+    },
+    {
+      "order": 2,
+      "title": "Special German Sounds: Ä, Ö, Ü, ß",
+      "subtitle": "The 4 sounds that make German unmistakably German.",
+      "type": "vocabulary",
+      "estimatedMinutes": 10,
+      "xpReward": 60,
+      "isPremium": false,
+      "hook": "These 4 characters terrify beginners. They shouldn't. Each one has a very simple pattern — and native German children learn them by age 4.",
+      "explain": "Ä, Ö, Ü are called 'Umlauts' — they're just vowels with a twist. The two dots (¨) mean: round your lips and tighten the sound. ß (Eszett) is simply a double-s, used after long vowels. Once you train your mouth, these become second nature within days.",
+      "examples": [
+        {
+          "german": "Tschüss",
+          "english": "Bye",
+          "breakdown": [
+            { "word": "Tschüss", "role": "The ü sound — like French 'tu', lips rounded, say 'ee'", "color": "#d4a843" }
+          ]
+        }
+      ],
+      "vocabulary": [
+        {
+          "german": "Ä / ä",
+          "english": "Sound: like 'e' in 'bed'",
+          "exampleSentence": "Mädchen — girl",
+          "exampleTranslation": "Mäd-chen: the ä sounds like the 'e' in 'bed'",
+          "memoryHook": "ä = 'e' in bed. Mädchen, Bäcker, Väter"
+        },
+        {
+          "german": "Ö / ö",
+          "english": "Sound: like 'er' in 'her' (British)",
+          "exampleSentence": "schön — beautiful",
+          "exampleTranslation": "schön: sh-ern (British 'her' without the r)",
+          "memoryHook": "Ö = round lips + say 'e'. Like you're surprised and snobbish."
+        },
+        {
+          "german": "Ü / ü",
+          "english": "Sound: like French 'tu'",
+          "exampleSentence": "Tschüss — bye",
+          "exampleTranslation": "Round your lips as if to say 'oo', then say 'ee'",
+          "memoryHook": "Ü = lips like 'oo', sound like 'ee'. Tschüss, über, grün"
+        },
+        {
+          "german": "ß (Eszett)",
+          "english": "Sound: like double-ss",
+          "exampleSentence": "Straße — street",
+          "exampleTranslation": "Stra-sse: sharp ss after a long vowel",
+          "memoryHook": "ß only appears after LONG vowels (Straße) or diphthongs. After short vowels: ss (Wasser)."
+        }
+      ],
+      "exercises": [
+        {
+          "type": "multiple_choice",
+          "order": 1,
+          "prompt": "The word 'schön' (beautiful) — the ö sounds like:",
+          "options": ["'oh' as in 'go'", "'er' as in British 'her'", "'oo' as in 'food'", "'a' as in 'cat'"],
+          "correctAnswer": "'er' as in British 'her'",
+          "explanation": "Ö is made by rounding your lips slightly and producing the 'e' sound. Think of the British pronunciation of 'her' without the r-sound at the end."
+        },
+        {
+          "type": "multiple_choice",
+          "order": 2,
+          "prompt": "Which spelling is correct for the German word for 'street'?",
+          "options": ["Strasse", "Straße", "Strase", "Straße or Strasse — both are correct"],
+          "correctAnswer": "Straße or Strasse — both are correct",
+          "explanation": "In modern German, both Straße and Strasse are accepted. Switzerland actually dropped ß entirely and always writes ss. In Germany, ß is used after long vowels and diphthongs."
+        }
+      ]
+    }
+  ]
+}

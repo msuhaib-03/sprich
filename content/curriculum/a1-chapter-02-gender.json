@@ -1,0 +1,246 @@
+{
+  "level": "A1",
+  "chapter": 2,
+  "title": "Gender — The Foundation Everything Rests On",
+  "description": "Every German noun is masculine, feminine, or neuter. This isn't arbitrary — there are patterns. Learn the patterns and you'll guess right 70% of the time.",
+  "lessons": [
+    {
+      "order": 1,
+      "title": "Why Does German Have Genders?",
+      "subtitle": "The historical reason — and why it actually helps you.",
+      "type": "grammar",
+      "estimatedMinutes": 8,
+      "xpReward": 60,
+      "isPremium": false,
+      "hook": "English had grammatical gender too — until about 1000 years ago. 'The moon' was masculine in Old English. 'The woman' was neuter. German kept this ancient system. It feels arbitrary at first, but patterns emerge that make it learnable.",
+      "explain": "Every German noun belongs to one of three grammatical genders: masculine (der), feminine (die), or neuter (das). The article is like a name tag the noun always wears. You must learn the article WITH the noun — never the noun alone. 'Tisch' (table) is useless. 'der Tisch' is the word. This is the single most important habit to build from day one.",
+      "examples": [
+        {
+          "german": "der Mann",
+          "english": "the man",
+          "breakdown": [
+            { "word": "der", "role": "masculine article", "color": "#3b82f6" },
+            { "word": "Mann", "role": "noun: man", "color": "#ffffff" }
+          ]
+        },
+        {
+          "german": "die Frau",
+          "english": "the woman",
+          "breakdown": [
+            { "word": "die", "role": "feminine article", "color": "#ec4899" },
+            { "word": "Frau", "role": "noun: woman", "color": "#ffffff" }
+          ]
+        },
+        {
+          "german": "das Kind",
+          "english": "the child",
+          "breakdown": [
+            { "word": "das", "role": "neuter article", "color": "#10b981" },
+            { "word": "Kind", "role": "noun: child", "color": "#ffffff" }
+          ]
+        }
+      ],
+      "vocabulary": [
+        {
+          "german": "der Mann",
+          "english": "the man",
+          "article": "der",
+          "gender": "masculine",
+          "plural": "die Männer",
+          "exampleSentence": "Der Mann ist groß.",
+          "exampleTranslation": "The man is tall.",
+          "memoryHook": "der = blue = masculine. der Mann, der Tisch, der Hund"
+        },
+        {
+          "german": "die Frau",
+          "english": "the woman",
+          "article": "die",
+          "gender": "feminine",
+          "plural": "die Frauen",
+          "exampleSentence": "Die Frau ist Lehrerin.",
+          "exampleTranslation": "The woman is a teacher.",
+          "memoryHook": "die = pink = feminine. die Frau, die Schule, die Stadt"
+        },
+        {
+          "german": "das Kind",
+          "english": "the child",
+          "article": "das",
+          "gender": "neuter",
+          "plural": "die Kinder",
+          "exampleSentence": "Das Kind spielt.",
+          "exampleTranslation": "The child plays.",
+          "memoryHook": "das = green = neuter. das Kind, das Buch, das Auto"
+        },
+        {
+          "german": "der Tisch",
+          "english": "the table",
+          "article": "der",
+          "gender": "masculine",
+          "plural": "die Tische",
+          "exampleSentence": "Der Tisch ist neu.",
+          "exampleTranslation": "The table is new.",
+          "memoryHook": "Things ending in -sch are often masculine"
+        },
+        {
+          "german": "die Schule",
+          "english": "the school",
+          "article": "die",
+          "gender": "feminine",
+          "plural": "die Schulen",
+          "exampleSentence": "Die Schule ist groß.",
+          "exampleTranslation": "The school is big.",
+          "memoryHook": "Words ending in -e are VERY often feminine (die Schule, die Küche, die Straße)"
+        },
+        {
+          "german": "das Auto",
+          "english": "the car",
+          "article": "das",
+          "gender": "neuter",
+          "plural": "die Autos",
+          "exampleSentence": "Das Auto ist schnell.",
+          "exampleTranslation": "The car is fast.",
+          "memoryHook": "Diminutives (-chen, -lein) and many loanwords are neuter"
+        }
+      ],
+      "exercises": [
+        {
+          "type": "multiple_choice",
+          "order": 1,
+          "prompt": "Always learn nouns with their ___",
+          "options": ["plural form", "article", "English translation", "pronunciation"],
+          "correctAnswer": "article",
+          "explanation": "In German, the article is inseparable from the noun. Never say 'Tisch' — say 'der Tisch'. The article changes based on the grammatical case, so you must know the base gender to apply the right change later."
+        },
+        {
+          "type": "multiple_choice",
+          "order": 2,
+          "prompt": "Which article goes with 'Schule' (school)?",
+          "options": ["der", "die", "das", "Not sure"],
+          "correctAnswer": "die",
+          "explanation": "Words ending in -e are very frequently feminine (die). Die Schule, die Küche, die Straße, die Blume. This pattern covers roughly 90% of -e ending nouns."
+        },
+        {
+          "type": "multiple_choice",
+          "order": 3,
+          "prompt": "Which color represents feminine nouns on Sprich?",
+          "options": ["Blue", "Green", "Pink/Red", "Gold"],
+          "correctAnswer": "Pink/Red",
+          "explanation": "Our color system: Blue = der (masculine), Pink = die (feminine), Green = das (neuter). These colors are used consistently across every lesson, exercise, and grammar breakdown on the platform."
+        }
+      ]
+    },
+    {
+      "order": 2,
+      "title": "Gender Patterns — Guess Right 70% of the Time",
+      "subtitle": "Endings that reveal gender. Learn these rules and guessing becomes educated.",
+      "type": "grammar",
+      "estimatedMinutes": 12,
+      "xpReward": 80,
+      "isPremium": false,
+      "hook": "The secret every German teacher knows: most textbooks hide the gender patterns. They make students memorize each word individually. We refuse to do that. Here are the patterns that let you predict gender from word endings.",
+      "explain": "German word endings reliably predict gender in most cases. This is not 100% reliable — German has exceptions — but these patterns are right more than 70% of the time, which means educated guessing, not random guessing. Learn these once and you'll instantly have a strong prior on any new word you encounter.",
+      "examples": [
+        {
+          "german": "die Freiheit",
+          "english": "freedom",
+          "breakdown": [
+            { "word": "die", "role": "feminine", "color": "#ec4899" },
+            { "word": "Frei-heit", "role": "-heit ending → always feminine", "color": "#ec4899" }
+          ]
+        },
+        {
+          "german": "das Mädchen",
+          "english": "the girl",
+          "breakdown": [
+            { "word": "das", "role": "neuter — not feminine!", "color": "#10b981" },
+            { "word": "Mäd-chen", "role": "-chen ending → always neuter (diminutive)", "color": "#10b981" }
+          ]
+        }
+      ],
+      "vocabulary": [
+        {
+          "german": "die Freiheit",
+          "english": "freedom",
+          "article": "die",
+          "gender": "feminine",
+          "exampleSentence": "Die Freiheit ist wichtig.",
+          "exampleTranslation": "Freedom is important.",
+          "memoryHook": "RULE: -heit → always die. Freiheit, Gesundheit, Sicherheit, Schönheit"
+        },
+        {
+          "german": "die Zeitung",
+          "english": "newspaper",
+          "article": "die",
+          "gender": "feminine",
+          "exampleSentence": "Ich lese die Zeitung.",
+          "exampleTranslation": "I read the newspaper.",
+          "memoryHook": "RULE: -ung → always die. Zeitung, Wohnung, Meinung, Hoffnung"
+        },
+        {
+          "german": "die Möglichkeit",
+          "english": "possibility",
+          "article": "die",
+          "gender": "feminine",
+          "exampleSentence": "Das ist eine Möglichkeit.",
+          "exampleTranslation": "That is a possibility.",
+          "memoryHook": "RULE: -keit → always die. Möglichkeit, Fähigkeit, Schwierigkeit"
+        },
+        {
+          "german": "das Mädchen",
+          "english": "the girl",
+          "article": "das",
+          "gender": "neuter",
+          "exampleSentence": "Das Mädchen heißt Anna.",
+          "exampleTranslation": "The girl is called Anna.",
+          "memoryHook": "RULE: -chen → always das (diminutive suffix). Even though Mädchen means girl — grammatically neuter. Don't fight it, just learn it."
+        },
+        {
+          "german": "das Brötchen",
+          "english": "the bread roll",
+          "article": "das",
+          "gender": "neuter",
+          "exampleSentence": "Ein Brötchen, bitte.",
+          "exampleTranslation": "One bread roll, please.",
+          "memoryHook": "RULE: -chen → das. Brötchen, Mädchen, Häuschen, Kätzchen"
+        },
+        {
+          "german": "der Lehrer",
+          "english": "the (male) teacher",
+          "article": "der",
+          "gender": "masculine",
+          "exampleSentence": "Der Lehrer erklärt das.",
+          "exampleTranslation": "The teacher explains that.",
+          "memoryHook": "RULE: -er (person/profession) → often der. Lehrer, Bäcker, Fahrer, Spieler"
+        }
+      ],
+      "exercises": [
+        {
+          "type": "multiple_choice",
+          "order": 1,
+          "prompt": "What article does 'Hoffnung' (hope) take? Hint: look at the ending.",
+          "options": ["der", "die", "das"],
+          "correctAnswer": "die",
+          "hint": "What pattern does '-ung' follow?",
+          "explanation": "Words ending in -ung are ALWAYS feminine (die). This is one of the most reliable rules in German. Hoffnung, Zeitung, Wohnung, Meinung, Übung — all die."
+        },
+        {
+          "type": "multiple_choice",
+          "order": 2,
+          "prompt": "What article does 'Kätzchen' (kitten) take?",
+          "options": ["der", "die", "das"],
+          "correctAnswer": "das",
+          "hint": "What does -chen always signal?",
+          "explanation": "Words ending in -chen are ALWAYS neuter (das). The -chen suffix is a diminutive — it makes things smaller/cuter. And all diminutives in German are neuter, regardless of the base word's gender. Das Kätzchen (from die Katze — the cat)."
+        },
+        {
+          "type": "multiple_choice",
+          "order": 3,
+          "prompt": "You see a new word: 'Sicherheit' (safety). Without knowing the word, what article do you guess?",
+          "options": ["der", "die", "das", "I can't guess"],
+          "correctAnswer": "die",
+          "explanation": "-heit is always feminine. Sicherheit (safety), Gesundheit (health), Freiheit (freedom), Schönheit (beauty). Every single -heit word is die. This is 100% reliable."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,317 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ─────────────────────────────────────────────────────────────────
+
+enum GermanLevel {
+  A1
+  A2
+  B1
+  B2
+  C1
+  C2
+}
+
+enum UserProfile {
+  bachelors_student
+  masters_student
+  working_person
+  complete_beginner
+}
+
+enum UserGoal {
+  get_job_germany
+  study_germany
+  live_comfortably
+  citizenship
+  fun_learning
+}
+
+enum LessonType {
+  vocabulary
+  grammar
+  listening
+  speaking
+  scenario
+  review
+  assessment
+}
+
+enum ExerciseType {
+  multiple_choice
+  fill_blank
+  arrange_words
+  translate
+  speak_response
+  listen_select
+}
+
+enum SpeakingScenario {
+  introduce_yourself
+  job_interview
+  train_station
+  supermarket
+  doctors_appointment
+  neighbour_chat
+  workplace_smalltalk
+  free_conversation
+}
+
+enum PlanType {
+  free
+  premium_monthly
+  premium_annual
+}
+
+enum SubscriptionStatus {
+  active
+  canceled
+  past_due
+  trialing
+}
+
+enum Gender {
+  masculine
+  feminine
+  neuter
+}
+
+enum GrammaticalCase {
+  nominative
+  accusative
+  dative
+  genitive
+}
+
+// ─── User ──────────────────────────────────────────────────────────────────
+
+model User {
+  id             String      @id @default(cuid())
+  email          String      @unique
+  name           String
+  avatarUrl      String?
+  passwordHash   String?
+  level          GermanLevel @default(A1)
+  profile        UserProfile @default(complete_beginner)
+  goal           UserGoal    @default(fun_learning)
+  dailyMinutes   Int         @default(30)
+  streak         Int         @default(0)
+  longestStreak  Int         @default(0)
+  xp             Int         @default(0)
+  lastActiveDate DateTime?
+
+  subscription    Subscription?
+  progress        UserProgress[]
+  vocabCards      SRSCard[]
+  speakingSessions SpeakingSession[]
+  weeklyReports   WeeklyReport[]
+  certificates    Certificate[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+// ─── Curriculum ────────────────────────────────────────────────────────────
+
+model Chapter {
+  id          String      @id @default(cuid())
+  level       GermanLevel
+  number      Int
+  title       String
+  description String
+  imageUrl    String?
+  lessons     Lesson[]
+
+  @@unique([level, number])
+  @@map("chapters")
+}
+
+model Lesson {
+  id                String      @id @default(cuid())
+  chapterId         String
+  chapter           Chapter     @relation(fields: [chapterId], references: [id])
+  order             Int
+  title             String
+  subtitle          String
+  type              LessonType
+  estimatedMinutes  Int         @default(10)
+  xpReward          Int         @default(50)
+  isPremium         Boolean     @default(false)
+
+  // Lesson content stored as structured JSON
+  hook              String      // The opening hook / story
+  explain           String      // The WHY explanation
+  contentJson       Json        // Full LessonContent object
+
+  exercises         Exercise[]
+  vocabulary        LessonVocab[]
+  progress          UserProgress[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([chapterId, order])
+  @@map("lessons")
+}
+
+model Exercise {
+  id            String       @id @default(cuid())
+  lessonId      String
+  lesson        Lesson       @relation(fields: [lessonId], references: [id])
+  type          ExerciseType
+  order         Int
+  prompt        String
+  options       Json?        // string[] for multiple choice
+  correctAnswer String
+  explanation   String       // WHY this is correct — crucial differentiator
+  hint          String?
+  audioUrl      String?
+
+  @@map("exercises")
+}
+
+// ─── Vocabulary ────────────────────────────────────────────────────────────
+
+model VocabWord {
+  id                  String      @id @default(cuid())
+  german              String
+  english             String
+  article             String?     // der/die/das
+  gender              Gender?
+  plural              String?
+  audioUrl            String?
+  exampleSentence     String
+  exampleTranslation  String
+  memoryHook          String?     // pattern rule or mnemonic
+  level               GermanLevel
+  grammaticalCase     GrammaticalCase?
+
+  lessons   LessonVocab[]
+  srsCards  SRSCard[]
+
+  @@map("vocab_words")
+}
+
+model LessonVocab {
+  lessonId  String
+  vocabId   String
+  lesson    Lesson    @relation(fields: [lessonId], references: [id])
+  vocab     VocabWord @relation(fields: [vocabId], references: [id])
+
+  @@id([lessonId, vocabId])
+  @@map("lesson_vocab")
+}
+
+// ─── Spaced Repetition (SM-2) ──────────────────────────────────────────────
+
+model SRSCard {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  vocabId     String
+  vocab       VocabWord @relation(fields: [vocabId], references: [id])
+  easeFactor  Float     @default(2.5)
+  interval    Int       @default(1)      // days
+  repetitions Int       @default(0)
+  nextReview  DateTime  @default(now())
+  lastReview  DateTime?
+
+  @@unique([userId, vocabId])
+  @@map("srs_cards")
+}
+
+// ─── Progress ──────────────────────────────────────────────────────────────
+
+model UserProgress {
+  id               String   @id @default(cuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id])
+  lessonId         String
+  lesson           Lesson   @relation(fields: [lessonId], references: [id])
+  score            Int
+  xpEarned         Int
+  timeSpentSeconds Int
+  completedAt      DateTime @default(now())
+
+  @@unique([userId, lessonId])
+  @@map("user_progress")
+}
+
+model WeeklyReport {
+  id                       String   @id @default(cuid())
+  userId                   String
+  user                     User     @relation(fields: [userId], references: [id])
+  weekStart                DateTime
+  lessonsCompleted         Int
+  vocabularyLearned        Int
+  speakingMinutes          Int
+  hesitationImprovement    Float    // % change week-over-week
+  xpEarned                 Int
+  streakDays               Int
+  onTrackMessage           String   // AI-generated motivational message
+
+  @@map("weekly_reports")
+}
+
+// ─── Speaking ──────────────────────────────────────────────────────────────
+
+model SpeakingSession {
+  id              String           @id @default(cuid())
+  userId          String
+  user            User             @relation(fields: [userId], references: [id])
+  scenario        SpeakingScenario
+  transcript      String
+  overallScore    Int
+  pronunciationScore Int
+  grammarScore    Int
+  vocabularyScore Int
+  fluencyScore    Int
+  hesitationCount Int
+  wordsPerMinute  Float
+  aiFeedback      String
+
+  createdAt DateTime @default(now())
+
+  @@map("speaking_sessions")
+}
+
+// ─── Certificates ──────────────────────────────────────────────────────────
+
+model Certificate {
+  id          String      @id @default(cuid())
+  userId      String
+  user        User        @relation(fields: [userId], references: [id])
+  level       GermanLevel
+  issuedAt    DateTime    @default(now())
+  shareUrl    String      @unique
+
+  @@unique([userId, level])
+  @@map("certificates")
+}
+
+// ─── Subscriptions (Stripe) ────────────────────────────────────────────────
+
+model Subscription {
+  id                   String             @id @default(cuid())
+  userId               String             @unique
+  user                 User               @relation(fields: [userId], references: [id])
+  stripeCustomerId     String             @unique
+  stripeSubscriptionId String?            @unique
+  plan                 PlanType           @default(free)
+  status               SubscriptionStatus @default(active)
+  currentPeriodEnd     DateTime?
+  cancelAtPeriodEnd    Boolean            @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("subscriptions")
+}

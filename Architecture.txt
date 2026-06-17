@@ -1,0 +1,99 @@
+LEVEL A1
+├── Chapter 1: First Words & Sounds
+│   ├── Lesson 1.1 — The German alphabet & pronunciation rules
+│   ├── Lesson 1.2 — Greetings (Hallo, Guten Morgen, Tschüss)
+│   └── Lesson 1.3 — Numbers 1–20, Days of the week
+│
+├── Chapter 2: Gender — The Foundation Everything Rests On
+│   ├── Lesson 2.1 — WHY German has 3 genders (cultural/historical context)
+│   ├── Lesson 2.2 — Der (masculine), Die (feminine), Das (neuter)
+│   ├── Lesson 2.3 — Pattern rules: words ending in -ung → Die, -heit → Die, -chen → Das
+│   ├── Lesson 2.4 — Memory hooks for irregular genders
+│   └── Mini-Test + Review
+│
+├── Chapter 3: Nominative Case — Who is DOING the action?
+│   ├── Lesson 3.1 — What is a case? (Explained like: "English has it too — HE vs HIM")
+│   ├── Lesson 3.2 — Der/Die/Das in Nominative (the subject of the sentence)
+│   ├── Lesson 3.3 — Ein/Eine/Ein (indefinite articles in Nominative)
+│   └── Practice: Build 10 sentences using subject + verb only
+│
+├── Chapter 4: Akkusative Case — Who is RECEIVING the action?
+│   ├── Lesson 4.1 — WHY Akkusative exists (direct object, the thing being acted upon)
+│   ├── Lesson 4.2 — The ONLY change: Der → Den / Ein → Einen (masculine only!)
+│   ├── Lesson 4.3 — Die stays Die. Das stays Das. (Pattern lock-in)
+│   ├── Lesson 4.4 — "Ich habe einen Bruder und eine Schwester" — sentence building
+│   ├── Lesson 4.5 — Verbs that ALWAYS take Akkusative (haben, sehen, kaufen...)
+│   └── Visual: Nominative vs Akkusative table side by side with color coding
+│
+├── Chapter 5: Verbs — Present Tense Conjugation
+│   ├── Lesson 5.1 — Regular verbs: machen, spielen, lernen
+│   ├── Lesson 5.2 — Sein (to be) and Haben (to have) — the two most important
+│   ├── Lesson 5.3 — Irregular stem-changers: fahren → fährt, lesen → liest
+│   └── Daily Scenario: Introduce yourself in 5 sentences
+│
+├── Chapter 6: First Conversations
+│   ├── Lesson 6.1 — At the train station
+│   ├── Lesson 6.2 — Ordering food
+│   └── Lesson 6.3 — Asking for directions
+│
+└── A1 FINAL ASSESSMENT → Certificate unlock
+
+[HOOK]      — A surprising fact or real-world story (30 sec)
+[EXPLAIN]   — The WHY, never just the rule (2 min)
+[SHOW]      — Examples with color-coded grammar (1 min)
+[PRACTICE]  — Interactive exercises (5–10 min)
+[SPEAK]     — Say it out loud with AI feedback (2 min)
+[REVIEW]    — Spaced repetition cards for today's vocabulary
+
+THE PSYCHOLOGICAL ENGAGEMENT LOOP:
+Day 1    → Placement + Roadmap revealed (investment)
+Day 2-7  → Quick wins, vocabulary growing fast (early momentum)
+Week 2   → First speaking scenario completed (identity shift: "I'm someone who speaks German")
+Month 1  → A1 certificate earned (social proof, shareable)
+Month 2  → They bring a friend (referral loop)
+Month 3  → They're at A2, can't stop now (sunk cost + genuine progress)
+
+
+TECHSTACK:
+Frontend:
+Next.js 14 (App Router)        — Web app, SSR, fast loads
+TypeScript                      — Type safety across the board  
+Tailwind CSS + Framer Motion   — UI + smooth animations
+Zustand                        — Lightweight state management
+React Query (TanStack)         — Data fetching + caching
+
+Backend:
+Node.js + NestJS (TypeScript)  — Scalable, modular API
+PostgreSQL                     — Core data (users, lessons, progress)
+Redis                          — Sessions, caching, streak data
+Prisma ORM                     — Type-safe DB queries
+
+Auth&Payments:
+Supabase Auth                  — Email, Google, social login
+Stripe                         — Premium subscriptions, one-time purchases
+
+AI&Audio
+Claude API (Anthropic)         — Conversation partner, grammar explainer, feedback
+Deepgram                       — Speech-to-text (evaluate user pronunciation)
+ElevenLabs                     — High-quality German TTS (native speaker audio)
+
+Infrastructure:
+Vercel                         — Frontend deployment
+Railway or Render              — Backend + PostgreSQL
+Upstash                        — Serverless Redis
+Cloudflare R2                  — Audio file storage (cheap S3 alternative)
+
+
+
+FREE VS PREMIUM
+Free vs Premium
+Feature				Free			Premium
+Lessons 			per day	2		Unlimited
+Levels available		A1 only			A1 → C2
+AI conversation practice	5 min/day		Unlimited
+Speaking analysis		Basic			Detailed (hesitation, speed, accent)
+Certificates			None			All levels
+Offline mode			No			Yes
+Job-specific vocabulary packs	No			Yes
+Progress reports		Weekly			Daily
+Price				Free			~$9.99/month or ~$79/year

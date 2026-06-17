@@ -1,0 +1,126 @@
+{
+  "level": "A1",
+  "chapter": 4,
+  "title": "Accusative Case — When Articles Change",
+  "description": "This is where most apps confuse people. We'll make it crystal clear: only ONE article changes in Accusative. Just one.",
+  "lessons": [
+    {
+      "order": 1,
+      "title": "What is the Accusative Case?",
+      "subtitle": "Every language has it — including English. You already understand it.",
+      "type": "grammar",
+      "estimatedMinutes": 10,
+      "xpReward": 80,
+      "isPremium": false,
+      "hook": "English has cases too — you just don't notice. 'He hit him.' Why 'him' and not 'he'? Because 'him' is the object — the thing receiving the action. German does the same thing, but it shows it by changing the article, not the pronoun. This is the Accusative case.",
+      "explain": "In every German sentence, you need to identify two things: WHO is doing the action (the subject — Nominative case) and WHAT is receiving the action (the direct object — Accusative case). The subject takes der/die/das/ein/eine/ein. The direct object takes den/die/das/einen/eine/ein. Notice what's different: ONLY the masculine article changes. Der → den. Ein → einen. Everything else stays exactly the same.",
+      "examples": [
+        {
+          "german": "Ich habe einen Bruder und eine Schwester.",
+          "english": "I have a brother and a sister.",
+          "breakdown": [
+            { "word": "Ich", "role": "Subject (Nominative) — I am doing the having", "color": "#3b82f6" },
+            { "word": "habe", "role": "Verb — haben (to have)", "color": "#ffffff" },
+            { "word": "einen", "role": "Accusative masculine — ein → einen", "color": "#f97316" },
+            { "word": "Bruder", "role": "Direct object (masculine noun)", "color": "#f97316" },
+            { "word": "eine", "role": "Accusative feminine — eine stays eine", "color": "#ec4899" },
+            { "word": "Schwester", "role": "Direct object (feminine noun)", "color": "#ec4899" }
+          ]
+        },
+        {
+          "german": "Ich sehe den Mann.",
+          "english": "I see the man.",
+          "breakdown": [
+            { "word": "Ich", "role": "Subject (Nominative)", "color": "#3b82f6" },
+            { "word": "sehe", "role": "Verb — sehen (to see)", "color": "#ffffff" },
+            { "word": "den", "role": "Accusative masculine — der → den", "color": "#f97316" },
+            { "word": "Mann", "role": "Direct object (masculine)", "color": "#f97316" }
+          ]
+        },
+        {
+          "german": "Sie kauft die Zeitung.",
+          "english": "She buys the newspaper.",
+          "breakdown": [
+            { "word": "Sie", "role": "Subject (Nominative)", "color": "#ec4899" },
+            { "word": "kauft", "role": "Verb — kaufen (to buy)", "color": "#ffffff" },
+            { "word": "die", "role": "Accusative feminine — die stays die", "color": "#ec4899" },
+            { "word": "Zeitung", "role": "Direct object (feminine)", "color": "#ec4899" }
+          ]
+        }
+      ],
+      "vocabulary": [
+        {
+          "german": "haben",
+          "english": "to have",
+          "exampleSentence": "Ich habe einen Hund.",
+          "exampleTranslation": "I have a dog.",
+          "memoryHook": "haben ALWAYS takes Accusative — the thing you 'have' is always a direct object"
+        },
+        {
+          "german": "sehen",
+          "english": "to see",
+          "exampleSentence": "Ich sehe den Film.",
+          "exampleTranslation": "I see the film.",
+          "memoryHook": "sehen takes Accusative — what you see is a direct object"
+        },
+        {
+          "german": "kaufen",
+          "english": "to buy",
+          "exampleSentence": "Er kauft einen Apfel.",
+          "exampleTranslation": "He buys an apple.",
+          "memoryHook": "kaufen takes Accusative — what you buy receives the buying action"
+        },
+        {
+          "german": "brauchen",
+          "english": "to need",
+          "exampleSentence": "Wir brauchen einen Arzt.",
+          "exampleTranslation": "We need a doctor.",
+          "memoryHook": "brauchen takes Accusative — what you need is a direct object"
+        }
+      ],
+      "exercises": [
+        {
+          "type": "multiple_choice",
+          "order": 1,
+          "prompt": "In the sentence 'Ich sehe ___ Mann' — which article fills the blank?",
+          "options": ["der", "den", "die", "das"],
+          "correctAnswer": "den",
+          "hint": "Mann is masculine. What happens to masculine articles in Accusative?",
+          "explanation": "Mann (man) is masculine — base article is 'der'. In Accusative, masculine definite articles change: der → den. So: Ich sehe den Mann. This is the ONLY change in the definite article system for Accusative."
+        },
+        {
+          "type": "multiple_choice",
+          "order": 2,
+          "prompt": "'Ich kaufe ___ Zeitung' — Zeitung is feminine (die). What goes in the blank?",
+          "options": ["den", "die", "das", "der"],
+          "correctAnswer": "die",
+          "explanation": "Zeitung is feminine. In Accusative, feminine articles DO NOT CHANGE. Die stays die. So: Ich kaufe die Zeitung. This is the crucial insight — only masculine changes. Everything else is identical to Nominative."
+        },
+        {
+          "type": "multiple_choice",
+          "order": 3,
+          "prompt": "What is the ONE article that changes in Accusative?",
+          "options": ["die (feminine)", "das (neuter)", "der (masculine)", "All three change"],
+          "correctAnswer": "der (masculine)",
+          "explanation": "This is the key insight of the Accusative case: ONLY masculine articles change. Der → den. Ein → einen. Feminine (die/eine) and neuter (das/ein) stay exactly the same. Memorize this once and you have Accusative."
+        },
+        {
+          "type": "arrange_words",
+          "order": 4,
+          "prompt": "Arrange these words into a correct German sentence:",
+          "options": ["Bruder", "einen", "Ich", "habe"],
+          "correctAnswer": "Ich habe einen Bruder.",
+          "explanation": "German sentence structure: Subject (Ich) + Verb (habe) + Object (einen Bruder). Bruder is masculine, so in Accusative: einen (not ein)."
+        },
+        {
+          "type": "multiple_choice",
+          "order": 5,
+          "prompt": "Complete: 'Er hat ___ Hund und ___ Katze.' (Hund=dog/masculine, Katze=cat/feminine)",
+          "options": ["ein / eine", "einen / eine", "einen / ein", "ein / ein"],
+          "correctAnswer": "einen / eine",
+          "explanation": "Hund is masculine → Accusative indefinite = einen. Katze is feminine → Accusative indefinite = eine (no change from Nominative). Result: Er hat einen Hund und eine Katze."
+        }
+      ]
+    }
+  ]
+}
