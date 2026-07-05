@@ -1,7 +1,7 @@
 import { Controller, Post, Body, UseGuards, Request } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import { AiService } from './ai.service'
-import { IsString, IsArray } from 'class-validator'
+import { IsString, IsArray, IsOptional } from 'class-validator'
 
 class SpeakingTurnDto {
   @IsString()
@@ -12,6 +12,10 @@ class SpeakingTurnDto {
 
   @IsArray()
   history!: Array<{ role: 'user' | 'assistant'; content: string }>
+
+  @IsOptional()
+  @IsString()
+  level?: string
 }
 
 class ExplainGrammarDto {
@@ -34,7 +38,7 @@ export class AiController {
   ) {
     return this.aiService.speakingTurn({
       scenario: dto.scenario,
-      level: req.user.level ?? 'A1',
+      level: dto.level ?? req.user.level ?? 'A1',
       history: dto.history,
       userMessage: dto.userMessage,
     })
