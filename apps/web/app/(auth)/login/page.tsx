@@ -37,12 +37,12 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center px-4">
+    <div className="min-h-screen bg-[var(--bg)] flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
 
         <div className="text-center mb-8">
           <Link href="/" className="text-2xl font-black gold-text">Sprich</Link>
-          <p className="text-[#555] text-sm mt-1">Welcome back</p>
+          <p className="text-[var(--faint)] text-sm mt-1">Welcome back</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -75,9 +75,9 @@ export default function LoginPage() {
           </Button>
         </form>
 
-        <p className="text-center text-[#555] text-sm mt-6">
+        <p className="text-center text-[var(--faint)] text-sm mt-6">
           Don&apos;t have an account?{' '}
-          <Link href="/signup" className="text-[#d4a843] hover:text-[#f0c96a]">Sign up free</Link>
+          <Link href="/signup" className="text-[var(--gold)] hover:text-[var(--gold-light)]">Sign up free</Link>
         </p>
       </div>
     </div>

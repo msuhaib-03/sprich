@@ -30,7 +30,7 @@ export function GrammarExample({ example }: { example: ExampleData }) {
   const tokens = example.german.split(/(\s+)/)
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-[#111] p-6">
+    <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6">
       {/* The colored sentence */}
       <p className="text-2xl font-bold mb-2 leading-relaxed">
         {tokens.map((tok, i) => {
@@ -43,7 +43,7 @@ export function GrammarExample({ example }: { example: ExampleData }) {
           )
         })}
       </p>
-      <p className="text-[#888] text-sm italic mb-6">{example.english}</p>
+      <p className="text-[var(--muted)] text-sm italic mb-6">{example.english}</p>
 
       {/* Breakdown legend */}
       <div className="grid sm:grid-cols-2 gap-2">
@@ -56,7 +56,7 @@ export function GrammarExample({ example }: { example: ExampleData }) {
             <p className="font-mono text-sm font-semibold" style={{ color: b.color }}>
               {b.word}
             </p>
-            <p className="text-[#888] text-xs mt-0.5">{b.role}</p>
+            <p className="text-[var(--muted)] text-xs mt-0.5">{b.role}</p>
           </div>
         ))}
       </div>

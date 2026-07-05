@@ -1,0 +1,333 @@
+{
+  "level": "A2",
+  "chapter": 1,
+  "title": "Dative Case — The Receiver",
+  "description": "You know Nominative (the doer) and Accusative (the thing acted on). The Dative marks the person something is done FOR or TO — the indirect object. It's the third case, and it unlocks natural German.",
+  "lessons": [
+    {
+      "order": 1,
+      "title": "What Is the Dative? (To Whom?)",
+      "subtitle": "The indirect object — the receiver of the direct object.",
+      "type": "grammar",
+      "estimatedMinutes": 11,
+      "xpReward": 90,
+      "isPremium": true,
+      "hook": "'I give the book to the man.' There are two objects hiding here: the book (what you give — Accusative) and the man (who receives it — Dative). English uses the word 'to'; German uses the Dative case instead. Once you see this split, whole sentences click into place.",
+      "explain": "The Dative case marks the indirect object — the person or thing that RECEIVES the direct object, usually answering 'to whom?' or 'for whom?'. In 'Ich gebe dem Mann das Buch' (I give the man the book), 'das Buch' is the direct object (Accusative) and 'dem Mann' is the indirect object (Dative). The typical order in German is: subject – verb – dative – accusative. Verbs like geben (to give), zeigen (to show), and schicken (to send) very often take both an accusative and a dative object.",
+      "examples": [
+        {
+          "german": "Ich gebe dem Mann das Buch.",
+          "english": "I give the man the book.",
+          "breakdown": [
+            { "word": "Ich", "role": "subject (Nominative)", "color": "#3b82f6" },
+            { "word": "gebe", "role": "verb: give", "color": "#ffffff" },
+            { "word": "dem Mann", "role": "indirect object (Dative) — the receiver", "color": "#14b8a6" },
+            { "word": "das Buch", "role": "direct object (Accusative) — the thing", "color": "#f97316" }
+          ]
+        },
+        {
+          "german": "Sie zeigt der Frau den Weg.",
+          "english": "She shows the woman the way.",
+          "breakdown": [
+            { "word": "Sie", "role": "subject", "color": "#3b82f6" },
+            { "word": "zeigt", "role": "verb: shows", "color": "#ffffff" },
+            { "word": "der Frau", "role": "Dative — die → der (feminine)", "color": "#14b8a6" },
+            { "word": "den Weg", "role": "Accusative — der → den (masculine)", "color": "#f97316" }
+          ]
+        },
+        {
+          "german": "Wir schicken dem Kind ein Geschenk.",
+          "english": "We send the child a present.",
+          "breakdown": [
+            { "word": "Wir", "role": "subject", "color": "#3b82f6" },
+            { "word": "schicken", "role": "verb: send", "color": "#ffffff" },
+            { "word": "dem Kind", "role": "Dative — das → dem (neuter)", "color": "#14b8a6" },
+            { "word": "ein Geschenk", "role": "Accusative (neuter, unchanged)", "color": "#f97316" }
+          ]
+        }
+      ],
+      "vocabulary": [
+        {
+          "german": "geben",
+          "english": "to give",
+          "exampleSentence": "Ich gebe dir das Buch.",
+          "exampleTranslation": "I give you the book.",
+          "memoryHook": "Stem-changer e→i: du gibst, er gibt. Classic dative verb (give TO someone)."
+        },
+        {
+          "german": "zeigen",
+          "english": "to show",
+          "exampleSentence": "Zeig mir das Foto!",
+          "exampleTranslation": "Show me the photo!",
+          "memoryHook": "You show something (Akk) TO someone (Dat)."
+        },
+        {
+          "german": "schicken",
+          "english": "to send",
+          "exampleSentence": "Ich schicke dir eine E-Mail.",
+          "exampleTranslation": "I send you an email.",
+          "memoryHook": "Regular verb. Send something to someone → dative receiver."
+        },
+        {
+          "german": "das Geschenk",
+          "english": "the present / gift",
+          "article": "das",
+          "gender": "neuter",
+          "plural": "die Geschenke",
+          "exampleSentence": "Das Geschenk ist für dich.",
+          "exampleTranslation": "The present is for you.",
+          "memoryHook": "das Geschenk — from schenken (to give as a gift)."
+        },
+        {
+          "german": "der Weg",
+          "english": "the way / path",
+          "article": "der",
+          "gender": "masculine",
+          "plural": "die Wege",
+          "exampleSentence": "Ich zeige dir den Weg.",
+          "exampleTranslation": "I'll show you the way.",
+          "memoryHook": "der Weg → den Weg as a direct object (Accusative masculine)."
+        }
+      ],
+      "exercises": [
+        {
+          "type": "multiple_choice",
+          "order": 1,
+          "prompt": "In 'I give the man the book', which part is the Dative (indirect object)?",
+          "options": ["the book", "give", "the man", "I"],
+          "correctAnswer": "the man",
+          "explanation": "The man RECEIVES the book, so 'the man' is the indirect object → Dative (dem Mann). 'The book' is the thing being given → Accusative."
+        },
+        {
+          "type": "multiple_choice",
+          "order": 2,
+          "prompt": "The Dative usually answers which question?",
+          "options": ["Who is doing it?", "To/for whom?", "What is being acted on?", "Whose is it?"],
+          "correctAnswer": "To/for whom?",
+          "explanation": "Dative = 'to whom / for whom'. Nominative = who does it, Accusative = what is acted on, Genitive = whose."
+        },
+        {
+          "type": "multiple_choice",
+          "order": 3,
+          "prompt": "What is the usual German order of objects?",
+          "options": ["accusative before dative", "dative before accusative", "order never matters", "verb always last"],
+          "correctAnswer": "dative before accusative",
+          "explanation": "With two noun objects, German normally puts the Dative (receiver) before the Accusative (thing): 'Ich gebe dem Mann das Buch.'"
+        }
+      ]
+    },
+    {
+      "order": 2,
+      "title": "Dative Articles — dem, der, dem, den",
+      "subtitle": "How der/die/das and ein/eine change in the Dative.",
+      "type": "grammar",
+      "estimatedMinutes": 12,
+      "xpReward": 100,
+      "isPremium": true,
+      "hook": "In the Accusative, only the masculine changed. The Dative is bolder: every gender shifts, and the plural even adds an -n to the noun. But there's a clean table to memorize, and after that it's pure pattern recognition.",
+      "explain": "Definite articles in the Dative: der → dem (masculine), die → der (feminine), das → dem (neuter), die → den (plural, and the noun gets an extra -n: den Kindern). Indefinite: ein → einem (m), eine → einer (f), ein → einem (n). Notice masculine and neuter share 'dem' / 'einem' again, and the feminine 'der' looks exactly like the masculine Nominative 'der' — context tells them apart. Memorize dem-der-dem-den and you own the Dative.",
+      "examples": [
+        {
+          "german": "Ich helfe dem Lehrer.",
+          "english": "I help the teacher.",
+          "breakdown": [
+            { "word": "Ich", "role": "subject", "color": "#3b82f6" },
+            { "word": "helfe", "role": "helfen takes Dative", "color": "#ffffff" },
+            { "word": "dem Lehrer", "role": "Dative masculine — der → dem", "color": "#14b8a6" }
+          ]
+        },
+        {
+          "german": "Das Auto gehört der Frau.",
+          "english": "The car belongs to the woman.",
+          "breakdown": [
+            { "word": "Das Auto", "role": "subject (Nominative)", "color": "#3b82f6" },
+            { "word": "gehört", "role": "gehören takes Dative", "color": "#ffffff" },
+            { "word": "der Frau", "role": "Dative feminine — die → der", "color": "#14b8a6" }
+          ]
+        },
+        {
+          "german": "Er gibt den Kindern Bonbons.",
+          "english": "He gives the children sweets.",
+          "breakdown": [
+            { "word": "Er", "role": "subject", "color": "#3b82f6" },
+            { "word": "den Kindern", "role": "Dative plural — die → den, + noun -n", "color": "#14b8a6" },
+            { "word": "Bonbons", "role": "Accusative (the sweets)", "color": "#f97316" }
+          ]
+        }
+      ],
+      "vocabulary": [
+        {
+          "german": "helfen",
+          "english": "to help",
+          "exampleSentence": "Kannst du mir helfen?",
+          "exampleTranslation": "Can you help me?",
+          "memoryHook": "helfen ALWAYS takes the Dative: helfen + dem/der/mir/dir. Stem-changer e→i: du hilfst."
+        },
+        {
+          "german": "gehören",
+          "english": "to belong to",
+          "exampleSentence": "Das Buch gehört mir.",
+          "exampleTranslation": "The book belongs to me.",
+          "memoryHook": "gehören + Dative: it belongs TO someone. Das Handy gehört dem Mann."
+        },
+        {
+          "german": "danken",
+          "english": "to thank",
+          "exampleSentence": "Ich danke dir.",
+          "exampleTranslation": "I thank you.",
+          "memoryHook": "danken + Dative. 'Ich danke dir' — thank you (literally 'to you')."
+        },
+        {
+          "german": "das Handy",
+          "english": "the mobile phone",
+          "article": "das",
+          "gender": "neuter",
+          "plural": "die Handys",
+          "exampleSentence": "Das Handy gehört dem Mann.",
+          "exampleTranslation": "The phone belongs to the man.",
+          "memoryHook": "A German 'false friend': das Handy = mobile phone (not 'handy')."
+        },
+        {
+          "german": "das Kind",
+          "english": "the child",
+          "article": "das",
+          "gender": "neuter",
+          "plural": "die Kinder",
+          "exampleSentence": "Er hilft den Kindern.",
+          "exampleTranslation": "He helps the children.",
+          "memoryHook": "Dative plural: den Kindern (die → den AND add -n to the noun)."
+        }
+      ],
+      "exercises": [
+        {
+          "type": "multiple_choice",
+          "order": 1,
+          "prompt": "Complete: 'Ich helfe ___ Frau.' (I help the woman.)",
+          "options": ["dem", "der", "die", "den"],
+          "correctAnswer": "der",
+          "hint": "helfen takes Dative; Frau is feminine.",
+          "explanation": "Feminine Dative: die → der. helfen requires the Dative, so 'der Frau'. (Yes, it looks like masculine Nominative 'der' — context disambiguates.)"
+        },
+        {
+          "type": "multiple_choice",
+          "order": 2,
+          "prompt": "What happens to a plural noun in the Dative?",
+          "options": ["nothing changes", "it adds an -s", "the article becomes den and the noun adds -n", "it becomes singular"],
+          "correctAnswer": "the article becomes den and the noun adds -n",
+          "explanation": "Dative plural: die → den, and the noun takes an extra -n (den Kindern, den Männern). This -n is a signature marker of the Dative plural."
+        },
+        {
+          "type": "fill_blank",
+          "order": 3,
+          "prompt": "Complete: 'Das Handy gehört ___ Mann.' (The phone belongs to the man.)",
+          "correctAnswer": "dem",
+          "hint": "gehören takes Dative; Mann is masculine.",
+          "explanation": "Masculine Dative: der → dem. gehören requires the Dative, so 'dem Mann'."
+        }
+      ]
+    },
+    {
+      "order": 3,
+      "title": "Dative Prepositions & Verbs",
+      "subtitle": "mit, aus, zu, bei… always trigger the Dative. Learn the crew.",
+      "type": "grammar",
+      "estimatedMinutes": 12,
+      "xpReward": 100,
+      "isPremium": true,
+      "hook": "Some prepositions are Dative magnets — whenever you use them, the noun after them MUST go Dative, no exceptions. Germans even chant them: 'aus, bei, mit, nach, seit, von, zu'. Learn that little rhythm and half your Dative decisions are automatic.",
+      "explain": "These common prepositions ALWAYS take the Dative: aus (from/out of), bei (at/near), mit (with), nach (after/to), seit (since), von (from/of), zu (to). A memory chant is 'aus-bei-mit-nach-seit-von-zu'. Also, a set of verbs always take a Dative object even without a preposition: helfen (help), danken (thank), gehören (belong to), gefallen (to please/like), antworten (answer). With these, the person is always in the Dative: 'Das gefällt mir' (I like that — literally 'that pleases to me').",
+      "examples": [
+        {
+          "german": "Ich fahre mit dem Bus.",
+          "english": "I go by bus.",
+          "breakdown": [
+            { "word": "Ich fahre", "role": "I go/drive", "color": "#3b82f6" },
+            { "word": "mit", "role": "Dative preposition", "color": "#a855f7" },
+            { "word": "dem Bus", "role": "Dative — der Bus → dem Bus", "color": "#14b8a6" }
+          ]
+        },
+        {
+          "german": "Sie kommt aus der Türkei.",
+          "english": "She comes from Turkey.",
+          "breakdown": [
+            { "word": "Sie kommt", "role": "she comes", "color": "#3b82f6" },
+            { "word": "aus", "role": "Dative preposition", "color": "#a855f7" },
+            { "word": "der Türkei", "role": "Dative feminine", "color": "#14b8a6" }
+          ]
+        },
+        {
+          "german": "Das gefällt mir.",
+          "english": "I like that. (lit. that pleases to me)",
+          "breakdown": [
+            { "word": "Das", "role": "subject: that", "color": "#3b82f6" },
+            { "word": "gefällt", "role": "gefallen + Dative", "color": "#ffffff" },
+            { "word": "mir", "role": "Dative pronoun: to me", "color": "#14b8a6" }
+          ]
+        }
+      ],
+      "vocabulary": [
+        {
+          "german": "mit",
+          "english": "with / by",
+          "exampleSentence": "Ich komme mit dem Zug.",
+          "exampleTranslation": "I'm coming by train.",
+          "memoryHook": "Dative preposition. Also used for transport: mit dem Bus/Auto/Zug."
+        },
+        {
+          "german": "aus",
+          "english": "from / out of",
+          "exampleSentence": "Ich komme aus Deutschland.",
+          "exampleTranslation": "I come from Germany.",
+          "memoryHook": "Dative preposition. Origin: 'aus' + country/place."
+        },
+        {
+          "german": "zu",
+          "english": "to (a person/place)",
+          "exampleSentence": "Ich gehe zu dem Arzt.",
+          "exampleTranslation": "I go to the doctor.",
+          "memoryHook": "Dative preposition. Often contracts: zu dem → zum, zu der → zur."
+        },
+        {
+          "german": "gefallen",
+          "english": "to please / to like",
+          "exampleSentence": "Berlin gefällt mir.",
+          "exampleTranslation": "I like Berlin.",
+          "memoryHook": "Flipped logic: the thing is the subject, the person is Dative. 'X gefällt mir' = I like X."
+        },
+        {
+          "german": "antworten",
+          "english": "to answer",
+          "exampleSentence": "Antworte mir bitte.",
+          "exampleTranslation": "Please answer me.",
+          "memoryHook": "antworten + Dative person: you answer TO someone (antworte mir)."
+        }
+      ],
+      "exercises": [
+        {
+          "type": "multiple_choice",
+          "order": 1,
+          "prompt": "Which case do 'mit, aus, zu, bei, von' always trigger?",
+          "options": ["Nominative", "Accusative", "Dative", "Genitive"],
+          "correctAnswer": "Dative",
+          "explanation": "These are Dative prepositions — the noun after them is always Dative. The chant 'aus-bei-mit-nach-seit-von-zu' captures the core group."
+        },
+        {
+          "type": "fill_blank",
+          "order": 2,
+          "prompt": "Complete: 'Ich fahre mit ___ Bus.' (I go by bus.) — der Bus is masculine",
+          "correctAnswer": "dem",
+          "hint": "mit takes Dative; masculine Dative article.",
+          "explanation": "'mit' forces the Dative, and masculine Dative is 'dem': mit dem Bus."
+        },
+        {
+          "type": "multiple_choice",
+          "order": 3,
+          "prompt": "How do you say 'I like Berlin' using gefallen?",
+          "options": ["Ich gefalle Berlin.", "Berlin gefällt mir.", "Ich mag mir Berlin.", "Berlin gefällt ich."],
+          "correctAnswer": "Berlin gefällt mir.",
+          "explanation": "With gefallen, the liked thing is the subject and the person is Dative: 'Berlin gefällt mir' (literally: Berlin pleases to me)."
+        }
+      ]
+    }
+  ]
+}

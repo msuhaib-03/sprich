@@ -35,13 +35,13 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center px-4">
+    <div className="min-h-screen bg-[var(--bg)] flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
 
         {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/" className="text-2xl font-black gold-text">Sprich</Link>
-          <p className="text-[#555] text-sm mt-1">Start your German journey</p>
+          <p className="text-[var(--faint)] text-sm mt-1">Start your German journey</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -83,9 +83,9 @@ export default function SignupPage() {
           </Button>
         </form>
 
-        <p className="text-center text-[#555] text-sm mt-6">
+        <p className="text-center text-[var(--faint)] text-sm mt-6">
           Already have an account?{' '}
-          <Link href="/login" className="text-[#d4a843] hover:text-[#f0c96a]">Log in</Link>
+          <Link href="/login" className="text-[var(--gold)] hover:text-[var(--gold-light)]">Log in</Link>
         </p>
       </div>
     </div>

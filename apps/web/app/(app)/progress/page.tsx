@@ -57,7 +57,7 @@ export default function ProgressPage() {
   if (!summary) {
     return (
       <div className="max-w-3xl mx-auto px-6 py-10">
-        <p className="text-[#888]">Could not load your progress. Please try again.</p>
+        <p className="text-[var(--muted)]">Could not load your progress. Please try again.</p>
       </div>
     )
   }
@@ -69,9 +69,9 @@ export default function ProgressPage() {
   return (
     <div className="max-w-3xl mx-auto px-6 py-10">
       <div className="mb-8">
-        <p className="text-[#555] text-sm mb-1">Progress</p>
+        <p className="text-[var(--faint)] text-sm mb-1">Progress</p>
         <h1 className="text-3xl font-black">Your journey so far</h1>
-        <p className="text-[#888] mt-2">Real progress you can feel — not just streaks.</p>
+        <p className="text-[var(--muted)] mt-2">Real progress you can feel — not just streaks.</p>
       </div>
 
       {/* Headline stats */}
@@ -84,68 +84,68 @@ export default function ProgressPage() {
         ].map((s) => (
           <div
             key={s.label}
-            className={`p-5 rounded-2xl border ${s.accent ? 'border-[#d4a843]/30 bg-[#d4a843]/5' : 'border-white/5 bg-[#111]'}`}
+            className={`p-5 rounded-2xl border ${s.accent ? 'border-[#d4a843]/30 bg-[#d4a843]/5' : 'border-[var(--border)] bg-[var(--surface)]'}`}
           >
-            <p className="text-[#555] text-xs mb-2">{s.label}</p>
-            <p className={`text-2xl font-black ${s.accent ? 'gold-text' : 'text-white'}`}>{s.value}</p>
-            <p className="text-[#444] text-xs mt-1">{s.sub}</p>
+            <p className="text-[var(--faint)] text-xs mb-2">{s.label}</p>
+            <p className={`text-2xl font-black ${s.accent ? 'gold-text' : 'text-[var(--text)]'}`}>{s.value}</p>
+            <p className="text-[var(--faint-2)] text-xs mt-1">{s.sub}</p>
           </div>
         ))}
       </div>
 
       {/* Level completion */}
-      <div className="rounded-2xl border border-white/8 bg-[#111] p-6 mb-6">
+      <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 mb-6">
         <div className="flex items-center justify-between mb-3">
-          <p className="text-[#555] text-xs uppercase tracking-wider font-medium">
+          <p className="text-[var(--faint)] text-xs uppercase tracking-wider font-medium">
             Level {summary.level} completion
           </p>
           <p className="text-sm font-bold gold-text">{summary.completionPct}%</p>
         </div>
-        <div className="h-3 rounded-full bg-[#1a1a1a] overflow-hidden">
+        <div className="h-3 rounded-full bg-[var(--track)] overflow-hidden">
           <div
             className="h-full gold-gradient transition-all duration-700"
             style={{ width: `${summary.completionPct}%` }}
           />
         </div>
-        <p className="text-[#555] text-xs mt-2">
+        <p className="text-[var(--faint)] text-xs mt-2">
           {summary.completedAtLevel} of {summary.totalLessonsAtLevel} lessons in {summary.level}
         </p>
       </div>
 
       {/* Weekly activity */}
-      <div className="rounded-2xl border border-white/8 bg-[#111] p-6 mb-6">
-        <p className="text-[#555] text-xs uppercase tracking-wider mb-5 font-medium">Last 7 days</p>
+      <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 mb-6">
+        <p className="text-[var(--faint)] text-xs uppercase tracking-wider mb-5 font-medium">Last 7 days</p>
         <div className="flex items-end justify-between gap-2 h-32">
           {summary.weeklyActivity.map((d, i) => (
             <div key={i} className="flex-1 flex flex-col items-center justify-end gap-2 h-full">
               <div className="w-full flex items-end justify-center h-full">
                 <div
-                  className={`w-full rounded-t-md transition-all duration-500 ${d.count > 0 ? 'gold-gradient' : 'bg-[#1a1a1a]'}`}
+                  className={`w-full rounded-t-md transition-all duration-500 ${d.count > 0 ? 'gold-gradient' : 'bg-[var(--track)]'}`}
                   style={{ height: `${(d.count / maxCount) * 100}%`, minHeight: d.count > 0 ? '8px' : '4px' }}
                   title={`${d.count} lesson${d.count === 1 ? '' : 's'}`}
                 />
               </div>
-              <span className="text-[#555] text-xs">{d.label}</span>
+              <span className="text-[var(--faint)] text-xs">{d.label}</span>
             </div>
           ))}
         </div>
       </div>
 
       {/* Vocabulary mastery */}
-      <div className="rounded-2xl border border-white/8 bg-[#111] p-6 mb-6">
+      <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 mb-6">
         <div className="flex items-center justify-between mb-3">
-          <p className="text-[#555] text-xs uppercase tracking-wider font-medium">Vocabulary mastery</p>
+          <p className="text-[var(--faint)] text-xs uppercase tracking-wider font-medium">Vocabulary mastery</p>
           <p className="text-sm font-bold text-emerald-400">
             {summary.vocab.mastered}/{summary.vocab.total}
           </p>
         </div>
-        <div className="h-3 rounded-full bg-[#1a1a1a] overflow-hidden">
+        <div className="h-3 rounded-full bg-[var(--track)] overflow-hidden">
           <div
             className="h-full bg-emerald-500 transition-all duration-700"
             style={{ width: `${masteryPct}%` }}
           />
         </div>
-        <p className="text-[#555] text-xs mt-2">
+        <p className="text-[var(--faint)] text-xs mt-2">
           {summary.vocab.total === 0
             ? 'Complete lessons to start building your vocabulary deck.'
             : `${summary.vocab.mastered} words locked into long-term memory`}
@@ -154,11 +154,11 @@ export default function ProgressPage() {
 
       {/* AI insight */}
       <div className="rounded-2xl border border-[#d4a843]/20 bg-gradient-to-br from-[#d4a843]/8 to-transparent p-6 mb-6">
-        <p className="text-[#d4a843] text-xs uppercase tracking-wider mb-3 font-medium">🤖 Smart coach insight</p>
+        <p className="text-[var(--gold)] text-xs uppercase tracking-wider mb-3 font-medium">🤖 Smart coach insight</p>
         {insight ? (
-          <p className="text-white leading-relaxed">{insight}</p>
+          <p className="text-[var(--text)] leading-relaxed">{insight}</p>
         ) : (
-          <p className="text-[#888] text-sm mb-4">
+          <p className="text-[var(--muted)] text-sm mb-4">
             Get a personalized read on your week from your AI coach.
           </p>
         )}
@@ -176,8 +176,8 @@ export default function ProgressPage() {
 
       {/* Recent lessons */}
       {summary.recent.length > 0 && (
-        <div className="rounded-2xl border border-white/8 bg-[#111] p-6">
-          <p className="text-[#555] text-xs uppercase tracking-wider mb-4 font-medium">Recently completed</p>
+        <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6">
+          <p className="text-[var(--faint)] text-xs uppercase tracking-wider mb-4 font-medium">Recently completed</p>
           <div className="space-y-3">
             {summary.recent.map((r, i) => (
               <div key={i} className="flex items-center justify-between">

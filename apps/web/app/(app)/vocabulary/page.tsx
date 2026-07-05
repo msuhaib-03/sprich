@@ -51,7 +51,7 @@ function articleColor(article: string | null) {
     case 'das':
       return 'text-emerald-400'
     default:
-      return 'text-[#888]'
+      return 'text-[var(--muted)]'
   }
 }
 
@@ -80,6 +80,10 @@ export default function VocabularyPage() {
   const [search, setSearch] = useState('')
   const [dict, setDict] = useState<DictEntry[]>([])
   const [dictLoading, setDictLoading] = useState(false)
+
+  // "Added to deck" tracking (by a german|english key) + WOTD flag
+  const [added, setAdded] = useState<Set<string>>(new Set())
+  const [wotdAdded, setWotdAdded] = useState(false)
 
   const loadReview = useCallback(() => {
     setReviewLoading(true)
@@ -130,14 +134,46 @@ export default function VocabularyPage() {
     }
   }
 
+  async function addWotdToDeck() {
+    if (!wotd || wotdAdded) return
+    setWotdAdded(true)
+    setStats((s) => (s ? { ...s, total: s.total + 1 } : s))
+    try {
+      await api.post('/vocabulary/deck/word', { vocabId: wotd.id })
+    } catch {
+      setWotdAdded(false)
+    }
+  }
+
+  async function addDictToDeck(w: DictEntry) {
+    const key = `${w.german}|${w.english}`
+    if (added.has(key)) return
+    setAdded((prev) => new Set(prev).add(key))
+    setStats((s) => (s ? { ...s, total: s.total + 1 } : s))
+    try {
+      await api.post('/vocabulary/deck/dictionary', {
+        german: w.german,
+        english: w.english,
+        gender: w.gender ?? undefined,
+        example: w.example ?? undefined,
+      })
+    } catch {
+      setAdded((prev) => {
+        const next = new Set(prev)
+        next.delete(key)
+        return next
+      })
+    }
+  }
+
   const current = queue[0]
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-10">
       <div className="mb-8">
-        <p className="text-[#555] text-sm mb-1">Vocabulary</p>
+        <p className="text-[var(--faint)] text-sm mb-1">Vocabulary</p>
         <h1 className="text-3xl font-black">Your words</h1>
-        <p className="text-[#888] mt-2">Spaced repetition locks words into long-term memory.</p>
+        <p className="text-[var(--muted)] mt-2">Spaced repetition locks words into long-term memory.</p>
       </div>
 
       {/* Stats */}
@@ -149,10 +185,10 @@ export default function VocabularyPage() {
         ].map((s) => (
           <div
             key={s.label}
-            className={`p-4 rounded-2xl border ${s.accent ? 'border-[#d4a843]/30 bg-[#d4a843]/5' : 'border-white/5 bg-[#111]'}`}
+            className={`p-4 rounded-2xl border ${s.accent ? 'border-[#d4a843]/30 bg-[#d4a843]/5' : 'border-[var(--border)] bg-[var(--surface)]'}`}
           >
-            <p className="text-[#555] text-xs mb-1">{s.label}</p>
-            <p className={`text-2xl font-black ${s.accent ? 'gold-text' : 'text-white'}`}>{s.value}</p>
+            <p className="text-[var(--faint)] text-xs mb-1">{s.label}</p>
+            <p className={`text-2xl font-black ${s.accent ? 'gold-text' : 'text-[var(--text)]'}`}>{s.value}</p>
           </div>
         ))}
       </div>
@@ -160,26 +196,37 @@ export default function VocabularyPage() {
       {/* Word of the day */}
       {wotd && (
         <div className="rounded-2xl border border-[#d4a843]/20 bg-gradient-to-br from-[#d4a843]/8 to-transparent p-5 mb-8">
-          <p className="text-[#d4a843] text-xs uppercase tracking-wider mb-2 font-medium">✨ Word of the day</p>
+          <p className="text-[var(--gold)] text-xs uppercase tracking-wider mb-2 font-medium">✨ Word of the day</p>
           <p className="text-2xl font-black">
             {wotd.article && <span className={articleColor(wotd.article)}>{wotd.article} </span>}
             {wotd.german}
           </p>
-          <p className="text-[#888] text-sm mt-1">{wotd.english}</p>
-          <p className="text-[#666] text-sm mt-3 italic">
+          <p className="text-[var(--muted)] text-sm mt-1">{wotd.english}</p>
+          <p className="text-[var(--faint)] text-sm mt-3 italic">
             &ldquo;{wotd.exampleSentence}&rdquo; — {wotd.exampleTranslation}
           </p>
+          <button
+            onClick={addWotdToDeck}
+            disabled={wotdAdded}
+            className={`mt-4 px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
+              wotdAdded
+                ? 'text-emerald-400 cursor-default'
+                : 'border border-[#d4a843]/40 text-[var(--gold)] hover:bg-[#d4a843]/10'
+            }`}
+          >
+            {wotdAdded ? '✓ Added to your deck' : '+ Add to my review deck'}
+          </button>
         </div>
       )}
 
       {/* Tabs */}
-      <div className="flex gap-2 mb-6 border-b border-white/5">
+      <div className="flex gap-2 mb-6 border-b border-[var(--border)]">
         {(['review', 'dictionary'] as const).map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
             className={`px-4 py-2.5 text-sm font-semibold capitalize border-b-2 -mb-px transition-colors ${
-              tab === t ? 'border-[#d4a843] text-[#d4a843]' : 'border-transparent text-[#666] hover:text-white'
+              tab === t ? 'border-[#d4a843] text-[var(--gold)]' : 'border-transparent text-[var(--faint)] hover:text-[var(--text)]'
             }`}
           >
             {t === 'review' ? `Review${stats?.due ? ` · ${stats.due}` : ''}` : 'Dictionary'}
@@ -195,12 +242,12 @@ export default function VocabularyPage() {
               <span className="w-6 h-6 border-2 border-[#d4a843] border-t-transparent rounded-full animate-spin" />
             </div>
           ) : !current ? (
-            <div className="text-center py-16 rounded-2xl border border-white/5 bg-[#111]">
+            <div className="text-center py-16 rounded-2xl border border-[var(--border)] bg-[var(--surface)]">
               <div className="text-4xl mb-3">🎉</div>
               <p className="font-bold text-lg">
                 {reviewedCount > 0 ? 'All caught up!' : 'Nothing due right now'}
               </p>
-              <p className="text-[#666] text-sm mt-2 max-w-xs mx-auto">
+              <p className="text-[var(--faint)] text-sm mt-2 max-w-xs mx-auto">
                 {stats?.total
                   ? `You reviewed ${reviewedCount} card${reviewedCount === 1 ? '' : 's'}. Come back tomorrow for more.`
                   : 'Complete a lesson to start building your review deck.'}
@@ -211,9 +258,9 @@ export default function VocabularyPage() {
               {/* Flashcard */}
               <button
                 onClick={() => setRevealed(true)}
-                className="w-full text-left rounded-2xl border border-white/10 bg-[#111] p-8 min-h-[260px] flex flex-col justify-center transition-colors hover:border-white/20"
+                className="w-full text-left rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-8 min-h-[260px] flex flex-col justify-center transition-colors hover:border-[var(--border-strong)]"
               >
-                <p className="text-[#555] text-xs uppercase tracking-wider mb-4">
+                <p className="text-[var(--faint)] text-xs uppercase tracking-wider mb-4">
                   {current.vocab.level} · {current.vocab.grammaticalCase ?? 'vocabulary'}
                 </p>
                 <p className="text-4xl font-black mb-2">
@@ -223,22 +270,22 @@ export default function VocabularyPage() {
                   {current.vocab.german}
                 </p>
                 {current.vocab.plural && (
-                  <p className="text-[#555] text-sm">plural: die {current.vocab.plural}</p>
+                  <p className="text-[var(--faint)] text-sm">plural: die {current.vocab.plural}</p>
                 )}
 
                 {revealed ? (
-                  <div className="mt-6 pt-6 border-t border-white/8">
-                    <p className="text-2xl font-bold text-white">{current.vocab.english}</p>
-                    <p className="text-[#888] text-sm mt-3 italic">
+                  <div className="mt-6 pt-6 border-t border-[var(--border)]">
+                    <p className="text-2xl font-bold text-[var(--text)]">{current.vocab.english}</p>
+                    <p className="text-[var(--muted)] text-sm mt-3 italic">
                       &ldquo;{current.vocab.exampleSentence}&rdquo;
                     </p>
-                    <p className="text-[#555] text-sm">{current.vocab.exampleTranslation}</p>
+                    <p className="text-[var(--faint)] text-sm">{current.vocab.exampleTranslation}</p>
                     {current.vocab.memoryHook && (
-                      <p className="text-[#d4a843] text-sm mt-3">💡 {current.vocab.memoryHook}</p>
+                      <p className="text-[var(--gold)] text-sm mt-3">💡 {current.vocab.memoryHook}</p>
                     )}
                   </div>
                 ) : (
-                  <p className="text-[#444] text-sm mt-6">Tap to reveal the meaning</p>
+                  <p className="text-[var(--faint-2)] text-sm mt-6">Tap to reveal the meaning</p>
                 )}
               </button>
 
@@ -249,16 +296,16 @@ export default function VocabularyPage() {
                     <button
                       key={g.label}
                       onClick={() => grade(g.quality)}
-                      className={`py-3 rounded-xl border bg-[#111] font-semibold text-sm transition-colors ${g.cls}`}
+                      className={`py-3 rounded-xl border bg-[var(--surface)] font-semibold text-sm transition-colors ${g.cls}`}
                     >
                       {g.label}
-                      <span className="block text-[10px] text-[#555] font-normal mt-0.5">{g.sub}</span>
+                      <span className="block text-[10px] text-[var(--faint)] font-normal mt-0.5">{g.sub}</span>
                     </button>
                   ))}
                 </div>
               )}
 
-              <p className="text-center text-[#444] text-xs mt-4">
+              <p className="text-center text-[var(--faint-2)] text-xs mt-4">
                 {queue.length} card{queue.length === 1 ? '' : 's'} left in this session
               </p>
             </div>
@@ -273,7 +320,7 @@ export default function VocabularyPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search German or English…"
-            className="w-full px-4 py-3 rounded-xl bg-[#111] border border-white/10 text-white placeholder:text-[#555] focus:border-[#d4a843]/40 focus:outline-none mb-4"
+            className="w-full px-4 py-3 rounded-xl bg-[var(--surface)] border border-[var(--border)] text-[var(--text)] placeholder:text-[var(--faint)] focus:border-[#d4a843]/40 focus:outline-none mb-4"
           />
 
           {dictLoading ? (
@@ -281,7 +328,7 @@ export default function VocabularyPage() {
               <span className="w-5 h-5 border-2 border-[#d4a843] border-t-transparent rounded-full animate-spin" />
             </div>
           ) : dict.length === 0 ? (
-            <p className="text-[#555] text-center py-10">
+            <p className="text-[var(--faint)] text-center py-10">
               {search.trim() ? 'No words found.' : 'Type to search the dictionary.'}
             </p>
           ) : (
@@ -289,37 +336,50 @@ export default function VocabularyPage() {
               <div className="space-y-2">
                 {dict.map((w, i) => {
                   const article = genderArticle(w.gender)
+                  const isAdded = added.has(`${w.german}|${w.english}`)
                   return (
                     <div
                       key={`${w.german}-${i}`}
-                      className="flex items-start gap-4 p-4 rounded-xl border border-white/8 bg-[#111]"
+                      className="flex items-start gap-3 p-4 rounded-xl border border-[var(--border)] bg-[var(--surface)]"
                     >
                       <div className="flex-1 min-w-0">
                         <p className="font-bold">
                           {article && <span className={articleColor(article)}>{article} </span>}
                           {w.german}
-                          <span className="text-[#888] font-normal"> — {w.english}</span>
+                          <span className="text-[var(--muted)] font-normal"> — {w.english}</span>
                         </p>
                         {w.example && (
-                          <p className="text-[#555] text-sm mt-1 italic truncate">
+                          <p className="text-[var(--faint)] text-sm mt-1 italic truncate">
                             &ldquo;{w.example}&rdquo;
                           </p>
                         )}
                       </div>
                       {w.pos && (
-                        <span className="shrink-0 text-[#444] text-xs italic mt-1">{w.pos}</span>
+                        <span className="shrink-0 text-[var(--faint-2)] text-xs italic mt-1">{w.pos}</span>
                       )}
+                      <button
+                        onClick={() => addDictToDeck(w)}
+                        disabled={isAdded}
+                        title={isAdded ? 'In your deck' : 'Add to review deck'}
+                        className={`shrink-0 w-8 h-8 rounded-lg text-sm font-bold transition-colors ${
+                          isAdded
+                            ? 'text-emerald-400 cursor-default'
+                            : 'border border-[#d4a843]/40 text-[var(--gold)] hover:bg-[#d4a843]/10'
+                        }`}
+                      >
+                        {isAdded ? '✓' : '+'}
+                      </button>
                     </div>
                   )
                 })}
               </div>
-              <p className="text-[#444] text-xs text-center mt-6">
+              <p className="text-[var(--faint-2)] text-xs text-center mt-6">
                 Dictionary data from{' '}
                 <a
                   href="https://freedict.org/"
                   target="_blank"
                   rel="noreferrer"
-                  className="underline hover:text-[#888]"
+                  className="underline hover:text-[var(--muted)]"
                 >
                   FreeDict
                 </a>{' '}

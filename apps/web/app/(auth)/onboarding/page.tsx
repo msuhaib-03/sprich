@@ -143,10 +143,10 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] flex flex-col">
+    <div className="min-h-screen bg-[var(--bg)] flex flex-col">
 
       {/* Progress bar */}
-      <div className="h-1 bg-[#1a1a1a]">
+      <div className="h-1 bg-[var(--track)]">
         <div
           className="h-full gold-gradient transition-all duration-500"
           style={{ width: `${progress()}%` }}
@@ -159,20 +159,20 @@ export default function OnboardingPage() {
           {/* ── Step 0: Who are you ─────────────────────────────────── */}
           {step === 0 && (
             <div>
-              <p className="text-[#555] text-sm mb-2">Step 1 of 4</p>
+              <p className="text-[var(--faint)] text-sm mb-2">Step 1 of 4</p>
               <h1 className="text-2xl font-bold mb-2">Who are you?</h1>
-              <p className="text-[#888] mb-8">We&apos;ll adapt everything to fit your life.</p>
+              <p className="text-[var(--muted)] mb-8">We&apos;ll adapt everything to fit your life.</p>
               <div className="grid gap-3">
                 {PROFILES.map((p) => (
                   <button
                     key={p.value}
                     onClick={() => { setProfile(p.value); setStep(1) }}
-                    className="flex items-center gap-4 p-4 rounded-xl border border-white/8 bg-[#111] hover:border-[#d4a843]/40 hover:bg-[#d4a843]/5 transition-all text-left group"
+                    className="flex items-center gap-4 p-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] hover:border-[#d4a843]/40 hover:bg-[#d4a843]/5 transition-all text-left group"
                   >
                     <span className="text-2xl">{p.icon}</span>
                     <div>
-                      <p className="font-semibold group-hover:text-white">{p.label}</p>
-                      <p className="text-[#555] text-sm">{p.sub}</p>
+                      <p className="font-semibold group-hover:text-[var(--text)]">{p.label}</p>
+                      <p className="text-[var(--faint)] text-sm">{p.sub}</p>
                     </div>
                   </button>
                 ))}
@@ -183,20 +183,20 @@ export default function OnboardingPage() {
           {/* ── Step 1: What's your goal ─────────────────────────────── */}
           {step === 1 && (
             <div>
-              <p className="text-[#555] text-sm mb-2">Step 2 of 4</p>
+              <p className="text-[var(--faint)] text-sm mb-2">Step 2 of 4</p>
               <h1 className="text-2xl font-bold mb-2">What&apos;s your goal?</h1>
-              <p className="text-[#888] mb-8">Your lessons will focus on vocabulary that actually matters to you.</p>
+              <p className="text-[var(--muted)] mb-8">Your lessons will focus on vocabulary that actually matters to you.</p>
               <div className="grid gap-3">
                 {GOALS.map((g) => (
                   <button
                     key={g.value}
                     onClick={() => { setGoal(g.value); setStep(2) }}
-                    className="flex items-center gap-4 p-4 rounded-xl border border-white/8 bg-[#111] hover:border-[#d4a843]/40 hover:bg-[#d4a843]/5 transition-all text-left group"
+                    className="flex items-center gap-4 p-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] hover:border-[#d4a843]/40 hover:bg-[#d4a843]/5 transition-all text-left group"
                   >
                     <span className="text-2xl">{g.icon}</span>
                     <div>
-                      <p className="font-semibold group-hover:text-white">{g.label}</p>
-                      <p className="text-[#555] text-sm">{g.sub}</p>
+                      <p className="font-semibold group-hover:text-[var(--text)]">{g.label}</p>
+                      <p className="text-[var(--faint)] text-sm">{g.sub}</p>
                     </div>
                   </button>
                 ))}
@@ -207,20 +207,20 @@ export default function OnboardingPage() {
           {/* ── Step 2: Daily time ───────────────────────────────────── */}
           {step === 2 && (
             <div>
-              <p className="text-[#555] text-sm mb-2">Step 3 of 4</p>
+              <p className="text-[var(--faint)] text-sm mb-2">Step 3 of 4</p>
               <h1 className="text-2xl font-bold mb-2">How much time daily?</h1>
-              <p className="text-[#888] mb-8">Be honest — consistency beats intensity every time.</p>
+              <p className="text-[var(--muted)] mb-8">Be honest — consistency beats intensity every time.</p>
               <div className="grid gap-3">
                 {TIMES.map((t) => (
                   <button
                     key={t.value}
                     onClick={() => { setDailyMinutes(t.value); setStep(3) }}
-                    className="flex items-center gap-4 p-4 rounded-xl border border-white/8 bg-[#111] hover:border-[#d4a843]/40 hover:bg-[#d4a843]/5 transition-all text-left group relative"
+                    className="flex items-center gap-4 p-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] hover:border-[#d4a843]/40 hover:bg-[#d4a843]/5 transition-all text-left group relative"
                   >
                     <span className="text-2xl">{t.icon}</span>
                     <div>
-                      <p className="font-semibold group-hover:text-white">{t.label}</p>
-                      <p className="text-[#555] text-sm">{t.sub}</p>
+                      <p className="font-semibold group-hover:text-[var(--text)]">{t.label}</p>
+                      <p className="text-[var(--faint)] text-sm">{t.sub}</p>
                     </div>
                     {t.recommended && (
                       <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs px-2 py-0.5 rounded-full gold-gradient text-black font-semibold">
@@ -236,18 +236,18 @@ export default function OnboardingPage() {
           {/* ── Step 3: Placement ────────────────────────────────────── */}
           {step === 3 && (
             <div>
-              <p className="text-[#555] text-sm mb-2">
+              <p className="text-[var(--faint)] text-sm mb-2">
                 Quick check · {placementIndex + 1} of {PLACEMENT.length}
               </p>
               <h1 className="text-2xl font-bold mb-2">Let&apos;s find your level</h1>
-              <p className="text-[#888] mb-8">
+              <p className="text-[var(--muted)] mb-8">
                 Not a test — just helping us place you correctly. No wrong answers here.
               </p>
 
-              <div className="rounded-xl border border-white/10 bg-[#111] p-6 mb-6">
+              <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 mb-6">
                 <p className="font-semibold text-lg mb-2">{PLACEMENT[placementIndex].q}</p>
                 {PLACEMENT[placementIndex].context && (
-                  <p className="text-[#d4a843] font-mono text-base mb-4">
+                  <p className="text-[var(--gold)] font-mono text-base mb-4">
                     {PLACEMENT[placementIndex].context}
                   </p>
                 )}
@@ -258,7 +258,7 @@ export default function OnboardingPage() {
                   <button
                     key={i}
                     onClick={() => handlePlacementAnswer(opt.points)}
-                    className="p-4 rounded-xl border border-white/8 bg-[#111] hover:border-[#d4a843]/40 hover:bg-[#d4a843]/5 transition-all text-left font-medium"
+                    className="p-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] hover:border-[#d4a843]/40 hover:bg-[#d4a843]/5 transition-all text-left font-medium"
                   >
                     {opt.label}
                   </button>
@@ -277,13 +277,13 @@ export default function OnboardingPage() {
               <h1 className="text-3xl font-black mb-2">
                 You&apos;re at <span className="gold-text">{detectedLevel}</span>
               </h1>
-              <p className="text-[#888] mb-8 max-w-sm mx-auto">
+              <p className="text-[var(--muted)] mb-8 max-w-sm mx-auto">
                 Based on your answers. You can adjust this anytime — we just want to start you in the right place.
               </p>
 
               {/* Roadmap */}
-              <div className="rounded-xl border border-white/10 bg-[#111] p-6 mb-6 text-left">
-                <p className="text-[#555] text-xs uppercase tracking-wider mb-4 font-medium">Your personal roadmap</p>
+              <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 mb-6 text-left">
+                <p className="text-[var(--faint)] text-xs uppercase tracking-wider mb-4 font-medium">Your personal roadmap</p>
                 <div className="flex items-center gap-2 flex-wrap">
                   {['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].map((l, i) => {
                     const levels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
@@ -297,18 +297,18 @@ export default function OnboardingPage() {
                             ? 'gold-gradient text-black border-transparent'
                             : isUnlocked
                             ? 'border-green-500/30 text-green-400 bg-green-500/5'
-                            : 'border-white/8 text-[#444]'
+                            : 'border-[var(--border)] text-[var(--faint-2)]'
                         }`}>
                           {l}
                         </span>
-                        {i < 5 && <span className="text-[#333]">→</span>}
+                        {i < 5 && <span className="text-[var(--faint-2)]">→</span>}
                       </div>
                     )
                   })}
                 </div>
-                <p className="text-[#555] text-xs mt-4">
-                  Daily goal: <span className="text-white">{dailyMinutes} min</span> ·
-                  Starting: <span className="text-white">{detectedLevel}</span>
+                <p className="text-[var(--faint)] text-xs mt-4">
+                  Daily goal: <span className="text-[var(--text)]">{dailyMinutes} min</span> ·
+                  Starting: <span className="text-[var(--text)]">{detectedLevel}</span>
                 </p>
               </div>
 

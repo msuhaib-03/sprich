@@ -1,0 +1,222 @@
+{
+  "level": "A2",
+  "chapter": 3,
+  "title": "The Perfect Tense — Talking About the Past",
+  "description": "This is how Germans talk about the past in everyday speech. It's built from two pieces: a helper verb (haben or sein) plus a past participle parked at the end of the sentence.",
+  "lessons": [
+    {
+      "order": 1,
+      "title": "How the Perfect Tense Works",
+      "subtitle": "haben + past participle — the everyday past.",
+      "type": "grammar",
+      "estimatedMinutes": 12,
+      "xpReward": 100,
+      "isPremium": true,
+      "hook": "In conversation, Germans rarely use the simple past for most verbs — they use the Perfect tense. 'I have played', 'I have eaten', 'I have worked'. It sounds like English present perfect, but Germans use it to mean plain past too. Master its two-piece structure and you can suddenly talk about yesterday.",
+      "explain": "The Perfect tense = a conjugated helper verb (usually haben) + a past participle at the END of the sentence. For most verbs the participle is formed ge- + stem + -t (machen → gemacht, spielen → gespielt). Example: 'Ich habe Fußball gespielt' (I played football). The helper 'haben' sits in position 2 and carries the conjugation; the participle 'gespielt' waits at the very end — the same 'action-verb-goes-last' rhythm you met with modals.",
+      "examples": [
+        {
+          "german": "Ich habe Fußball gespielt.",
+          "english": "I played football.",
+          "breakdown": [
+            { "word": "Ich", "role": "subject", "color": "#3b82f6" },
+            { "word": "habe", "role": "helper haben (position 2)", "color": "#a855f7" },
+            { "word": "Fußball", "role": "object", "color": "#f97316" },
+            { "word": "gespielt", "role": "past participle at the END", "color": "#ffffff" }
+          ]
+        },
+        {
+          "german": "Du hast das gut gemacht.",
+          "english": "You did that well.",
+          "breakdown": [
+            { "word": "Du", "role": "subject", "color": "#3b82f6" },
+            { "word": "hast", "role": "haben → du hast", "color": "#a855f7" },
+            { "word": "das gut", "role": "that well", "color": "#ffffff" },
+            { "word": "gemacht", "role": "participle of machen", "color": "#ffffff" }
+          ]
+        },
+        {
+          "german": "Wir haben viel gelernt.",
+          "english": "We learned a lot.",
+          "breakdown": [
+            { "word": "Wir", "role": "subject", "color": "#3b82f6" },
+            { "word": "haben", "role": "helper haben (plural)", "color": "#a855f7" },
+            { "word": "viel", "role": "a lot", "color": "#ffffff" },
+            { "word": "gelernt", "role": "participle of lernen", "color": "#ffffff" }
+          ]
+        }
+      ],
+      "vocabulary": [
+        {
+          "german": "gemacht",
+          "english": "done / made (participle)",
+          "exampleSentence": "Ich habe die Arbeit gemacht.",
+          "exampleTranslation": "I did the work.",
+          "memoryHook": "machen → gemacht (ge + mach + t). The model regular participle."
+        },
+        {
+          "german": "gespielt",
+          "english": "played (participle)",
+          "exampleSentence": "Wir haben Karten gespielt.",
+          "exampleTranslation": "We played cards.",
+          "memoryHook": "spielen → gespielt (ge + spiel + t)."
+        },
+        {
+          "german": "gelernt",
+          "english": "learned (participle)",
+          "exampleSentence": "Ich habe Deutsch gelernt.",
+          "exampleTranslation": "I have learned German.",
+          "memoryHook": "lernen → gelernt (ge + lern + t)."
+        },
+        {
+          "german": "gearbeitet",
+          "english": "worked (participle)",
+          "exampleSentence": "Er hat gestern gearbeitet.",
+          "exampleTranslation": "He worked yesterday.",
+          "memoryHook": "arbeiten → gearbeitet (stem ends in -t, so add -et)."
+        },
+        {
+          "german": "gestern",
+          "english": "yesterday",
+          "exampleSentence": "Gestern habe ich gekocht.",
+          "exampleTranslation": "Yesterday I cooked.",
+          "memoryHook": "Time word that signals the past — pairs naturally with the Perfect."
+        }
+      ],
+      "exercises": [
+        {
+          "type": "multiple_choice",
+          "order": 1,
+          "prompt": "The Perfect tense is built from…",
+          "options": ["two nouns", "a helper verb (haben/sein) + a past participle", "a modal + an adjective", "just adding -s"],
+          "correctAnswer": "a helper verb (haben/sein) + a past participle",
+          "explanation": "Perfect = conjugated haben (or sein) in position 2, plus the past participle at the end of the sentence."
+        },
+        {
+          "type": "multiple_choice",
+          "order": 2,
+          "prompt": "What is the past participle of 'machen'?",
+          "options": ["macht", "gemachen", "gemacht", "machte"],
+          "correctAnswer": "gemacht",
+          "hint": "ge + stem + t",
+          "explanation": "Regular participles follow ge- + stem + -t: machen → gemacht. Same pattern: spielen → gespielt, lernen → gelernt."
+        },
+        {
+          "type": "fill_blank",
+          "order": 3,
+          "prompt": "Complete: 'Ich habe Fußball ___.' (I played football.) — verb: spielen",
+          "correctAnswer": "gespielt",
+          "hint": "ge + spiel + t, and it goes at the end.",
+          "explanation": "spielen → gespielt. The participle sits at the end: 'Ich habe Fußball gespielt.'"
+        }
+      ]
+    },
+    {
+      "order": 2,
+      "title": "sein as Helper + Irregular Participles",
+      "subtitle": "Movement and change use 'sein'; strong verbs end in -en.",
+      "type": "grammar",
+      "estimatedMinutes": 13,
+      "xpReward": 110,
+      "isPremium": true,
+      "hook": "Most verbs build the Perfect with haben — but a special group uses sein instead: verbs of movement (gehen, fahren, kommen) and change of state (aufstehen, werden). 'Ich bin nach Berlin gefahren' — I drove to Berlin. Knowing which helper to grab is the last piece of talking naturally about the past.",
+      "explain": "Use sein (not haben) as the helper for verbs that show movement from A to B (gehen, kommen, fahren, fliegen) or a change of state (aufstehen, einschlafen, werden). These are usually intransitive (no direct object). Example: 'Ich bin nach Hause gegangen'. Also, many common verbs are 'strong' (irregular): their participle ends in -en, often with a vowel change — gehen → gegangen, fahren → gefahren, essen → gegessen, trinken → getrunken, sehen → gesehen. These simply must be memorized, but the most useful ones are a short, high-value list.",
+      "examples": [
+        {
+          "german": "Ich bin nach Berlin gefahren.",
+          "english": "I went/drove to Berlin.",
+          "breakdown": [
+            { "word": "Ich", "role": "subject", "color": "#3b82f6" },
+            { "word": "bin", "role": "helper sein (movement!)", "color": "#a855f7" },
+            { "word": "nach Berlin", "role": "to Berlin", "color": "#ffffff" },
+            { "word": "gefahren", "role": "strong participle (fahren → gefahren)", "color": "#ffffff" }
+          ]
+        },
+        {
+          "german": "Sie ist früh aufgestanden.",
+          "english": "She got up early.",
+          "breakdown": [
+            { "word": "Sie", "role": "subject", "color": "#3b82f6" },
+            { "word": "ist", "role": "helper sein (change of state)", "color": "#a855f7" },
+            { "word": "früh", "role": "early", "color": "#ffffff" },
+            { "word": "aufgestanden", "role": "participle of aufstehen (ge inside!)", "color": "#ffffff" }
+          ]
+        },
+        {
+          "german": "Wir haben Pizza gegessen.",
+          "english": "We ate pizza.",
+          "breakdown": [
+            { "word": "Wir", "role": "subject", "color": "#3b82f6" },
+            { "word": "haben", "role": "helper haben (has an object)", "color": "#a855f7" },
+            { "word": "Pizza", "role": "object", "color": "#f97316" },
+            { "word": "gegessen", "role": "strong participle (essen → gegessen)", "color": "#ffffff" }
+          ]
+        }
+      ],
+      "vocabulary": [
+        {
+          "german": "gegangen",
+          "english": "gone / went (participle)",
+          "exampleSentence": "Ich bin nach Hause gegangen.",
+          "exampleTranslation": "I went home.",
+          "memoryHook": "gehen → gegangen. Uses SEIN (movement). Strong: ends in -en."
+        },
+        {
+          "german": "gefahren",
+          "english": "driven / gone (participle)",
+          "exampleSentence": "Er ist mit dem Auto gefahren.",
+          "exampleTranslation": "He went by car.",
+          "memoryHook": "fahren → gefahren. Movement → SEIN."
+        },
+        {
+          "german": "gegessen",
+          "english": "eaten (participle)",
+          "exampleSentence": "Hast du schon gegessen?",
+          "exampleTranslation": "Have you eaten yet?",
+          "memoryHook": "essen → gegessen. Has an object → HABEN. Irregular double-g."
+        },
+        {
+          "german": "getrunken",
+          "english": "drunk (participle)",
+          "exampleSentence": "Ich habe Wasser getrunken.",
+          "exampleTranslation": "I drank water.",
+          "memoryHook": "trinken → getrunken (i → u). Uses HABEN."
+        },
+        {
+          "german": "aufstehen",
+          "english": "to get up",
+          "exampleSentence": "Ich bin um 7 Uhr aufgestanden.",
+          "exampleTranslation": "I got up at 7.",
+          "memoryHook": "Separable + change of state → SEIN. Participle: aufgestanden (ge sits inside)."
+        }
+      ],
+      "exercises": [
+        {
+          "type": "multiple_choice",
+          "order": 1,
+          "prompt": "Which helper verb do movement verbs (gehen, fahren, kommen) use in the Perfect?",
+          "options": ["haben", "sein", "werden", "möchten"],
+          "correctAnswer": "sein",
+          "explanation": "Verbs of movement (A→B) and change of state use 'sein': 'Ich bin gefahren / gekommen / gegangen.' Most other verbs use 'haben'."
+        },
+        {
+          "type": "multiple_choice",
+          "order": 2,
+          "prompt": "Complete: 'Ich ___ nach Hause gegangen.' (I went home.)",
+          "options": ["habe", "bin", "will", "muss"],
+          "correctAnswer": "bin",
+          "hint": "gehen is movement → sein; 'ich' form of sein.",
+          "explanation": "gehen uses 'sein', and the 'ich' form of sein is 'bin': 'Ich bin nach Hause gegangen.'"
+        },
+        {
+          "type": "multiple_choice",
+          "order": 3,
+          "prompt": "Which participle is correct for 'essen' (to eat)?",
+          "options": ["geesst", "gegessen", "geessen", "isst"],
+          "correctAnswer": "gegessen",
+          "explanation": "essen is a strong verb: essen → gegessen (ends in -en, with a doubled g). It takes 'haben' because it has a direct object."
+        }
+      ]
+    }
+  ]
+}

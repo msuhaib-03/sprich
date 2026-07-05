@@ -7,6 +7,20 @@ const DAY_MS = 86_400_000
 /** A card is "mastered" once it has survived several successful reviews. */
 const MASTERED_REPETITIONS = 5
 
+/** der/die/das from a grammatical-gender string (for saved dictionary words). */
+function articleFromGender(gender?: string | null): string | null {
+  switch (gender) {
+    case 'masculine':
+      return 'der'
+    case 'feminine':
+      return 'die'
+    case 'neuter':
+      return 'das'
+    default:
+      return null
+  }
+}
+
 /** Lower rank = better match: exact German headword, then prefix, then the rest. */
 function rank(german: string, lowerTerm: string): number {
   const g = german.toLowerCase()
@@ -103,6 +117,59 @@ export class VocabularyService {
       entries.sort((a, b) => rank(a.german, lower) - rank(b.german, lower))
     }
     return entries
+  }
+
+  /** Add an existing curriculum/vocab word to the user's review deck. */
+  async addWordToDeck(userId: string, vocabId: string) {
+    await this.prisma.vocabWord.findUniqueOrThrow({ where: { id: vocabId }, select: { id: true } })
+    await this.prisma.sRSCard.upsert({
+      where: { userId_vocabId: { userId, vocabId } },
+      create: { userId, vocabId },
+      update: {},
+    })
+    return { added: true, vocabId }
+  }
+
+  /**
+   * Add a dictionary entry to the user's review deck. Finds or creates a
+   * VocabWord for it (so it can carry an SRS card), then schedules it.
+   */
+  async addDictionaryToDeck(
+    userId: string,
+    entry: { german: string; english: string; gender?: string | null; example?: string | null },
+  ) {
+    const user = await this.prisma.user.findUniqueOrThrow({
+      where: { id: userId },
+      select: { level: true },
+    })
+
+    let word = await this.prisma.vocabWord.findFirst({
+      where: { german: entry.german, english: entry.english },
+      select: { id: true },
+    })
+
+    if (!word) {
+      const gender = (entry.gender as Prisma.VocabWordCreateInput['gender']) ?? null
+      word = await this.prisma.vocabWord.create({
+        data: {
+          german: entry.german,
+          english: entry.english,
+          gender,
+          article: articleFromGender(entry.gender),
+          exampleSentence: entry.example ?? '',
+          exampleTranslation: '',
+          level: user.level,
+        },
+        select: { id: true },
+      })
+    }
+
+    await this.prisma.sRSCard.upsert({
+      where: { userId_vocabId: { userId, vocabId: word.id } },
+      create: { userId, vocabId: word.id },
+      update: {},
+    })
+    return { added: true, vocabId: word.id }
   }
 
   /** A single word, stable for the whole calendar day (UTC). */

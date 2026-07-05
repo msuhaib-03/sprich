@@ -125,7 +125,7 @@ export default function LessonPlayer({ params }: { params: Promise<{ lessonId: s
     return (
       <div className="max-w-lg mx-auto px-6 py-20 text-center">
         <p className="text-red-400 mb-4">{error || 'Lesson not found'}</p>
-        <Link href="/learn" className="text-[#d4a843]">← Back to lessons</Link>
+        <Link href="/learn" className="text-[var(--gold)]">← Back to lessons</Link>
       </div>
     )
   }
@@ -135,13 +135,13 @@ export default function LessonPlayer({ params }: { params: Promise<{ lessonId: s
   return (
     <div className="min-h-screen flex flex-col">
       {/* Top bar */}
-      <div className="sticky top-0 bg-[#0a0a0a]/90 backdrop-blur z-10 border-b border-white/5">
+      <div className="sticky top-0 bg-[var(--bg)]/90 backdrop-blur z-10 border-b border-[var(--border)]">
         <div className="max-w-2xl mx-auto px-6 py-3 flex items-center gap-4">
-          <Link href="/learn" className="text-[#555] hover:text-white text-sm">✕</Link>
-          <div className="flex-1 h-2 bg-[#1a1a1a] rounded-full overflow-hidden">
+          <Link href="/learn" className="text-[var(--faint)] hover:text-[var(--text)] text-sm">✕</Link>
+          <div className="flex-1 h-2 bg-[var(--track)] rounded-full overflow-hidden">
             <div className="h-full gold-gradient transition-all duration-500" style={{ width: `${progressPct}%` }} />
           </div>
-          <span className="text-[#555] text-xs">{lesson.xpReward} XP</span>
+          <span className="text-[var(--faint)] text-xs">{lesson.xpReward} XP</span>
         </div>
       </div>
 
@@ -150,7 +150,7 @@ export default function LessonPlayer({ params }: { params: Promise<{ lessonId: s
         {/* ── HOOK ── */}
         {stage === 'hook' && (
           <div className="flex flex-col min-h-[60vh]">
-            <p className="text-[#555] text-xs uppercase tracking-wider mb-3">{lesson.type} · {lesson.title}</p>
+            <p className="text-[var(--faint)] text-xs uppercase tracking-wider mb-3">{lesson.type} · {lesson.title}</p>
             <div className="flex-1 flex items-center">
               <div>
                 <div className="text-4xl mb-6">💡</div>
@@ -164,9 +164,9 @@ export default function LessonPlayer({ params }: { params: Promise<{ lessonId: s
         {/* ── EXPLAIN (the WHY) ── */}
         {stage === 'explain' && (
           <div className="flex flex-col min-h-[60vh]">
-            <p className="text-[#d4a843] text-xs uppercase tracking-wider mb-3 font-medium">The Why</p>
+            <p className="text-[var(--gold)] text-xs uppercase tracking-wider mb-3 font-medium">The Why</p>
             <div className="flex-1 flex items-center">
-              <p className="text-xl leading-relaxed text-[#ddd]">{lesson.explain}</p>
+              <p className="text-xl leading-relaxed text-[var(--text-soft)]">{lesson.explain}</p>
             </div>
             <Button onClick={nextStage} className="w-full">Show me examples →</Button>
           </div>
@@ -176,7 +176,7 @@ export default function LessonPlayer({ params }: { params: Promise<{ lessonId: s
         {stage === 'examples' && (
           <div>
             <h2 className="text-2xl font-bold mb-2">See it in action</h2>
-            <p className="text-[#888] mb-6">Every word colored by its grammatical role.</p>
+            <p className="text-[var(--muted)] mb-6">Every word colored by its grammatical role.</p>
             <div className="space-y-4 mb-8">
               {examples.map((ex, i) => <GrammarExample key={i} example={ex} />)}
             </div>
@@ -190,23 +190,23 @@ export default function LessonPlayer({ params }: { params: Promise<{ lessonId: s
         {stage === 'vocab' && (
           <div>
             <h2 className="text-2xl font-bold mb-2">Key vocabulary</h2>
-            <p className="text-[#888] mb-6">These go into your spaced-repetition deck.</p>
+            <p className="text-[var(--muted)] mb-6">These go into your spaced-repetition deck.</p>
             <div className="space-y-3 mb-8">
               {lesson.vocabulary.map((v, i) => (
-                <div key={i} className="rounded-xl border border-white/8 bg-[#111] p-4">
+                <div key={i} className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4">
                   <div className="flex items-baseline gap-2 mb-1">
                     <span className={`font-bold text-lg ${
                       v.vocab.article === 'der' ? 'text-blue-400'
                       : v.vocab.article === 'die' ? 'text-pink-400'
-                      : v.vocab.article === 'das' ? 'text-green-400' : 'text-white'
+                      : v.vocab.article === 'das' ? 'text-green-400' : 'text-[var(--text)]'
                     }`}>
                       {v.vocab.article ? `${v.vocab.article} ` : ''}{v.vocab.german}
                     </span>
-                    <span className="text-[#888]">— {v.vocab.english}</span>
+                    <span className="text-[var(--muted)]">— {v.vocab.english}</span>
                   </div>
-                  <p className="text-[#666] text-sm italic">{v.vocab.exampleSentence}</p>
+                  <p className="text-[var(--faint)] text-sm italic">{v.vocab.exampleSentence}</p>
                   {v.vocab.memoryHook && (
-                    <p className="text-[#d4a843] text-xs mt-2">💡 {v.vocab.memoryHook}</p>
+                    <p className="text-[var(--gold)] text-xs mt-2">💡 {v.vocab.memoryHook}</p>
                   )}
                 </div>
               ))}
@@ -242,7 +242,7 @@ export default function LessonPlayer({ params }: { params: Promise<{ lessonId: s
               🎉
             </div>
             <h1 className="text-3xl font-black mb-2">Lesson complete!</h1>
-            <p className="text-[#888] mb-8">
+            <p className="text-[var(--muted)] mb-8">
               {lesson.exercises.length > 0
                 ? `You got ${correctCount} of ${lesson.exercises.length} right.`
                 : 'Nicely done.'}
@@ -251,11 +251,11 @@ export default function LessonPlayer({ params }: { params: Promise<{ lessonId: s
             <div className="grid grid-cols-2 gap-4 w-full max-w-xs mb-8">
               <div className="rounded-2xl border border-[#d4a843]/30 bg-[#d4a843]/5 p-4">
                 <p className="text-2xl font-black gold-text">+{result?.xpEarned ?? 0}</p>
-                <p className="text-[#555] text-xs">XP earned</p>
+                <p className="text-[var(--faint)] text-xs">XP earned</p>
               </div>
-              <div className="rounded-2xl border border-white/8 bg-[#111] p-4">
+              <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4">
                 <p className="text-2xl font-black">🔥 {result?.streak ?? 0}</p>
-                <p className="text-[#555] text-xs">day streak</p>
+                <p className="text-[var(--faint)] text-xs">day streak</p>
               </div>
             </div>
 
@@ -326,7 +326,7 @@ function ExerciseRunner({
 
   return (
     <div className="flex flex-col min-h-[60vh]">
-      <p className="text-[#555] text-xs mb-4">Question {index + 1} of {total}</p>
+      <p className="text-[var(--faint)] text-xs mb-4">Question {index + 1} of {total}</p>
       <p className="text-xl font-bold mb-6">{exercise.prompt}</p>
 
       <div className="flex-1">
@@ -346,7 +346,7 @@ function ExerciseRunner({
                     showCorrect ? 'border-green-500 bg-green-500/10 text-green-300'
                     : showWrong ? 'border-red-500 bg-red-500/10 text-red-300'
                     : isSel ? 'border-[#d4a843] bg-[#d4a843]/10'
-                    : 'border-white/8 bg-[#111] hover:border-white/20'
+                    : 'border-[var(--border)] bg-[var(--surface)] hover:border-[var(--border-strong)]'
                   }`}
                 >
                   {opt}
@@ -361,8 +361,8 @@ function ExerciseRunner({
         {/* Arrange words */}
         {isArrange && exercise.options && (
           <div>
-            <div className="min-h-16 rounded-xl border border-dashed border-white/15 p-3 mb-4 flex flex-wrap gap-2">
-              {arranged.length === 0 && <span className="text-[#555] text-sm self-center">Tap words below in order…</span>}
+            <div className="min-h-16 rounded-xl border border-dashed border-[var(--border-strong)] p-3 mb-4 flex flex-wrap gap-2">
+              {arranged.length === 0 && <span className="text-[var(--faint)] text-sm self-center">Tap words below in order…</span>}
               {arranged.map((w, i) => (
                 <button
                   key={`${w}-${i}`}
@@ -380,7 +380,7 @@ function ExerciseRunner({
                   key={`${w}-pool-${i}`}
                   disabled={submitted}
                   onClick={() => setArranged([...arranged, w])}
-                  className="px-3 py-1.5 rounded-lg bg-[#1a1a1a] border border-white/10 text-sm hover:border-white/30"
+                  className="px-3 py-1.5 rounded-lg bg-[var(--track)] border border-[var(--border)] text-sm hover:border-[var(--border-strong)]"
                 >
                   {w}
                 </button>
@@ -398,7 +398,7 @@ function ExerciseRunner({
             onChange={(e) => setTextInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && canSubmit && !submitted && checkAnswer()}
             placeholder="Type your answer…"
-            className="w-full px-4 py-3 rounded-xl bg-[#1a1a1a] border border-white/10 text-white text-lg focus:outline-none focus:border-[#d4a843]/60"
+            className="w-full px-4 py-3 rounded-xl bg-[var(--track)] border border-[var(--border)] text-[var(--text)] text-lg focus:outline-none focus:border-[#d4a843]/60"
           />
         )}
 
@@ -406,7 +406,7 @@ function ExerciseRunner({
         {exercise.hint && !submitted && (
           <button
             onClick={() => setShowHint(true)}
-            className="mt-4 text-[#555] text-sm hover:text-[#888]"
+            className="mt-4 text-[var(--faint)] text-sm hover:text-[var(--muted)]"
           >
             {showHint ? `💡 ${exercise.hint}` : 'Need a hint?'}
           </button>
@@ -418,7 +418,7 @@ function ExerciseRunner({
             <p className={`text-sm font-semibold mb-1 ${isCorrect ? 'text-green-400' : 'text-orange-400'}`}>
               {isCorrect ? '✓ Correct!' : `Not quite — the answer is "${exercise.correctAnswer}"`}
             </p>
-            <p className="text-[#ccc] text-sm leading-relaxed">{exercise.explanation}</p>
+            <p className="text-[var(--text-soft)] text-sm leading-relaxed">{exercise.explanation}</p>
           </div>
         )}
       </div>

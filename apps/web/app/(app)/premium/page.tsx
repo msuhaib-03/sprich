@@ -50,16 +50,16 @@ export default function PremiumPage() {
   return (
     <div className="max-w-2xl mx-auto px-6 py-10">
       <div className="text-center mb-8">
-        <p className="text-[#d4a843] text-sm mb-1">✨ Premium</p>
+        <p className="text-[var(--gold)] text-sm mb-1">✨ Premium</p>
         <h1 className="text-3xl font-black">Unlock the full journey</h1>
-        <p className="text-[#888] mt-2">From A1 to C2, unlimited speaking, and certificates you can share.</p>
+        <p className="text-[var(--muted)] mt-2">From A1 to C2, unlimited speaking, and certificates you can share.</p>
       </div>
 
       {isPremium ? (
         <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/5 p-6 text-center mb-8">
           <p className="text-2xl mb-2">🎉</p>
           <p className="font-bold text-lg">You&apos;re on Premium</p>
-          <p className="text-[#888] text-sm mt-1">
+          <p className="text-[var(--muted)] text-sm mt-1">
             {sub?.currentPeriodEnd
               ? `Renews ${new Date(sub.currentPeriodEnd).toLocaleDateString()}`
               : 'Enjoy full access to everything Sprich offers.'}
@@ -69,13 +69,13 @@ export default function PremiumPage() {
         <>
           {/* Cycle toggle */}
           <div className="flex justify-center mb-6">
-            <div className="inline-flex rounded-xl border border-white/10 bg-[#111] p-1">
+            <div className="inline-flex rounded-xl border border-[var(--border)] bg-[var(--surface)] p-1">
               {(['monthly', 'annual'] as const).map((c) => (
                 <button
                   key={c}
                   onClick={() => setCycle(c)}
                   className={`px-5 py-2 rounded-lg text-sm font-semibold capitalize transition-colors ${
-                    cycle === c ? 'gold-gradient text-black' : 'text-[#888] hover:text-white'
+                    cycle === c ? 'gold-gradient text-black' : 'text-[var(--muted)] hover:text-[var(--text)]'
                   }`}
                 >
                   {c}
@@ -89,10 +89,10 @@ export default function PremiumPage() {
           <div className="rounded-2xl border border-[#d4a843]/30 bg-gradient-to-br from-[#d4a843]/8 to-transparent p-8 text-center mb-8">
             <p className="text-5xl font-black">
               {cycle === 'monthly' ? '$9.99' : '$79'}
-              <span className="text-lg text-[#888] font-normal">/{cycle === 'monthly' ? 'mo' : 'yr'}</span>
+              <span className="text-lg text-[var(--muted)] font-normal">/{cycle === 'monthly' ? 'mo' : 'yr'}</span>
             </p>
             {cycle === 'annual' && (
-              <p className="text-[#888] text-sm mt-1">Just $6.58/month, billed yearly</p>
+              <p className="text-[var(--muted)] text-sm mt-1">Just $6.58/month, billed yearly</p>
             )}
             <button
               onClick={upgrade}
@@ -105,26 +105,26 @@ export default function PremiumPage() {
               Upgrade to Premium →
             </button>
             {error && <p className="text-red-400 text-sm mt-3">{error}</p>}
-            <p className="text-[#555] text-xs mt-3">Cancel anytime. Secure checkout via Stripe.</p>
+            <p className="text-[var(--faint)] text-xs mt-3">Cancel anytime. Secure checkout via Stripe.</p>
           </div>
         </>
       )}
 
       {/* Comparison */}
-      <div className="rounded-2xl border border-white/8 bg-[#111] overflow-hidden">
+      <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] overflow-hidden">
         <div className="grid grid-cols-[1.4fr_1fr_1fr] text-sm">
-          <div className="px-4 py-3 text-[#555] font-medium">Feature</div>
-          <div className="px-4 py-3 text-[#888] font-medium text-center border-l border-white/5">Free</div>
-          <div className="px-4 py-3 gold-text font-bold text-center border-l border-white/5">Premium</div>
+          <div className="px-4 py-3 text-[var(--faint)] font-medium">Feature</div>
+          <div className="px-4 py-3 text-[var(--muted)] font-medium text-center border-l border-[var(--border)]">Free</div>
+          <div className="px-4 py-3 gold-text font-bold text-center border-l border-[var(--border)]">Premium</div>
           {COMPARISON.map((row, i) => (
             <div key={i} className="contents">
-              <div className={`px-4 py-3 border-t border-white/5 ${i % 2 ? 'bg-white/[0.015]' : ''}`}>
+              <div className={`px-4 py-3 border-t border-[var(--border)] ${i % 2 ? 'bg-[var(--overlay-faint)]' : ''}`}>
                 {row.feature}
               </div>
-              <div className={`px-4 py-3 text-center text-[#888] border-t border-l border-white/5 ${i % 2 ? 'bg-white/[0.015]' : ''}`}>
+              <div className={`px-4 py-3 text-center text-[var(--muted)] border-t border-l border-[var(--border)] ${i % 2 ? 'bg-[var(--overlay-faint)]' : ''}`}>
                 {row.free}
               </div>
-              <div className={`px-4 py-3 text-center text-white border-t border-l border-white/5 ${i % 2 ? 'bg-white/[0.015]' : ''}`}>
+              <div className={`px-4 py-3 text-center text-[var(--text)] border-t border-l border-[var(--border)] ${i % 2 ? 'bg-[var(--overlay-faint)]' : ''}`}>
                 {row.premium}
               </div>
             </div>

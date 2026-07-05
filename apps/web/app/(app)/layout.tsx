@@ -16,7 +16,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   if (!token) return null
 
   return (
-    <div className="flex min-h-screen bg-[#0a0a0a]">
+    <div className="flex min-h-screen bg-[var(--bg)]">
       <Sidebar />
       <main className="flex-1 overflow-y-auto">
         {children}

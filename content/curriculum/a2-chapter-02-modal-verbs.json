@@ -1,0 +1,218 @@
+{
+  "level": "A2",
+  "chapter": 2,
+  "title": "Modal Verbs — Can, Must, Want",
+  "description": "Modal verbs let you express ability, necessity, permission, and desire. They also introduce a signature German pattern: the modal is conjugated, and the main verb waits at the very end of the sentence.",
+  "lessons": [
+    {
+      "order": 1,
+      "title": "können & müssen — Can and Must",
+      "subtitle": "Your first two modals — and the 'verb goes to the end' rule.",
+      "type": "grammar",
+      "estimatedMinutes": 12,
+      "xpReward": 100,
+      "isPremium": true,
+      "hook": "'I can speak German.' 'I must work.' These little helper verbs — können, müssen — appear in almost every real conversation. And they teach you the most German thing about German word order: you say the helper early, but the action verb goes all the way to the end.",
+      "explain": "Modal verbs (können = can/be able to, müssen = must/have to) work with a second verb. The modal is conjugated in the normal position (second), and the main verb stays in its infinitive form and moves to the END of the sentence: 'Ich kann Deutsch sprechen' (I can speak German). Modals are slightly irregular in the singular: können → ich kann, du kannst, er kann; müssen → ich muss, du musst, er muss. Notice the ich and er forms are identical and often lose the umlaut.",
+      "examples": [
+        {
+          "german": "Ich kann Deutsch sprechen.",
+          "english": "I can speak German.",
+          "breakdown": [
+            { "word": "Ich", "role": "subject", "color": "#3b82f6" },
+            { "word": "kann", "role": "modal können, conjugated (position 2)", "color": "#a855f7" },
+            { "word": "Deutsch", "role": "object", "color": "#f97316" },
+            { "word": "sprechen", "role": "main verb — infinitive, at the END", "color": "#ffffff" }
+          ]
+        },
+        {
+          "german": "Du musst heute arbeiten.",
+          "english": "You have to work today.",
+          "breakdown": [
+            { "word": "Du", "role": "subject", "color": "#3b82f6" },
+            { "word": "musst", "role": "modal müssen, conjugated", "color": "#a855f7" },
+            { "word": "heute", "role": "time: today", "color": "#ffffff" },
+            { "word": "arbeiten", "role": "main verb at the end", "color": "#ffffff" }
+          ]
+        },
+        {
+          "german": "Wir können morgen kommen.",
+          "english": "We can come tomorrow.",
+          "breakdown": [
+            { "word": "Wir", "role": "subject", "color": "#3b82f6" },
+            { "word": "können", "role": "modal (plural = infinitive form)", "color": "#a855f7" },
+            { "word": "morgen", "role": "time: tomorrow", "color": "#ffffff" },
+            { "word": "kommen", "role": "main verb at the end", "color": "#ffffff" }
+          ]
+        }
+      ],
+      "vocabulary": [
+        {
+          "german": "können",
+          "english": "can / to be able to",
+          "exampleSentence": "Ich kann schwimmen.",
+          "exampleTranslation": "I can swim.",
+          "memoryHook": "ich kann, du kannst, er kann, wir können. Ability + permission."
+        },
+        {
+          "german": "müssen",
+          "english": "must / to have to",
+          "exampleSentence": "Ich muss gehen.",
+          "exampleTranslation": "I have to go.",
+          "memoryHook": "ich muss, du musst, er muss. Necessity. 'muss' sounds like 'must'."
+        },
+        {
+          "german": "arbeiten",
+          "english": "to work",
+          "exampleSentence": "Ich muss viel arbeiten.",
+          "exampleTranslation": "I have to work a lot.",
+          "memoryHook": "The infinitive that lands at the end with müssen."
+        },
+        {
+          "german": "sprechen",
+          "english": "to speak",
+          "exampleSentence": "Kannst du langsam sprechen?",
+          "exampleTranslation": "Can you speak slowly?",
+          "memoryHook": "Pairs with können constantly: 'Ich kann ... sprechen'."
+        },
+        {
+          "german": "schwimmen",
+          "english": "to swim",
+          "exampleSentence": "Er kann gut schwimmen.",
+          "exampleTranslation": "He can swim well.",
+          "memoryHook": "Regular verb; a natural fit with können (ability)."
+        }
+      ],
+      "exercises": [
+        {
+          "type": "multiple_choice",
+          "order": 1,
+          "prompt": "Where does the main verb go in a modal sentence?",
+          "options": ["right after the subject", "at the very end (infinitive)", "it disappears", "before the modal"],
+          "correctAnswer": "at the very end (infinitive)",
+          "explanation": "The modal is conjugated in position 2; the main verb stays as an infinitive and moves to the end: 'Ich kann Deutsch sprechen.'"
+        },
+        {
+          "type": "multiple_choice",
+          "order": 2,
+          "prompt": "Complete: 'Ich ___ heute arbeiten.' (I have to work today.)",
+          "options": ["muss", "musst", "müssen", "musse"],
+          "correctAnswer": "muss",
+          "hint": "müssen with 'ich'.",
+          "explanation": "müssen → ich muss (no umlaut in the singular). The ich and er/sie/es forms are identical: ich muss, er muss."
+        },
+        {
+          "type": "fill_blank",
+          "order": 3,
+          "prompt": "Put in order: 'Wir / können / kommen / morgen' → 'Wir können morgen ___.'",
+          "correctAnswer": "kommen",
+          "hint": "The main verb goes last.",
+          "explanation": "The modal 'können' is in position 2, and the infinitive 'kommen' goes to the end: 'Wir können morgen kommen.'"
+        }
+      ]
+    },
+    {
+      "order": 2,
+      "title": "wollen, dürfen, sollen, möchten",
+      "subtitle": "Want, be allowed to, should, would like — the rest of the crew.",
+      "type": "grammar",
+      "estimatedMinutes": 13,
+      "xpReward": 110,
+      "isPremium": true,
+      "hook": "German draws careful lines English blurs. 'Can I?' might mean ability (können) OR permission (dürfen). 'I want' (wollen) is blunt, while 'I would like' (möchten) is polite. Choosing the right modal instantly makes you sound more like a native and less like a textbook.",
+      "explain": "Four more modals: wollen (to want), dürfen (to be allowed to / may), sollen (should / to be supposed to), and möchten (would like — the polite form of wollen). Singular forms: wollen → ich will, du willst, er will; dürfen → ich darf, du darfst, er darf; sollen → ich soll, du sollst, er soll; möchten → ich möchte, du möchtest, er möchte. Careful: 'ich will' means 'I want' (NOT 'I will' — that's a false friend). Use 'möchte' when you want to be polite, especially when ordering or requesting.",
+      "examples": [
+        {
+          "german": "Ich will einen Kaffee.",
+          "english": "I want a coffee.",
+          "breakdown": [
+            { "word": "Ich", "role": "subject", "color": "#3b82f6" },
+            { "word": "will", "role": "wollen → ich will (want, NOT 'will')", "color": "#a855f7" },
+            { "word": "einen Kaffee", "role": "Accusative object", "color": "#f97316" }
+          ]
+        },
+        {
+          "german": "Darf ich hier rauchen?",
+          "english": "May I smoke here?",
+          "breakdown": [
+            { "word": "Darf", "role": "dürfen — permission (question → verb first)", "color": "#a855f7" },
+            { "word": "ich", "role": "subject", "color": "#3b82f6" },
+            { "word": "hier rauchen", "role": "main verb at the end", "color": "#ffffff" }
+          ]
+        },
+        {
+          "german": "Du sollst mehr schlafen.",
+          "english": "You should sleep more.",
+          "breakdown": [
+            { "word": "Du", "role": "subject", "color": "#3b82f6" },
+            { "word": "sollst", "role": "sollen — advice/obligation", "color": "#a855f7" },
+            { "word": "mehr schlafen", "role": "main verb at the end", "color": "#ffffff" }
+          ]
+        }
+      ],
+      "vocabulary": [
+        {
+          "german": "wollen",
+          "english": "to want",
+          "exampleSentence": "Ich will nach Hause gehen.",
+          "exampleTranslation": "I want to go home.",
+          "memoryHook": "ich will, du willst, er will. FALSE FRIEND: 'will' = want, not future 'will'."
+        },
+        {
+          "german": "dürfen",
+          "english": "to be allowed to / may",
+          "exampleSentence": "Darf ich das nehmen?",
+          "exampleTranslation": "May I take that?",
+          "memoryHook": "ich darf, du darfst, er darf. Permission. 'Darf ich?' = May I?"
+        },
+        {
+          "german": "sollen",
+          "english": "should / to be supposed to",
+          "exampleSentence": "Ich soll heute lernen.",
+          "exampleTranslation": "I'm supposed to study today.",
+          "memoryHook": "ich soll, du sollst, er soll. Advice or an order from someone else."
+        },
+        {
+          "german": "möchten",
+          "english": "would like",
+          "exampleSentence": "Ich möchte einen Tee, bitte.",
+          "exampleTranslation": "I would like a tea, please.",
+          "memoryHook": "The polite 'want'. Use möchte, not will, when ordering."
+        },
+        {
+          "german": "rauchen",
+          "english": "to smoke",
+          "exampleSentence": "Hier darf man nicht rauchen.",
+          "exampleTranslation": "You're not allowed to smoke here.",
+          "memoryHook": "Common with dürfen (permission) and its negative."
+        }
+      ],
+      "exercises": [
+        {
+          "type": "multiple_choice",
+          "order": 1,
+          "prompt": "You're ordering politely. Which is best?",
+          "options": ["Ich will einen Tee.", "Ich muss einen Tee.", "Ich möchte einen Tee, bitte.", "Ich soll einen Tee."],
+          "correctAnswer": "Ich möchte einen Tee, bitte.",
+          "explanation": "'möchte' (would like) is the polite choice for requests. 'Ich will' (I want) sounds blunt/demanding when ordering."
+        },
+        {
+          "type": "multiple_choice",
+          "order": 2,
+          "prompt": "'Ich will' means…",
+          "options": ["I will (future)", "I want", "I should", "I may"],
+          "correctAnswer": "I want",
+          "explanation": "False friend alert: 'ich will' = 'I want' (from wollen), not the English future 'I will'. German future uses 'werden'."
+        },
+        {
+          "type": "fill_blank",
+          "order": 3,
+          "prompt": "Ask permission: '___ ich hier parken?' (May I park here?) — verb: dürfen",
+          "correctAnswer": "Darf",
+          "hint": "dürfen with 'ich', and questions put the verb first.",
+          "explanation": "dürfen → ich darf; in a yes/no question the conjugated verb comes first: 'Darf ich hier parken?'"
+        }
+      ]
+    }
+  ]
+}

@@ -1,42 +1,75 @@
 @import "tailwindcss";
 
-:root {
-  /* Sprich Brand Colors */
-  --brand-black: #0a0a0a;
-  --brand-white: #fafafa;
-  --brand-gold: #d4a843;
-  --brand-gold-light: #f0c96a;
-  --brand-gold-dark: #a07820;
-  --brand-gray-900: #111111;
-  --brand-gray-800: #1a1a1a;
-  --brand-gray-700: #2a2a2a;
-  --brand-gray-600: #3a3a3a;
-  --brand-gray-400: #888888;
-  --brand-gray-200: #d4d4d4;
-  --brand-gray-100: #f0f0f0;
+/* ─── Theme tokens ──────────────────────────────────────────────────────────
+   Dark is the default (used as :root fallback so no-JS SSR renders dark, which
+   matches the app's identity). .light / .dark override via the theme toggle. */
 
-  /* Grammar Color Coding — used in lesson breakdowns */
+:root,
+.dark {
+  --bg: #0b0b0e;
+  --surface: #151519;
+  --surface-2: #101014;
+  --surface-hover: #1c1c22;
+  --track: #212128;
+  --border: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  --overlay: rgba(255, 255, 255, 0.05);
+  --overlay-faint: rgba(255, 255, 255, 0.022);
+
+  --text: #f3f1ec;
+  --text-soft: #d0ccc4;
+  --muted: #9b968c;
+  --faint: #6d6a63;
+  --faint-2: #4a473f;
+
+  --gold: #d4a843;
+  --gold-light: #f0c96a;
+  --gold-dark: #a07820;
+}
+
+.light {
+  --bg: #f7f3ec;
+  --surface: #ffffff;
+  --surface-2: #f1ebe0;
+  --surface-hover: #f2ece1;
+  --track: #e9e2d5;
+  --border: rgba(28, 24, 18, 0.10);
+  --border-strong: rgba(28, 24, 18, 0.22);
+  --overlay: rgba(28, 24, 18, 0.04);
+  --overlay-faint: rgba(28, 24, 18, 0.02);
+
+  --text: #1b1915;
+  --text-soft: #3a372f;
+  --muted: #6e685d;
+  --faint: #948d80;
+  --faint-2: #bcb4a6;
+
+  --gold: #b5891f;
+  --gold-light: #d4a843;
+  --gold-dark: #8a6714;
+}
+
+/* Grammar color coding — used in lesson breakdowns (vivid, works on both themes) */
+:root {
   --nominative: #3b82f6;
   --accusative: #f97316;
-  --dative: #10b981;
+  --dative: #14b8a6;
   --genitive: #8b5cf6;
-
-  /* Article gender colors */
   --masculine: #3b82f6;
   --feminine: #ec4899;
   --neuter: #10b981;
-
-  --background: var(--brand-black);
-  --foreground: var(--brand-white);
 }
 
 * { box-sizing: border-box; }
 
+html { background-color: var(--bg); }
+
 body {
-  background-color: var(--brand-black);
-  color: var(--brand-white);
+  background-color: var(--bg);
+  color: var(--text);
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 /* Grammar highlighting */
@@ -45,17 +78,16 @@ body {
 .dat { color: var(--dative);     font-weight: 600; }
 .gen { color: var(--genitive);   font-weight: 600; }
 
-/* Article gender */
 .der { color: var(--masculine); font-weight: 700; }
 .die { color: var(--feminine);  font-weight: 700; }
 .das { color: var(--neuter);    font-weight: 700; }
 
 .gold-gradient {
-  background: linear-gradient(135deg, var(--brand-gold-dark), var(--brand-gold), var(--brand-gold-light));
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-light));
 }
 
 .gold-text {
-  background: linear-gradient(135deg, var(--brand-gold), var(--brand-gold-light));
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

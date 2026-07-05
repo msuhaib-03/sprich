@@ -16,10 +16,16 @@ export const metadata: Metadata = {
   },
 }
 
+// Runs before paint: apply the saved theme (default: dark) to avoid a flash.
+const themeScript = `(function(){try{var t=localStorage.getItem('sprich-theme')||'dark';document.documentElement.classList.add(t==='light'?'light':'dark');}catch(e){document.documentElement.classList.add('dark');}})();`
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="de" className={`${inter.variable} h-full`}>
-      <body className="min-h-full bg-[#0a0a0a] text-[#fafafa] antialiased">{children}</body>
+    <html lang="de" className={`${inter.variable} h-full`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
+      <body className="min-h-full bg-[var(--bg)] text-[var(--text)] antialiased">{children}</body>
     </html>
   )
 }
