@@ -1,9 +1,10 @@
 import { Injectable, ServiceUnavailableException, HttpException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 
-// A widely-available prebuilt ElevenLabs voice; override via ELEVENLABS_VOICE_ID
-// with a German/multilingual voice from your Voice Library for best results.
-const DEFAULT_VOICE_ID = '21m00Tcm4TlvDq8ikWAM'
+// A current PREMADE ElevenLabs voice (George). IMPORTANT: the free tier can
+// only use premade voices via the API — Voice Library voices return HTTP 402.
+// Override with ELEVENLABS_VOICE_ID using another *premade* voice id.
+const DEFAULT_VOICE_ID = 'JBFqnCBsd6RMkjVDRZzb'
 
 @Injectable()
 export class SpeakingService {

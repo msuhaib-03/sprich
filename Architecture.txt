@@ -100,6 +100,13 @@ Price				Free			~$9.99/month or ~$79/year
 
 
 ===============================================================================
+npx kill-port 4000
+restart your machine if error arrives ever again.
+npm run dev
+
+/apps/web
+npx next dev
+
 npm run db:generate
 npm run db:migrate
 cd packages/db && npx prisma db seed
@@ -108,7 +115,4 @@ cd packages/db && npx prisma db seed
 We will do Stripe in the end.
 
 
-DATABASE_URL="postgresql://neondb_owner:npg_ujDzrXv2y6PY@ep-nameless-hill-asvdlzti.c-4.eu-central-1.aws.neon.tech/neondb?sslmode=require"
-JWT_SECRET="sprich-dev-secret-change-in-production"
 
-ELEVEN LABS KEY: sk_544eec649044c2b3074a340042a3557e77ede1566c237833
