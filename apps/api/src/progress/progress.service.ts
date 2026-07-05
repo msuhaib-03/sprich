@@ -5,6 +5,13 @@ import { AiService } from '../ai/ai.service'
 const DAY_MS = 86_400_000
 const MASTERED_REPETITIONS = 5
 
+/** "Suhaib Khan" → "Suhaib K." — enough identity for a leaderboard, no more. */
+function displayName(full: string): string {
+  const parts = full.trim().split(/\s+/)
+  if (parts.length === 1) return parts[0]
+  return `${parts[0]} ${parts[parts.length - 1][0].toUpperCase()}.`
+}
+
 @Injectable()
 export class ProgressService {
   constructor(
@@ -202,6 +209,98 @@ export class ProgressService {
         completedAt: e.completedAt,
       })),
     }
+  }
+
+  /** Top learners by XP, plus the caller's own rank (even outside the top). */
+  async getLeaderboard(userId: string) {
+    const [top, me] = await Promise.all([
+      this.prisma.user.findMany({
+        orderBy: [{ xp: 'desc' }, { createdAt: 'asc' }],
+        take: 20,
+        select: { id: true, name: true, level: true, xp: true, streak: true },
+      }),
+      this.prisma.user.findUniqueOrThrow({
+        where: { id: userId },
+        select: { id: true, name: true, level: true, xp: true, streak: true },
+      }),
+    ])
+    const higher = await this.prisma.user.count({ where: { xp: { gt: me.xp } } })
+
+    return {
+      top: top.map((u, i) => ({
+        rank: i + 1,
+        name: displayName(u.name),
+        level: u.level,
+        xp: u.xp,
+        streak: u.streak,
+        isMe: u.id === userId,
+      })),
+      me: {
+        rank: higher + 1,
+        name: displayName(me.name),
+        level: me.level,
+        xp: me.xp,
+        streak: me.streak,
+      },
+    }
+  }
+
+  /**
+   * Badges are derived live from existing stats — no extra table, always
+   * accurate. German titles double as vocabulary. Locked badges carry a
+   * progress bar so there's always a visible next goal.
+   */
+  async getBadges(userId: string) {
+    const [user, lessonsDone, perfectCount, sessions, deckSize, mastered] = await Promise.all([
+      this.prisma.user.findUniqueOrThrow({
+        where: { id: userId },
+        select: { xp: true, streak: true, longestStreak: true, level: true },
+      }),
+      this.prisma.userProgress.count({ where: { userId } }),
+      this.prisma.userProgress.count({ where: { userId, score: 100 } }),
+      this.prisma.speakingSession.count({ where: { userId } }),
+      this.prisma.sRSCard.count({ where: { userId } }),
+      this.prisma.sRSCard.count({
+        where: { userId, repetitions: { gte: MASTERED_REPETITIONS } },
+      }),
+    ])
+
+    const bestStreak = Math.max(user.streak, user.longestStreak)
+    const levelIndex = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].indexOf(user.level)
+
+    const badge = (
+      id: string,
+      icon: string,
+      title: string,
+      description: string,
+      current: number,
+      target: number,
+    ) => ({
+      id,
+      icon,
+      title,
+      description,
+      earned: current >= target,
+      progress: { current: Math.min(current, target), target },
+    })
+
+    return [
+      badge('first_lesson', '📖', 'Erste Schritte', '"First steps" — complete your first lesson', lessonsDone, 1),
+      badge('lessons_10', '🎓', 'Fleißig', '"Diligent" — complete 10 lessons', lessonsDone, 10),
+      badge('lessons_25', '🏛️', 'Gelehrt', '"Scholarly" — complete 25 lessons', lessonsDone, 25),
+      badge('perfect', '💯', 'Perfektionist', 'Score 100% on any lesson', perfectCount, 1),
+      badge('streak_3', '🔥', 'Dranbleiben', '"Keep at it" — reach a 3-day streak', bestStreak, 3),
+      badge('streak_7', '⚡', 'Eine Woche', '"One week" — reach a 7-day streak', bestStreak, 7),
+      badge('streak_30', '🗻', 'Unaufhaltsam', '"Unstoppable" — reach a 30-day streak', bestStreak, 30),
+      badge('first_talk', '🗣️', 'Mutig', '"Brave" — finish your first speaking session', sessions, 1),
+      badge('talks_10', '🎙️', 'Redegewandt', '"Eloquent" — finish 10 speaking sessions', sessions, 10),
+      badge('vocab_25', '🃏', 'Wortsammler', '"Word collector" — 25 words in your deck', deckSize, 25),
+      badge('vocab_100', '📚', 'Wortschatz', '"Vocabulary treasure" — 100 words in your deck', deckSize, 100),
+      badge('mastered_10', '🧠', 'Gedächtnismeister', '"Memory master" — master 10 words', mastered, 10),
+      badge('xp_500', '⭐', 'Aufsteiger', '"Climber" — earn 500 XP', user.xp, 500),
+      badge('xp_2000', '🌟', 'Deutschprofi', '"German pro" — earn 2,000 XP', user.xp, 2000),
+      badge('level_a2', '🇩🇪', 'Level Up', 'Reach level A2', levelIndex, 1),
+    ]
   }
 
   /** On-demand AI motivational insight based on the last 7 days. */

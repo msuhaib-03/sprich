@@ -11,6 +11,7 @@ const NAV = [
   { href: '/speak', label: 'Speak', icon: '🎙️' },
   { href: '/vocabulary', label: 'Vocabulary', icon: '🃏' },
   { href: '/progress', label: 'Progress', icon: '📊' },
+  { href: '/leaderboard', label: 'Leaderboard', icon: '🏆' },
   { href: '/premium', label: 'Premium', icon: '✨' },
 ]
 

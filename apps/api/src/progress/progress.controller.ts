@@ -42,6 +42,16 @@ export class ProgressController {
     return this.progressService.getSummary(req.user.id)
   }
 
+  @Get('leaderboard')
+  getLeaderboard(@Request() req: { user: { id: string } }) {
+    return this.progressService.getLeaderboard(req.user.id)
+  }
+
+  @Get('badges')
+  getBadges(@Request() req: { user: { id: string } }) {
+    return this.progressService.getBadges(req.user.id)
+  }
+
   @Post('weekly-report')
   weeklyReport(@Request() req: { user: { id: string } }) {
     return this.progressService.generateWeeklyReport(req.user.id)
