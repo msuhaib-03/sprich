@@ -1,0 +1,347 @@
+{
+  "level": "A1",
+  "chapter": 3,
+  "title": "Nominative Case — Who Is Doing the Action?",
+  "description": "Before articles ever change, they have a home base: the Nominative. This is the subject of the sentence — the doer. Master this and every other case becomes a small change from here.",
+  "lessons": [
+    {
+      "order": 1,
+      "title": "What Is a Case? (You Already Know One)",
+      "subtitle": "English hides its cases. German shows them. Same idea.",
+      "type": "grammar",
+      "estimatedMinutes": 8,
+      "xpReward": 60,
+      "isPremium": false,
+      "hook": "Say these out loud: 'He sees the dog.' and 'The dog sees him.' Why 'he' in one and 'him' in the other? Same person — different job in the sentence. That switch IS a case. English only does it to pronouns. German does it to the little word in front of the noun (the article). That's the whole secret.",
+      "explain": "A 'case' is just a label that tells you what job a word is doing in the sentence. The Nominative case marks the SUBJECT — the person or thing doing the action. In 'The man reads', 'the man' is the subject, so it's Nominative. German has four cases, but they all branch out from this one. The Nominative is the form you find in the dictionary — it's home base. Learn a noun's article here first, then later cases are just small edits.",
+      "examples": [
+        {
+          "german": "Der Hund schläft.",
+          "english": "The dog sleeps.",
+          "breakdown": [
+            { "word": "Der", "role": "Nominative masculine — the subject", "color": "#3b82f6" },
+            { "word": "Hund", "role": "noun: dog (the doer)", "color": "#3b82f6" },
+            { "word": "schläft", "role": "verb: sleeps", "color": "#ffffff" }
+          ]
+        },
+        {
+          "german": "Die Frau arbeitet.",
+          "english": "The woman works.",
+          "breakdown": [
+            { "word": "Die", "role": "Nominative feminine — the subject", "color": "#ec4899" },
+            { "word": "Frau", "role": "noun: woman (the doer)", "color": "#ec4899" },
+            { "word": "arbeitet", "role": "verb: works", "color": "#ffffff" }
+          ]
+        },
+        {
+          "german": "Das Kind lacht.",
+          "english": "The child laughs.",
+          "breakdown": [
+            { "word": "Das", "role": "Nominative neuter — the subject", "color": "#10b981" },
+            { "word": "Kind", "role": "noun: child (the doer)", "color": "#10b981" },
+            { "word": "lacht", "role": "verb: laughs", "color": "#ffffff" }
+          ]
+        }
+      ],
+      "vocabulary": [
+        {
+          "german": "schlafen",
+          "english": "to sleep",
+          "exampleSentence": "Der Hund schläft.",
+          "exampleTranslation": "The dog sleeps.",
+          "memoryHook": "Stem-changer: er/sie/es schläft (a → ä). You'll meet this pattern in Chapter 5."
+        },
+        {
+          "german": "arbeiten",
+          "english": "to work",
+          "exampleSentence": "Die Frau arbeitet in Berlin.",
+          "exampleTranslation": "The woman works in Berlin.",
+          "memoryHook": "Stem ends in -t, so you add an extra -e: er arbeitet (not 'arbeitt')."
+        },
+        {
+          "german": "lachen",
+          "english": "to laugh",
+          "exampleSentence": "Das Kind lacht.",
+          "exampleTranslation": "The child laughs.",
+          "memoryHook": "Regular verb. lach- + -t = lacht."
+        },
+        {
+          "german": "der Freund",
+          "english": "the friend (male)",
+          "article": "der",
+          "gender": "masculine",
+          "plural": "die Freunde",
+          "exampleSentence": "Der Freund kommt heute.",
+          "exampleTranslation": "The friend comes today.",
+          "memoryHook": "der = blue = the subject when he's doing the action."
+        },
+        {
+          "german": "die Katze",
+          "english": "the cat",
+          "article": "die",
+          "gender": "feminine",
+          "plural": "die Katzen",
+          "exampleSentence": "Die Katze trinkt Milch.",
+          "exampleTranslation": "The cat drinks milk.",
+          "memoryHook": "-e ending → usually die. Here the cat is the doer → Nominative."
+        }
+      ],
+      "exercises": [
+        {
+          "type": "multiple_choice",
+          "order": 1,
+          "prompt": "In 'The man reads a book', which part is the SUBJECT (Nominative)?",
+          "options": ["a book", "reads", "The man", "book"],
+          "correctAnswer": "The man",
+          "explanation": "The subject is the doer of the action — the one who reads. 'The man' does the reading, so it is Nominative. 'A book' receives the action (that's Accusative, from Chapter 4)."
+        },
+        {
+          "type": "multiple_choice",
+          "order": 2,
+          "prompt": "Which English pair shows a 'case' change, like German does?",
+          "options": ["big / bigger", "he / him", "dog / dogs", "run / running"],
+          "correctAnswer": "he / him",
+          "explanation": "'He / him' changes based on the word's job: 'he' is the subject (Nominative), 'him' is the object. That is exactly what German does — but German changes the article in front of the noun, not just the pronoun."
+        },
+        {
+          "type": "multiple_choice",
+          "order": 3,
+          "prompt": "The Nominative case is the form you find where?",
+          "options": ["Only in questions", "In the dictionary (home base)", "Only after verbs", "Never — it's invisible"],
+          "correctAnswer": "In the dictionary (home base)",
+          "explanation": "Nominative is the base form. When you look up 'der Tisch' in a dictionary, that's the Nominative. Every other case is a small change away from this starting point."
+        }
+      ]
+    },
+    {
+      "order": 2,
+      "title": "Der, Die, Das as the Subject",
+      "subtitle": "In Nominative, the articles look exactly like you learned them. Nothing changes yet.",
+      "type": "grammar",
+      "estimatedMinutes": 9,
+      "xpReward": 70,
+      "isPremium": false,
+      "hook": "Here's good news you rarely hear: in the Nominative case, the definite articles are EXACTLY the ones you already memorized in Chapter 2. der, die, das, and die (plural). No tricks, no changes. This lesson is your reward for learning gender — you already know it.",
+      "explain": "When a noun is the subject (the doer), it uses these definite articles: der (masculine), die (feminine), das (neuter), and die (plural — all genders share it). This is the 'default' table every other case is measured against. Say each noun as a subject a few times so this feels automatic — because in Chapter 4 you saw that only the masculine der becomes den in Accusative. Everything you lock in here stays stable.",
+      "examples": [
+        {
+          "german": "Der Lehrer erklärt die Regel.",
+          "english": "The teacher explains the rule.",
+          "breakdown": [
+            { "word": "Der", "role": "Nominative masculine (subject)", "color": "#3b82f6" },
+            { "word": "Lehrer", "role": "noun: teacher (the doer)", "color": "#3b82f6" },
+            { "word": "erklärt", "role": "verb: explains", "color": "#ffffff" },
+            { "word": "die Regel", "role": "object (Accusative feminine — unchanged)", "color": "#ec4899" }
+          ]
+        },
+        {
+          "german": "Die Kinder spielen.",
+          "english": "The children play.",
+          "breakdown": [
+            { "word": "Die", "role": "Nominative plural — all genders use die", "color": "#a855f7" },
+            { "word": "Kinder", "role": "noun: children (plural)", "color": "#a855f7" },
+            { "word": "spielen", "role": "verb: play", "color": "#ffffff" }
+          ]
+        },
+        {
+          "german": "Das Auto ist rot.",
+          "english": "The car is red.",
+          "breakdown": [
+            { "word": "Das", "role": "Nominative neuter (subject)", "color": "#10b981" },
+            { "word": "Auto", "role": "noun: car (the doer/topic)", "color": "#10b981" },
+            { "word": "ist rot", "role": "is red", "color": "#ffffff" }
+          ]
+        }
+      ],
+      "vocabulary": [
+        {
+          "german": "der Mann",
+          "english": "the man",
+          "article": "der",
+          "gender": "masculine",
+          "plural": "die Männer",
+          "exampleSentence": "Der Mann trinkt Kaffee.",
+          "exampleTranslation": "The man drinks coffee.",
+          "memoryHook": "Subject + masculine → der. Stays der in Nominative."
+        },
+        {
+          "german": "die Lehrerin",
+          "english": "the teacher (female)",
+          "article": "die",
+          "gender": "feminine",
+          "plural": "die Lehrerinnen",
+          "exampleSentence": "Die Lehrerin ist nett.",
+          "exampleTranslation": "The teacher is kind.",
+          "memoryHook": "-in makes a female person → almost always die."
+        },
+        {
+          "german": "das Buch",
+          "english": "the book",
+          "article": "das",
+          "gender": "neuter",
+          "plural": "die Bücher",
+          "exampleSentence": "Das Buch liegt hier.",
+          "exampleTranslation": "The book lies here.",
+          "memoryHook": "das = green = neuter. Plural die Bücher (ü)."
+        },
+        {
+          "german": "die Regel",
+          "english": "the rule",
+          "article": "die",
+          "gender": "feminine",
+          "plural": "die Regeln",
+          "exampleSentence": "Die Regel ist einfach.",
+          "exampleTranslation": "The rule is simple.",
+          "memoryHook": "die Regel — a rule you can actually follow."
+        },
+        {
+          "german": "erklären",
+          "english": "to explain",
+          "exampleSentence": "Ich erkläre die Grammatik.",
+          "exampleTranslation": "I explain the grammar.",
+          "memoryHook": "er-KLÄR-en → to make clear (klar). Regular verb."
+        }
+      ],
+      "exercises": [
+        {
+          "type": "multiple_choice",
+          "order": 1,
+          "prompt": "Fill in: '___ Frau liest.' (The woman reads.)",
+          "options": ["Der", "Die", "Das", "Den"],
+          "correctAnswer": "Die",
+          "hint": "Frau is feminine, and she is the doer.",
+          "explanation": "Frau is feminine → die. As the subject (Nominative), feminine stays die. 'Den' is Accusative masculine — wrong gender and wrong case here."
+        },
+        {
+          "type": "multiple_choice",
+          "order": 2,
+          "prompt": "What is the Nominative plural article for ALL genders?",
+          "options": ["der", "das", "die", "den"],
+          "correctAnswer": "die",
+          "explanation": "In the plural, every gender shares the same Nominative article: die. Die Männer, die Frauen, die Kinder — all die. This makes plurals easier than singulars."
+        },
+        {
+          "type": "fill_blank",
+          "order": 3,
+          "prompt": "Complete: '___ Kind spielt im Garten.' (The child plays in the garden.)",
+          "correctAnswer": "Das",
+          "hint": "Kind is neuter.",
+          "explanation": "Kind is neuter → das. The child is doing the playing, so it's the subject → Nominative → das (unchanged)."
+        }
+      ]
+    },
+    {
+      "order": 3,
+      "title": "Ein, Eine, Ein — 'A' and 'An'",
+      "subtitle": "The indefinite articles in Nominative — for when it's not a specific thing.",
+      "type": "grammar",
+      "estimatedMinutes": 10,
+      "xpReward": 80,
+      "isPremium": false,
+      "hook": "'The dog' vs 'a dog' — English feels the difference instantly. German has it too: der Hund (the dog) vs ein Hund (a dog). The indefinite article 'ein' is what you use when you're not pointing at one specific thing. And in Nominative, it follows a simple, learnable shape.",
+      "explain": "Use ein/eine/ein for 'a/an' — an unspecific thing. In the Nominative case: masculine = ein, feminine = eine, neuter = ein. Notice masculine and neuter look identical (both 'ein'), and feminine adds -e (eine). There is no plural of 'ein' — 'a dogs' makes no sense in English either; German just drops the article (Hunde = dogs). Remember this Nominative shape, because in Chapter 4 only the masculine ein became einen. Feminine eine and neuter ein never changed.",
+      "examples": [
+        {
+          "german": "Ein Mann wartet.",
+          "english": "A man is waiting.",
+          "breakdown": [
+            { "word": "Ein", "role": "Nominative masculine — a (subject)", "color": "#3b82f6" },
+            { "word": "Mann", "role": "noun: man", "color": "#3b82f6" },
+            { "word": "wartet", "role": "verb: waits", "color": "#ffffff" }
+          ]
+        },
+        {
+          "german": "Eine Frau singt.",
+          "english": "A woman sings.",
+          "breakdown": [
+            { "word": "Eine", "role": "Nominative feminine — adds -e", "color": "#ec4899" },
+            { "word": "Frau", "role": "noun: woman", "color": "#ec4899" },
+            { "word": "singt", "role": "verb: sings", "color": "#ffffff" }
+          ]
+        },
+        {
+          "german": "Ein Kind weint.",
+          "english": "A child is crying.",
+          "breakdown": [
+            { "word": "Ein", "role": "Nominative neuter — same as masculine", "color": "#10b981" },
+            { "word": "Kind", "role": "noun: child", "color": "#10b981" },
+            { "word": "weint", "role": "verb: cries", "color": "#ffffff" }
+          ]
+        }
+      ],
+      "vocabulary": [
+        {
+          "german": "ein Apfel",
+          "english": "an apple",
+          "article": "ein",
+          "gender": "masculine",
+          "plural": "die Äpfel",
+          "exampleSentence": "Ein Apfel liegt auf dem Tisch.",
+          "exampleTranslation": "An apple lies on the table.",
+          "memoryHook": "der Apfel → ein Apfel. Masculine 'a' = ein."
+        },
+        {
+          "german": "eine Blume",
+          "english": "a flower",
+          "article": "eine",
+          "gender": "feminine",
+          "plural": "die Blumen",
+          "exampleSentence": "Eine Blume wächst hier.",
+          "exampleTranslation": "A flower grows here.",
+          "memoryHook": "die Blume → eine Blume. Feminine adds -e."
+        },
+        {
+          "german": "ein Haus",
+          "english": "a house",
+          "article": "ein",
+          "gender": "neuter",
+          "plural": "die Häuser",
+          "exampleSentence": "Ein Haus steht am See.",
+          "exampleTranslation": "A house stands by the lake.",
+          "memoryHook": "das Haus → ein Haus. Neuter 'a' = ein (same as masculine)."
+        },
+        {
+          "german": "warten",
+          "english": "to wait",
+          "exampleSentence": "Ich warte auf den Bus.",
+          "exampleTranslation": "I wait for the bus.",
+          "memoryHook": "Stem ends in -t → er wartet (extra -e)."
+        },
+        {
+          "german": "singen",
+          "english": "to sing",
+          "exampleSentence": "Die Kinder singen ein Lied.",
+          "exampleTranslation": "The children sing a song.",
+          "memoryHook": "Regular verb. sing- + endings."
+        }
+      ],
+      "exercises": [
+        {
+          "type": "multiple_choice",
+          "order": 1,
+          "prompt": "Choose: '___ Frau kommt.' (A woman is coming.)",
+          "options": ["Ein", "Eine", "Einen", "Der"],
+          "correctAnswer": "Eine",
+          "hint": "Feminine indefinite article in Nominative.",
+          "explanation": "Frau is feminine → eine. 'Einen' is Accusative masculine (wrong here). Feminine 'eine' is the same in Nominative and Accusative — it never changes."
+        },
+        {
+          "type": "multiple_choice",
+          "order": 2,
+          "prompt": "Masculine and neuter share which Nominative indefinite article?",
+          "options": ["eine", "einen", "ein", "einem"],
+          "correctAnswer": "ein",
+          "explanation": "In Nominative, both masculine and neuter use 'ein' (ein Mann, ein Kind). Only feminine differs, adding -e (eine Frau). This overlap is why identifying gender matters before you can build the Accusative."
+        },
+        {
+          "type": "fill_blank",
+          "order": 3,
+          "prompt": "Complete: '___ Apfel ist grün.' (An apple is green.) — der Apfel is masculine.",
+          "correctAnswer": "Ein",
+          "hint": "Masculine 'a' in Nominative.",
+          "explanation": "der Apfel is masculine, and here the apple is the subject → Nominative masculine → ein. (In Chapter 4's Accusative it would become 'einen Apfel'.)"
+        }
+      ]
+    }
+  ]
+}

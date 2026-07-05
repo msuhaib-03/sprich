@@ -1,0 +1,341 @@
+{
+  "level": "A1",
+  "chapter": 6,
+  "title": "First Conversations",
+  "description": "Time to use it for real. These are the everyday situations you'll actually face in Germany — buying a ticket, ordering food, finding your way. Learn the exact phrases that get the job done.",
+  "lessons": [
+    {
+      "order": 1,
+      "title": "At the Train Station",
+      "subtitle": "Buy a ticket, find your platform, ask when the train leaves.",
+      "type": "scenario",
+      "estimatedMinutes": 12,
+      "xpReward": 100,
+      "isPremium": false,
+      "hook": "The Bahnhof (train station) is often a newcomer's first real German test. The good news: ticket conversations are short and follow a script. Learn four or five phrases and you can get a ticket to anywhere in Germany with confidence — no panic, no pointing.",
+      "explain": "In a station you mainly need to do three things: ask for a ticket, ask about the platform (das Gleis), and ask about times. Key phrases: 'Eine Fahrkarte nach ___, bitte' (A ticket to ___, please), 'Wann fährt der Zug?' (When does the train leave?), and 'Von welchem Gleis?' (From which platform?). Germans appreciate 'bitte' (please) and 'danke' (thank you) — politeness is expected, not optional. Keep sentences short; you don't need to be fancy to be understood.",
+      "examples": [
+        {
+          "german": "Eine Fahrkarte nach Berlin, bitte.",
+          "english": "A ticket to Berlin, please.",
+          "breakdown": [
+            { "word": "Eine Fahrkarte", "role": "a ticket (feminine object)", "color": "#ec4899" },
+            { "word": "nach Berlin", "role": "to Berlin", "color": "#ffffff" },
+            { "word": "bitte", "role": "please (always polite)", "color": "#a855f7" }
+          ]
+        },
+        {
+          "german": "Wann fährt der Zug nach Hamburg?",
+          "english": "When does the train to Hamburg leave?",
+          "breakdown": [
+            { "word": "Wann", "role": "question word: when", "color": "#a855f7" },
+            { "word": "fährt", "role": "fahren → er fährt (a→ä)", "color": "#ffffff" },
+            { "word": "der Zug", "role": "the train (subject)", "color": "#3b82f6" },
+            { "word": "nach Hamburg", "role": "to Hamburg", "color": "#ffffff" }
+          ]
+        },
+        {
+          "german": "Von welchem Gleis fährt der Zug?",
+          "english": "From which platform does the train leave?",
+          "breakdown": [
+            { "word": "Von welchem Gleis", "role": "from which platform", "color": "#a855f7" },
+            { "word": "fährt der Zug", "role": "does the train leave", "color": "#3b82f6" }
+          ]
+        }
+      ],
+      "vocabulary": [
+        {
+          "german": "die Fahrkarte",
+          "english": "the ticket",
+          "article": "die",
+          "gender": "feminine",
+          "plural": "die Fahrkarten",
+          "exampleSentence": "Ich brauche eine Fahrkarte.",
+          "exampleTranslation": "I need a ticket.",
+          "memoryHook": "Fahr (drive) + Karte (card) = a card for driving/travelling."
+        },
+        {
+          "german": "der Bahnhof",
+          "english": "the train station",
+          "article": "der",
+          "gender": "masculine",
+          "plural": "die Bahnhöfe",
+          "exampleSentence": "Wo ist der Bahnhof?",
+          "exampleTranslation": "Where is the train station?",
+          "memoryHook": "Bahn (rail) + Hof (yard) = the rail yard. 'Hauptbahnhof' = main station."
+        },
+        {
+          "german": "das Gleis",
+          "english": "the platform / track",
+          "article": "das",
+          "gender": "neuter",
+          "plural": "die Gleise",
+          "exampleSentence": "Der Zug fährt von Gleis 3.",
+          "exampleTranslation": "The train leaves from platform 3.",
+          "memoryHook": "das Gleis — listen for 'Gleis' + a number in announcements."
+        },
+        {
+          "german": "abfahren",
+          "english": "to depart",
+          "exampleSentence": "Der Zug fährt um 9 Uhr ab.",
+          "exampleTranslation": "The train departs at 9 o'clock.",
+          "memoryHook": "ab (off/away) + fahren. Separable: '...fährt ... ab' splits apart."
+        },
+        {
+          "german": "die Verspätung",
+          "english": "the delay",
+          "article": "die",
+          "gender": "feminine",
+          "plural": "die Verspätungen",
+          "exampleSentence": "Der Zug hat Verspätung.",
+          "exampleTranslation": "The train is delayed.",
+          "memoryHook": "-ung ending → die. Sadly, a word you'll use often with German trains."
+        }
+      ],
+      "exercises": [
+        {
+          "type": "multiple_choice",
+          "order": 1,
+          "prompt": "You want a ticket to Cologne (Köln). What do you say?",
+          "options": ["Wo ist Köln?", "Eine Fahrkarte nach Köln, bitte.", "Der Zug nach Köln.", "Ich bin Köln."],
+          "correctAnswer": "Eine Fahrkarte nach Köln, bitte.",
+          "explanation": "'Eine Fahrkarte nach [city], bitte' is the standard, polite way to request a ticket. 'nach' is used for destinations (cities and countries)."
+        },
+        {
+          "type": "multiple_choice",
+          "order": 2,
+          "prompt": "What does 'das Gleis' mean?",
+          "options": ["the ticket", "the delay", "the platform / track", "the train"],
+          "correctAnswer": "the platform / track",
+          "explanation": "das Gleis is the platform/track. When you hear 'Gleis 5', your train is at track 5. Don't confuse it with die Fahrkarte (ticket) or der Zug (train)."
+        },
+        {
+          "type": "multiple_choice",
+          "order": 3,
+          "prompt": "How do you ask 'When does the train leave?'",
+          "options": ["Wo fährt der Zug?", "Was ist der Zug?", "Wann fährt der Zug?", "Wer ist der Zug?"],
+          "correctAnswer": "Wann fährt der Zug?",
+          "hint": "'Wann' = when.",
+          "explanation": "'Wann' means when. 'Wo' = where, 'Was' = what, 'Wer' = who. So 'Wann fährt der Zug?' asks about the time of departure."
+        }
+      ]
+    },
+    {
+      "order": 2,
+      "title": "Ordering Food",
+      "subtitle": "Order a coffee, a meal, and ask for the bill — like a local.",
+      "type": "scenario",
+      "estimatedMinutes": 12,
+      "xpReward": 100,
+      "isPremium": false,
+      "hook": "Cafés and restaurants are where German gets fun and low-stakes. Nobody expects perfection — they expect a friendly 'Ich möchte...' (I would like...). Master that one polite phrase and you can order almost anything on any menu in the country.",
+      "explain": "The magic phrase for ordering is 'Ich möchte...' (I would like...) — it's polite and works everywhere. Add the item: 'Ich möchte einen Kaffee' (I would like a coffee). To ask the price: 'Was kostet das?' (What does that cost?). To pay: 'Die Rechnung, bitte' (The bill, please) or 'Zahlen, bitte' (To pay, please). Note the Accusative from Chapter 4 in action: einen Kaffee (masculine → einen). Tipping is normal but modest — you often round up and say the total you want to pay.",
+      "examples": [
+        {
+          "german": "Ich möchte einen Kaffee, bitte.",
+          "english": "I would like a coffee, please.",
+          "breakdown": [
+            { "word": "Ich möchte", "role": "I would like (polite)", "color": "#a855f7" },
+            { "word": "einen Kaffee", "role": "a coffee — Accusative masculine (ein→einen)", "color": "#f97316" },
+            { "word": "bitte", "role": "please", "color": "#ffffff" }
+          ]
+        },
+        {
+          "german": "Was kostet das?",
+          "english": "What does that cost?",
+          "breakdown": [
+            { "word": "Was", "role": "question word: what", "color": "#a855f7" },
+            { "word": "kostet", "role": "kosten → es kostet (costs)", "color": "#ffffff" },
+            { "word": "das", "role": "that / it", "color": "#10b981" }
+          ]
+        },
+        {
+          "german": "Die Rechnung, bitte.",
+          "english": "The bill, please.",
+          "breakdown": [
+            { "word": "Die Rechnung", "role": "the bill (feminine)", "color": "#ec4899" },
+            { "word": "bitte", "role": "please", "color": "#a855f7" }
+          ]
+        }
+      ],
+      "vocabulary": [
+        {
+          "german": "möchten",
+          "english": "would like",
+          "exampleSentence": "Ich möchte ein Wasser.",
+          "exampleTranslation": "I would like a water.",
+          "memoryHook": "The politeness verb. ich möchte, du möchtest, er möchte. Safer than 'ich will' (I want)."
+        },
+        {
+          "german": "der Kaffee",
+          "english": "the coffee",
+          "article": "der",
+          "gender": "masculine",
+          "exampleSentence": "Ein Kaffee, bitte.",
+          "exampleTranslation": "A coffee, please.",
+          "memoryHook": "der Kaffee → 'einen Kaffee' when you order (Accusative masculine)."
+        },
+        {
+          "german": "das Wasser",
+          "english": "the water",
+          "article": "das",
+          "gender": "neuter",
+          "exampleSentence": "Ein Wasser, bitte.",
+          "exampleTranslation": "A water, please.",
+          "memoryHook": "das Wasser stays 'ein Wasser' in the Accusative (neuter never changes)."
+        },
+        {
+          "german": "die Rechnung",
+          "english": "the bill / check",
+          "article": "die",
+          "gender": "feminine",
+          "plural": "die Rechnungen",
+          "exampleSentence": "Die Rechnung, bitte.",
+          "exampleTranslation": "The bill, please.",
+          "memoryHook": "-ung → die. From rechnen (to calculate)."
+        },
+        {
+          "german": "kosten",
+          "english": "to cost",
+          "exampleSentence": "Was kostet der Kuchen?",
+          "exampleTranslation": "What does the cake cost?",
+          "memoryHook": "Sounds like English 'cost'. 'Was kostet das?' — your price-check phrase."
+        }
+      ],
+      "exercises": [
+        {
+          "type": "multiple_choice",
+          "order": 1,
+          "prompt": "What is the polite way to order 'a coffee'?",
+          "options": ["Ich will Kaffee!", "Kaffee.", "Ich möchte einen Kaffee, bitte.", "Wo ist Kaffee?"],
+          "correctAnswer": "Ich möchte einen Kaffee, bitte.",
+          "explanation": "'Ich möchte... bitte' is polite and expected. Notice 'einen Kaffee' — der Kaffee is masculine, and as the thing being ordered (the object) it becomes einen (Accusative)."
+        },
+        {
+          "type": "multiple_choice",
+          "order": 2,
+          "prompt": "How do you ask for the bill?",
+          "options": ["Die Rechnung, bitte.", "Der Bahnhof, bitte.", "Eine Frage, bitte.", "Das Gleis, bitte."],
+          "correctAnswer": "Die Rechnung, bitte.",
+          "explanation": "die Rechnung = the bill. 'Die Rechnung, bitte' or 'Zahlen, bitte' both work when you're ready to pay."
+        },
+        {
+          "type": "fill_blank",
+          "order": 3,
+          "prompt": "Order a water: 'Ich möchte ___ Wasser, bitte.' (das Wasser is neuter)",
+          "correctAnswer": "ein",
+          "hint": "Neuter indefinite article — and neuter doesn't change in the Accusative.",
+          "explanation": "das Wasser is neuter → ein Wasser. Neuter 'ein' is identical in Nominative and Accusative, so it stays 'ein' even though the water is the object being ordered."
+        }
+      ]
+    },
+    {
+      "order": 3,
+      "title": "Asking for Directions",
+      "subtitle": "Find the station, the toilet, the way — and understand the answer.",
+      "type": "scenario",
+      "estimatedMinutes": 12,
+      "xpReward": 100,
+      "isPremium": false,
+      "hook": "Getting lost is the fastest way to learn a city — and directions are one of the most reusable conversations in any language. The core is a single question word: 'Wo?' (Where?). 'Wo ist...?' plus a place gets you 90% of the way there. Then you just need to recognize a handful of answer words: links, rechts, geradeaus.",
+      "explain": "To ask where something is: 'Wo ist...?' (Where is...?) — e.g. 'Wo ist der Bahnhof?'. To ask how to get somewhere: 'Wie komme ich zum/zur...?' (How do I get to the...?). The answers use direction words: links (left), rechts (right), geradeaus (straight ahead). A polite opener helps: 'Entschuldigung' (Excuse me) before you ask. You won't catch every word of the reply — that's fine. Listen for links / rechts / geradeaus and a landmark, and you'll find your way.",
+      "examples": [
+        {
+          "german": "Entschuldigung, wo ist der Bahnhof?",
+          "english": "Excuse me, where is the train station?",
+          "breakdown": [
+            { "word": "Entschuldigung", "role": "excuse me (polite opener)", "color": "#a855f7" },
+            { "word": "wo ist", "role": "where is", "color": "#a855f7" },
+            { "word": "der Bahnhof", "role": "the train station (subject)", "color": "#3b82f6" }
+          ]
+        },
+        {
+          "german": "Gehen Sie geradeaus und dann links.",
+          "english": "Go straight ahead and then left.",
+          "breakdown": [
+            { "word": "Gehen Sie", "role": "go (formal command)", "color": "#ffffff" },
+            { "word": "geradeaus", "role": "straight ahead", "color": "#a855f7" },
+            { "word": "und dann links", "role": "and then left", "color": "#a855f7" }
+          ]
+        },
+        {
+          "german": "Wie komme ich zum Zentrum?",
+          "english": "How do I get to the center?",
+          "breakdown": [
+            { "word": "Wie komme ich", "role": "how do I get", "color": "#a855f7" },
+            { "word": "zum Zentrum", "role": "to the center (zu + dem)", "color": "#ffffff" }
+          ]
+        }
+      ],
+      "vocabulary": [
+        {
+          "german": "die Entschuldigung",
+          "english": "excuse me / sorry",
+          "article": "die",
+          "gender": "feminine",
+          "exampleSentence": "Entschuldigung, wo ist die Toilette?",
+          "exampleTranslation": "Excuse me, where is the toilet?",
+          "memoryHook": "-ung → die. Say it first to politely stop someone."
+        },
+        {
+          "german": "links",
+          "english": "left",
+          "exampleSentence": "Die Bank ist links.",
+          "exampleTranslation": "The bank is on the left.",
+          "memoryHook": "links = left (both start with 'l')."
+        },
+        {
+          "german": "rechts",
+          "english": "right",
+          "exampleSentence": "Der Supermarkt ist rechts.",
+          "exampleTranslation": "The supermarket is on the right.",
+          "memoryHook": "rechts = right (both start with 'r')."
+        },
+        {
+          "german": "geradeaus",
+          "english": "straight ahead",
+          "exampleSentence": "Gehen Sie geradeaus.",
+          "exampleTranslation": "Go straight ahead.",
+          "memoryHook": "gerade (straight) + aus. The 'keep going' word."
+        },
+        {
+          "german": "die Toilette",
+          "english": "the toilet",
+          "article": "die",
+          "gender": "feminine",
+          "plural": "die Toiletten",
+          "exampleSentence": "Wo ist die Toilette, bitte?",
+          "exampleTranslation": "Where is the toilet, please?",
+          "memoryHook": "die Toilette — possibly the most urgent phrase to know abroad."
+        }
+      ],
+      "exercises": [
+        {
+          "type": "multiple_choice",
+          "order": 1,
+          "prompt": "How do you politely ask 'Where is the train station?'",
+          "options": ["Was ist der Bahnhof?", "Entschuldigung, wo ist der Bahnhof?", "Der Bahnhof ist gut.", "Wann ist der Bahnhof?"],
+          "correctAnswer": "Entschuldigung, wo ist der Bahnhof?",
+          "explanation": "'Entschuldigung' (excuse me) opens politely, and 'wo ist...?' asks where something is. 'Wo' is the key direction-asking word."
+        },
+        {
+          "type": "multiple_choice",
+          "order": 2,
+          "prompt": "Someone says 'Gehen Sie rechts.' Which way do you go?",
+          "options": ["Left", "Right", "Straight ahead", "Back"],
+          "correctAnswer": "Right",
+          "hint": "rechts and 'right' both start with r.",
+          "explanation": "rechts = right. Remember the pairs: links = left (l/l), rechts = right (r/r), geradeaus = straight ahead."
+        },
+        {
+          "type": "fill_blank",
+          "order": 3,
+          "prompt": "'Gehen Sie ___.' means 'Go straight ahead.'",
+          "correctAnswer": "geradeaus",
+          "hint": "The 'keep going forward' word.",
+          "explanation": "geradeaus = straight ahead. It combines gerade (straight) + aus. This is the word to listen for when the answer is simply 'keep going'."
+        }
+      ]
+    }
+  ]
+}

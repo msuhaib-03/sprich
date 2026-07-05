@@ -1,0 +1,334 @@
+{
+  "level": "A1",
+  "chapter": 5,
+  "title": "Verbs — Present Tense",
+  "description": "Verbs are the engine of every sentence. German verbs change their ending to match who is doing the action. Learn one pattern of endings and you can conjugate hundreds of verbs.",
+  "lessons": [
+    {
+      "order": 1,
+      "title": "Regular Verbs — One Set of Endings",
+      "subtitle": "machen, spielen, lernen — chop off -en, add the ending for the person.",
+      "type": "grammar",
+      "estimatedMinutes": 12,
+      "xpReward": 90,
+      "isPremium": false,
+      "hook": "English is lazy with verbs: I play, you play, we play — only 'he plays' adds anything. German is more organized: every person gets its own ending. That sounds like more work, but it's actually a gift — the ending tells you WHO is acting, even in a fast or scrambled sentence.",
+      "explain": "A German verb has two parts: a stem and an ending. Take the infinitive (spielen = to play), remove -en to get the stem (spiel-), then add the ending for the subject: ich spiele, du spielst, er/sie/es spielt, wir spielen, ihr spielt, sie/Sie spielen. That's the full set: -e, -st, -t, -en, -t, -en. This exact pattern works for the huge majority of German verbs — machen, lernen, wohnen, kaufen, and thousands more. Memorize the six endings once; reuse them forever.",
+      "examples": [
+        {
+          "german": "Ich spiele Fußball.",
+          "english": "I play football.",
+          "breakdown": [
+            { "word": "Ich", "role": "subject: I", "color": "#3b82f6" },
+            { "word": "spiel", "role": "stem of spielen", "color": "#ffffff" },
+            { "word": "e", "role": "ich ending: -e", "color": "#a855f7" },
+            { "word": "Fußball", "role": "object: football", "color": "#f97316" }
+          ]
+        },
+        {
+          "german": "Du lernst Deutsch.",
+          "english": "You learn German.",
+          "breakdown": [
+            { "word": "Du", "role": "subject: you (informal)", "color": "#3b82f6" },
+            { "word": "lern", "role": "stem of lernen", "color": "#ffffff" },
+            { "word": "st", "role": "du ending: -st", "color": "#a855f7" },
+            { "word": "Deutsch", "role": "object: German", "color": "#f97316" }
+          ]
+        },
+        {
+          "german": "Er macht die Hausaufgaben.",
+          "english": "He does the homework.",
+          "breakdown": [
+            { "word": "Er", "role": "subject: he", "color": "#3b82f6" },
+            { "word": "mach", "role": "stem of machen", "color": "#ffffff" },
+            { "word": "t", "role": "er/sie/es ending: -t", "color": "#a855f7" },
+            { "word": "die Hausaufgaben", "role": "object (plural)", "color": "#f97316" }
+          ]
+        }
+      ],
+      "vocabulary": [
+        {
+          "german": "machen",
+          "english": "to do / to make",
+          "exampleSentence": "Was machst du?",
+          "exampleTranslation": "What are you doing?",
+          "memoryHook": "ich mache, du machst, er macht. The most useful verb for everyday questions."
+        },
+        {
+          "german": "spielen",
+          "english": "to play",
+          "exampleSentence": "Wir spielen im Park.",
+          "exampleTranslation": "We play in the park.",
+          "memoryHook": "spiel- + endings. Sounds like 'spiel' in English board-game culture."
+        },
+        {
+          "german": "lernen",
+          "english": "to learn",
+          "exampleSentence": "Ich lerne jeden Tag.",
+          "exampleTranslation": "I learn every day.",
+          "memoryHook": "lern- + endings. You're doing it right now: du lernst Deutsch."
+        },
+        {
+          "german": "wohnen",
+          "english": "to live / reside",
+          "exampleSentence": "Sie wohnt in Hamburg.",
+          "exampleTranslation": "She lives in Hamburg.",
+          "memoryHook": "For where you LIVE (reside). ich wohne, du wohnst, er wohnt."
+        },
+        {
+          "german": "kommen",
+          "english": "to come",
+          "exampleSentence": "Woher kommst du?",
+          "exampleTranslation": "Where do you come from?",
+          "memoryHook": "komm- + endings. 'Woher kommst du?' is a first-conversation must."
+        }
+      ],
+      "exercises": [
+        {
+          "type": "multiple_choice",
+          "order": 1,
+          "prompt": "Complete: 'Du ___ Deutsch.' (You learn German.)",
+          "options": ["lerne", "lernst", "lernt", "lernen"],
+          "correctAnswer": "lernst",
+          "hint": "The 'du' ending is -st.",
+          "explanation": "For 'du', the ending is -st: du lernst. Stem (lern-) + -st. This -st ending only ever belongs to 'du'."
+        },
+        {
+          "type": "multiple_choice",
+          "order": 2,
+          "prompt": "Which ending belongs to 'er / sie / es'?",
+          "options": ["-e", "-st", "-t", "-en"],
+          "correctAnswer": "-t",
+          "explanation": "er/sie/es takes -t: er macht, sie spielt, es kommt. Note 'ihr' (you all) also uses -t, but that comes with the plural set. The singular he/she/it always ends in -t."
+        },
+        {
+          "type": "fill_blank",
+          "order": 3,
+          "prompt": "Complete: 'Wir ___ im Park.' (We play in the park.) — verb: spielen",
+          "correctAnswer": "spielen",
+          "hint": "The 'wir' ending is -en (same as the infinitive).",
+          "explanation": "For 'wir', the ending is -en: wir spielen. Handily, wir and sie/Sie both use the full -en form, identical to the infinitive."
+        }
+      ]
+    },
+    {
+      "order": 2,
+      "title": "Sein and Haben — The Two You Can't Live Without",
+      "subtitle": "'to be' and 'to have' are irregular — and everywhere. Learn them cold.",
+      "type": "grammar",
+      "estimatedMinutes": 11,
+      "xpReward": 90,
+      "isPremium": false,
+      "hook": "If you learn only two verbs today, make them sein (to be) and haben (to have). 'I am tired', 'I have a question', 'she is nice', 'we have time' — you can't survive a single conversation without them. They're irregular, so they don't follow the tidy pattern from Lesson 1. That's exactly why they're worth memorizing outright.",
+      "explain": "sein (to be) is the most irregular verb in German: ich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie/Sie sind. haben (to have) is mostly regular but drops the 'b' in du and er forms: ich habe, du hast, er/sie/es hat, wir haben, ihr habt, sie/Sie haben. Don't try to derive these — just drill them until they're automatic. They also power future grammar (perfect tense uses haben and sein), so this investment pays off for months.",
+      "examples": [
+        {
+          "german": "Ich bin müde.",
+          "english": "I am tired.",
+          "breakdown": [
+            { "word": "Ich", "role": "subject: I", "color": "#3b82f6" },
+            { "word": "bin", "role": "sein → ich bin", "color": "#a855f7" },
+            { "word": "müde", "role": "adjective: tired", "color": "#ffffff" }
+          ]
+        },
+        {
+          "german": "Du hast Zeit.",
+          "english": "You have time.",
+          "breakdown": [
+            { "word": "Du", "role": "subject: you", "color": "#3b82f6" },
+            { "word": "hast", "role": "haben → du hast (no 'b')", "color": "#a855f7" },
+            { "word": "Zeit", "role": "object: time", "color": "#f97316" }
+          ]
+        },
+        {
+          "german": "Sie ist Ärztin.",
+          "english": "She is a doctor.",
+          "breakdown": [
+            { "word": "Sie", "role": "subject: she", "color": "#ec4899" },
+            { "word": "ist", "role": "sein → er/sie/es ist", "color": "#a855f7" },
+            { "word": "Ärztin", "role": "profession: doctor (female)", "color": "#ffffff" }
+          ]
+        }
+      ],
+      "vocabulary": [
+        {
+          "german": "sein",
+          "english": "to be",
+          "exampleSentence": "Ich bin aus Deutschland.",
+          "exampleTranslation": "I am from Germany.",
+          "memoryHook": "bin, bist, ist, sind, seid, sind. Fully irregular — memorize as a chant."
+        },
+        {
+          "german": "haben",
+          "english": "to have",
+          "exampleSentence": "Wir haben eine Frage.",
+          "exampleTranslation": "We have a question.",
+          "memoryHook": "habe, hast, hat, haben, habt, haben. The 'b' vanishes in du hast / er hat."
+        },
+        {
+          "german": "müde",
+          "english": "tired",
+          "exampleSentence": "Am Abend bin ich müde.",
+          "exampleTranslation": "In the evening I am tired.",
+          "memoryHook": "Adjective. Pairs constantly with sein: ich bin müde."
+        },
+        {
+          "german": "die Zeit",
+          "english": "the time",
+          "article": "die",
+          "gender": "feminine",
+          "exampleSentence": "Hast du Zeit?",
+          "exampleTranslation": "Do you have time?",
+          "memoryHook": "die Zeit. 'Hast du Zeit?' — the ultimate friendly opener."
+        },
+        {
+          "german": "die Frage",
+          "english": "the question",
+          "article": "die",
+          "gender": "feminine",
+          "plural": "die Fragen",
+          "exampleSentence": "Ich habe eine Frage.",
+          "exampleTranslation": "I have a question.",
+          "memoryHook": "-e ending → die. From fragen (to ask)."
+        }
+      ],
+      "exercises": [
+        {
+          "type": "multiple_choice",
+          "order": 1,
+          "prompt": "Complete: 'Ich ___ Student.' (I am a student.)",
+          "options": ["bin", "bist", "ist", "sind"],
+          "correctAnswer": "bin",
+          "hint": "sein with 'ich'.",
+          "explanation": "sein → ich bin. This form only ever goes with 'ich'. 'bist' is du, 'ist' is er/sie/es."
+        },
+        {
+          "type": "multiple_choice",
+          "order": 2,
+          "prompt": "Complete: 'Er ___ einen Hund.' (He has a dog.)",
+          "options": ["habe", "hast", "hat", "haben"],
+          "correctAnswer": "hat",
+          "hint": "haben with 'er' — remember the 'b' disappears.",
+          "explanation": "haben → er hat. In the du and er/sie/es forms, haben loses its 'b': du hast, er hat. Everywhere else the 'b' stays (wir haben, ihr habt)."
+        },
+        {
+          "type": "multiple_choice",
+          "order": 3,
+          "prompt": "Which is the correct 'wir' form of sein?",
+          "options": ["seid", "sind", "bist", "ist"],
+          "correctAnswer": "sind",
+          "explanation": "sein → wir sind. Careful: 'ihr seid' (you all) is spelled differently and is a classic trap. wir/sie/Sie = sind; ihr = seid."
+        }
+      ]
+    },
+    {
+      "order": 3,
+      "title": "Stem-Changing Verbs — When the Vowel Shifts",
+      "subtitle": "fahren → er fährt, lesen → er liest. A small vowel change in du and er.",
+      "type": "grammar",
+      "estimatedMinutes": 12,
+      "xpReward": 100,
+      "isPremium": false,
+      "hook": "Some very common verbs pull a small trick: their stem vowel changes — but ONLY in the du and er/sie/es forms. 'fahren' (to drive) becomes 'du fährst, er fährt'. It looks scary, but the pattern is tight and predictable: a→ä, e→ie, e→i. Once you spot it, you'll recognize it everywhere.",
+      "explain": "Stem-changing (or 'strong') verbs keep the normal endings from Lesson 1 — but their stem vowel shifts in the du and er/sie/es forms only. The three common shifts are: a → ä (fahren: du fährst, er fährt), e → ie (lesen: du liest, er liest), and e → i (sprechen: du sprichst, er spricht). All other forms (ich, wir, ihr, sie) keep the original vowel. So it's not chaos — it's two forms per verb that differ, and always in the same predictable direction.",
+      "examples": [
+        {
+          "german": "Er fährt nach Berlin.",
+          "english": "He drives to Berlin.",
+          "breakdown": [
+            { "word": "Er", "role": "subject: he", "color": "#3b82f6" },
+            { "word": "fähr", "role": "fahren stem, a → ä (only du/er)", "color": "#a855f7" },
+            { "word": "t", "role": "er ending: -t", "color": "#a855f7" },
+            { "word": "nach Berlin", "role": "to Berlin", "color": "#ffffff" }
+          ]
+        },
+        {
+          "german": "Du liest ein Buch.",
+          "english": "You read a book.",
+          "breakdown": [
+            { "word": "Du", "role": "subject: you", "color": "#3b82f6" },
+            { "word": "liest", "role": "lesen, e → ie (du/er)", "color": "#a855f7" },
+            { "word": "ein Buch", "role": "object: a book", "color": "#f97316" }
+          ]
+        },
+        {
+          "german": "Sie spricht Deutsch.",
+          "english": "She speaks German.",
+          "breakdown": [
+            { "word": "Sie", "role": "subject: she", "color": "#ec4899" },
+            { "word": "sprich", "role": "sprechen, e → i (du/er)", "color": "#a855f7" },
+            { "word": "t", "role": "er/sie ending: -t", "color": "#a855f7" },
+            { "word": "Deutsch", "role": "object: German", "color": "#f97316" }
+          ]
+        }
+      ],
+      "vocabulary": [
+        {
+          "german": "fahren",
+          "english": "to drive / to go (by vehicle)",
+          "exampleSentence": "Ich fahre mit dem Zug.",
+          "exampleTranslation": "I go by train.",
+          "memoryHook": "a → ä: ich fahre, du fährst, er fährt. ich and wir keep the plain 'a'."
+        },
+        {
+          "german": "lesen",
+          "english": "to read",
+          "exampleSentence": "Er liest die Zeitung.",
+          "exampleTranslation": "He reads the newspaper.",
+          "memoryHook": "e → ie: ich lese, du liest, er liest. Note du and er look the same (liest)."
+        },
+        {
+          "german": "sprechen",
+          "english": "to speak",
+          "exampleSentence": "Sprichst du Englisch?",
+          "exampleTranslation": "Do you speak English?",
+          "memoryHook": "e → i: ich spreche, du sprichst, er spricht. Essential for any conversation."
+        },
+        {
+          "german": "essen",
+          "english": "to eat",
+          "exampleSentence": "Sie isst einen Apfel.",
+          "exampleTranslation": "She eats an apple.",
+          "memoryHook": "e → i: ich esse, du isst, er isst. (du isst and er isst look identical.)"
+        },
+        {
+          "german": "der Zug",
+          "english": "the train",
+          "article": "der",
+          "gender": "masculine",
+          "plural": "die Züge",
+          "exampleSentence": "Der Zug kommt um acht.",
+          "exampleTranslation": "The train comes at eight.",
+          "memoryHook": "der Zug — you'll need it in Chapter 6 at the train station."
+        }
+      ],
+      "exercises": [
+        {
+          "type": "multiple_choice",
+          "order": 1,
+          "prompt": "Complete: 'Er ___ nach München.' (He drives to Munich.) — verb: fahren",
+          "options": ["fahre", "fahrst", "fährt", "fahren"],
+          "correctAnswer": "fährt",
+          "hint": "a → ä in the er form.",
+          "explanation": "fahren is a stem-changer: a → ä in du and er/sie/es. So er fährt (with ä). 'fahrt' without the umlaut would be wrong for 'er'."
+        },
+        {
+          "type": "multiple_choice",
+          "order": 2,
+          "prompt": "In stem-changing verbs, which forms change the vowel?",
+          "options": ["ich and wir", "du and er/sie/es", "ihr and sie", "all forms"],
+          "correctAnswer": "du and er/sie/es",
+          "explanation": "Only the du and er/sie/es forms change the stem vowel. ich, wir, ihr, and sie/Sie keep the original vowel. That's why it's just two forms to watch per verb."
+        },
+        {
+          "type": "fill_blank",
+          "order": 3,
+          "prompt": "Complete: 'Du ___ Deutsch.' (You speak German.) — verb: sprechen (e → i)",
+          "correctAnswer": "sprichst",
+          "hint": "e → i, then add the du ending -st.",
+          "explanation": "sprechen changes e → i in du/er, then takes the normal -st for du: du sprichst. Stem-change first, then the regular ending."
+        }
+      ]
+    }
+  ]
+}

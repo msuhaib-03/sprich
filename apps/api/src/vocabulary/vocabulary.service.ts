@@ -1,11 +1,19 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
-import { GermanLevel, Prisma } from '@prisma/client'
+import { Prisma } from '@prisma/client'
 
 const DAY_MS = 86_400_000
 
 /** A card is "mastered" once it has survived several successful reviews. */
 const MASTERED_REPETITIONS = 5
+
+/** Lower rank = better match: exact German headword, then prefix, then the rest. */
+function rank(german: string, lowerTerm: string): number {
+  const g = german.toLowerCase()
+  if (g === lowerTerm) return 0
+  if (g.startsWith(lowerTerm)) return 1
+  return 2
+}
 
 @Injectable()
 export class VocabularyService {
@@ -65,36 +73,36 @@ export class VocabularyService {
     })
   }
 
-  /** Searchable dictionary of every word at or below the user's level. */
-  async getDictionary(userId: string, search?: string, level?: GermanLevel) {
-    const user = await this.prisma.user.findUniqueOrThrow({
-      where: { id: userId },
-      select: { level: true },
+  /**
+   * Full German↔English dictionary lookup (FreeDict data, GPL/AGPL — see NOTICE).
+   * Searches both German headwords and English translations.
+   */
+  async searchDictionary(search?: string, limit = 50) {
+    const take = Math.min(Math.max(limit, 1), 100)
+    const term = search?.trim()
+
+    const where: Prisma.DictionaryEntryWhereInput = term
+      ? {
+          OR: [
+            { german: { contains: term, mode: 'insensitive' } },
+            { english: { contains: term, mode: 'insensitive' } },
+          ],
+        }
+      : {}
+
+    const entries = await this.prisma.dictionaryEntry.findMany({
+      where,
+      orderBy: { german: 'asc' },
+      take,
+      select: { german: true, english: true, pos: true, gender: true, example: true },
     })
 
-    const order: GermanLevel[] = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
-    const ceiling = level ?? user.level
-    const allowed = order.slice(0, order.indexOf(ceiling) + 1)
-
-    const where: Prisma.VocabWordWhereInput = { level: { in: allowed } }
-    if (search?.trim()) {
-      where.OR = [
-        { german: { contains: search.trim(), mode: 'insensitive' } },
-        { english: { contains: search.trim(), mode: 'insensitive' } },
-      ]
+    // Prioritise exact / prefix matches on the German headword.
+    if (term) {
+      const lower = term.toLowerCase()
+      entries.sort((a, b) => rank(a.german, lower) - rank(b.german, lower))
     }
-
-    const [words, learnedCards] = await Promise.all([
-      this.prisma.vocabWord.findMany({
-        where,
-        orderBy: [{ level: 'asc' }, { german: 'asc' }],
-        take: 200,
-      }),
-      this.prisma.sRSCard.findMany({ where: { userId }, select: { vocabId: true } }),
-    ])
-
-    const learned = new Set(learnedCards.map((c) => c.vocabId))
-    return words.map((w) => ({ ...w, learned: learned.has(w.id) }))
+    return entries
   }
 
   /** A single word, stable for the whole calendar day (UTC). */

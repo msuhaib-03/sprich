@@ -297,6 +297,22 @@ model Certificate {
   @@map("certificates")
 }
 
+// ─── Dictionary (FreeDict deu-eng, GPL/AGPL v3 — see NOTICE) ────────────────
+
+model DictionaryEntry {
+  id        String  @id @default(cuid())
+  sourceId  String  @unique          // TEI xml:id — makes re-import idempotent
+  german    String                    // headword (orth)
+  english   String                    // translations joined with "; "
+  pos       String?                   // part of speech (n, v, adj, ...)
+  gender    Gender?                   // mapped from TEI <gen>
+  example   String?                   // optional usage example
+
+  @@index([german])
+  @@index([english])
+  @@map("dictionary_entries")
+}
+
 // ─── Subscriptions (Stripe) ────────────────────────────────────────────────
 
 model Subscription {

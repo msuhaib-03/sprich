@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Query, UseGuards, Request } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import { IsString, IsInt, Min, Max } from 'class-validator'
-import { GermanLevel } from '@prisma/client'
 import { VocabularyService } from './vocabulary.service'
 
 class ReviewDto {
@@ -30,12 +29,11 @@ export class VocabularyController {
   }
 
   @Get('dictionary')
-  getDictionary(
-    @Request() req: { user: { id: string } },
+  searchDictionary(
     @Query('search') search?: string,
-    @Query('level') level?: GermanLevel,
+    @Query('limit') limit?: string,
   ) {
-    return this.vocabularyService.getDictionary(req.user.id, search, level)
+    return this.vocabularyService.searchDictionary(search, limit ? parseInt(limit, 10) : 50)
   }
 
   @Get('word-of-the-day')

@@ -24,8 +24,12 @@ interface SRSCard {
   vocab: VocabWord
 }
 
-interface DictWord extends VocabWord {
-  learned: boolean
+interface DictEntry {
+  german: string
+  english: string
+  pos: string | null
+  gender: string | null
+  example: string | null
 }
 
 interface Stats {
@@ -74,7 +78,7 @@ export default function VocabularyPage() {
 
   // Dictionary state
   const [search, setSearch] = useState('')
-  const [dict, setDict] = useState<DictWord[]>([])
+  const [dict, setDict] = useState<DictEntry[]>([])
   const [dictLoading, setDictLoading] = useState(false)
 
   const loadReview = useCallback(() => {
@@ -102,8 +106,8 @@ export default function VocabularyPage() {
     setDictLoading(true)
     const t = setTimeout(() => {
       api
-        .get<DictWord[]>(`/vocabulary/dictionary?search=${encodeURIComponent(search)}`)
-        .catch(() => [] as DictWord[])
+        .get<DictEntry[]>(`/vocabulary/dictionary?search=${encodeURIComponent(search)}`)
+        .catch(() => [] as DictEntry[])
         .then((words) => setDict(words))
         .finally(() => setDictLoading(false))
     }, 250)
@@ -277,34 +281,68 @@ export default function VocabularyPage() {
               <span className="w-5 h-5 border-2 border-[#d4a843] border-t-transparent rounded-full animate-spin" />
             </div>
           ) : dict.length === 0 ? (
-            <p className="text-[#555] text-center py-10">No words found.</p>
+            <p className="text-[#555] text-center py-10">
+              {search.trim() ? 'No words found.' : 'Type to search the dictionary.'}
+            </p>
           ) : (
-            <div className="space-y-2">
-              {dict.map((w) => (
-                <div
-                  key={w.id}
-                  className="flex items-start gap-4 p-4 rounded-xl border border-white/8 bg-[#111]"
+            <>
+              <div className="space-y-2">
+                {dict.map((w, i) => {
+                  const article = genderArticle(w.gender)
+                  return (
+                    <div
+                      key={`${w.german}-${i}`}
+                      className="flex items-start gap-4 p-4 rounded-xl border border-white/8 bg-[#111]"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <p className="font-bold">
+                          {article && <span className={articleColor(article)}>{article} </span>}
+                          {w.german}
+                          <span className="text-[#888] font-normal"> — {w.english}</span>
+                        </p>
+                        {w.example && (
+                          <p className="text-[#555] text-sm mt-1 italic truncate">
+                            &ldquo;{w.example}&rdquo;
+                          </p>
+                        )}
+                      </div>
+                      {w.pos && (
+                        <span className="shrink-0 text-[#444] text-xs italic mt-1">{w.pos}</span>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+              <p className="text-[#444] text-xs text-center mt-6">
+                Dictionary data from{' '}
+                <a
+                  href="https://freedict.org/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline hover:text-[#888]"
                 >
-                  <div className="flex-1 min-w-0">
-                    <p className="font-bold">
-                      {w.article && <span className={articleColor(w.article)}>{w.article} </span>}
-                      {w.german}
-                      <span className="text-[#888] font-normal"> — {w.english}</span>
-                    </p>
-                    <p className="text-[#555] text-sm mt-1 italic truncate">
-                      &ldquo;{w.exampleSentence}&rdquo;
-                    </p>
-                  </div>
-                  <div className="shrink-0 text-right">
-                    <span className="text-[#444] text-xs">{w.level}</span>
-                    {w.learned && <span className="block text-green-400 text-xs mt-1">✓ learned</span>}
-                  </div>
-                </div>
-              ))}
-            </div>
+                  FreeDict
+                </a>{' '}
+                (GPL/AGPL&nbsp;v3)
+              </p>
+            </>
           )}
         </div>
       )}
     </div>
   )
+}
+
+// der/die/das from grammatical gender, for noun entries.
+function genderArticle(gender: string | null): string | null {
+  switch (gender) {
+    case 'masculine':
+      return 'der'
+    case 'feminine':
+      return 'die'
+    case 'neuter':
+      return 'das'
+    default:
+      return null
+  }
 }

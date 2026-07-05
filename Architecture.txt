@@ -100,3 +100,13 @@ Price				Free			~$9.99/month or ~$79/year
 
 
 ===============================================================================
+npm run db:generate
+npm run db:migrate
+cd packages/db && npx prisma db seed
+--->Run when run on a new machine or a reset of setup
+
+We will do Stripe in the end.
+
+
+DATABASE_URL="postgresql://neondb_owner:npg_ujDzrXv2y6PY@ep-nameless-hill-asvdlzti.c-4.eu-central-1.aws.neon.tech/neondb?sslmode=require"
+JWT_SECRET="sprich-dev-secret-change-in-production"
