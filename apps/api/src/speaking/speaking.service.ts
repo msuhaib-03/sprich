@@ -10,6 +10,7 @@ import { AiService } from '../ai/ai.service'
 import { SpeakingScenario } from '@prisma/client'
 import * as fs from 'fs'
 import * as path from 'path'
+import * as os from 'os'
 import * as crypto from 'crypto'
 
 // A current PREMADE ElevenLabs voice (George). IMPORTANT: the free tier can
@@ -23,17 +24,31 @@ const TTS_MODEL = 'eleven_multilingual_v2'
 export class SpeakingService {
   // Same text + voice ⇒ same audio, so cache generated MP3s on disk. Repeat
   // plays (any user, any session) cost zero ElevenLabs credits. Swap this
-  // layer for R2/S3 when deploying multi-instance.
-  private cacheDir: string
+  // layer for R2/S3 when deploying multi-instance. Caching is a pure
+  // optimization — if the disk isn't writable for any reason (read-only
+  // container, permissions), the app must still boot and TTS must still
+  // work, just without the cache.
+  private cacheDir: string | null
 
   constructor(
     private config: ConfigService,
     private prisma: PrismaService,
     private ai: AiService,
   ) {
-    this.cacheDir =
-      this.config.get<string>('AUDIO_CACHE_DIR') || path.join(process.cwd(), '.audio-cache')
-    fs.mkdirSync(this.cacheDir, { recursive: true })
+    // os.tmpdir() (e.g. /tmp) is writable on virtually every hosting
+    // platform, unlike the deployed source directory (process.cwd()),
+    // which some hosts mount read-only. This previously crashed the ENTIRE
+    // app at boot on Render, because a constructor throw fails Nest's
+    // dependency injection for every route, including the health check.
+    const dir =
+      this.config.get<string>('AUDIO_CACHE_DIR') || path.join(os.tmpdir(), 'sprich-audio-cache')
+    try {
+      fs.mkdirSync(dir, { recursive: true })
+      this.cacheDir = dir
+    } catch (err) {
+      console.warn(`⚠️  Audio cache directory unavailable (${dir}) — TTS will not be cached.`, err)
+      this.cacheDir = null
+    }
   }
 
   /**
@@ -47,15 +62,21 @@ export class SpeakingService {
   ): Promise<{ audio: Buffer; cached: boolean }> {
     const voice = voiceId || this.config.get<string>('ELEVENLABS_VOICE_ID') || DEFAULT_VOICE_ID
 
-    const key = crypto.createHash('sha256').update(`${voice}|${TTS_MODEL}|${text}`).digest('hex')
-    const cachePath = path.join(this.cacheDir, `${key}.mp3`)
+    const cachePath = this.cacheDir
+      ? path.join(
+          this.cacheDir,
+          `${crypto.createHash('sha256').update(`${voice}|${TTS_MODEL}|${text}`).digest('hex')}.mp3`,
+        )
+      : null
 
     // Cache first — works even if the key/quota is dead for already-heard audio.
-    try {
-      const audio = await fs.promises.readFile(cachePath)
-      return { audio, cached: true }
-    } catch {
-      /* miss — generate below */
+    if (cachePath) {
+      try {
+        const audio = await fs.promises.readFile(cachePath)
+        return { audio, cached: true }
+      } catch {
+        /* miss — generate below */
+      }
     }
 
     const apiKey = this.config.get<string>('ELEVENLABS_API_KEY')
@@ -88,7 +109,7 @@ export class SpeakingService {
 
     const audio = Buffer.from(await res.arrayBuffer())
     // Persist for next time — fire and forget; a failed write only means a miss later.
-    fs.promises.writeFile(cachePath, audio).catch(() => {})
+    if (cachePath) fs.promises.writeFile(cachePath, audio).catch(() => {})
     return { audio, cached: false }
   }
 
