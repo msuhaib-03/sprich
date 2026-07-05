@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config'
 import Anthropic from '@anthropic-ai/sdk'
 
 type ChatMessage = { role: 'user' | 'assistant'; content: string }
-type Provider = 'anthropic' | 'gemini'
+type Provider = 'anthropic' | 'gemini' | 'groq'
 
 // Anthropic model ids (used when ANTHROPIC_API_KEY is present).
 const CLAUDE_SMART = 'claude-sonnet-4-6'
@@ -14,22 +14,28 @@ export class AiService {
   private anthropic: Anthropic | null
   private geminiKey?: string
   private geminiModel: string
+  private groqKey?: string
+  private groqModel: string
   private provider: Provider
 
   constructor(private config: ConfigService) {
     const anthropicKey = this.config.get<string>('ANTHROPIC_API_KEY')
     this.geminiKey = this.config.get<string>('GEMINI_API_KEY') || undefined
     this.geminiModel = this.config.get<string>('GEMINI_MODEL') || 'gemini-2.0-flash'
+    this.groqKey = this.config.get<string>('GROQ_API_KEY') || undefined
+    this.groqModel = this.config.get<string>('GROQ_MODEL') || 'llama-3.3-70b-versatile'
     this.anthropic = anthropicKey ? new Anthropic({ apiKey: anthropicKey }) : null
 
-    // Explicit override wins; otherwise prefer Claude if available, else Gemini.
+    // Explicit override wins; otherwise prefer Claude → Gemini → Groq by key presence.
     const forced = this.config.get<string>('AI_PROVIDER')
-    if (forced === 'anthropic' || forced === 'gemini') {
+    if (forced === 'anthropic' || forced === 'gemini' || forced === 'groq') {
       this.provider = forced
     } else if (this.anthropic) {
       this.provider = 'anthropic'
     } else if (this.geminiKey) {
       this.provider = 'gemini'
+    } else if (this.groqKey) {
+      this.provider = 'groq'
     } else {
       this.provider = 'anthropic' // nothing configured — calls will error clearly
     }
@@ -45,7 +51,51 @@ export class AiService {
     temperature?: number
   }): Promise<string> {
     if (this.provider === 'gemini') return this.completeGemini(params)
+    if (this.provider === 'groq') return this.completeGroq(params)
     return this.completeAnthropic(params)
+  }
+
+  private async completeGroq(params: {
+    system?: string
+    messages: ChatMessage[]
+    maxTokens: number
+    temperature?: number
+  }): Promise<string> {
+    if (!this.groqKey) {
+      throw new ServiceUnavailableException(
+        'AI is not configured. Set GROQ_API_KEY, GEMINI_API_KEY, or ANTHROPIC_API_KEY.',
+      )
+    }
+
+    // Groq is OpenAI-compatible: a flat messages array with a system role.
+    const messages = [
+      ...(params.system ? [{ role: 'system', content: params.system }] : []),
+      ...params.messages,
+    ]
+
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${this.groqKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: this.groqModel,
+        messages,
+        max_tokens: params.maxTokens,
+        temperature: params.temperature ?? 0.7,
+      }),
+    })
+
+    if (!res.ok) {
+      const detail = await res.text().catch(() => '')
+      throw new HttpException(`AI request failed (${res.status}). ${detail.slice(0, 200)}`, 502)
+    }
+
+    const data = (await res.json()) as {
+      choices?: { message?: { content?: string } }[]
+    }
+    return (data.choices?.[0]?.message?.content ?? '').trim()
   }
 
   private async completeAnthropic(params: {
