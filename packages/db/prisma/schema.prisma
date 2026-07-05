@@ -1,5 +1,10 @@
 generator client {
   provider = "prisma-client-js"
+  // "native" covers local dev (Windows/Mac); "debian-openssl-3.0.x" covers
+  // Render/most Debian-based Node hosting build images, which ship an OpenSSL
+  // version newer than Prisma's own default detection sometimes expects —
+  // a documented source of "query engine not found" errors at deploy time.
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource db {

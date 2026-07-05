@@ -11,8 +11,10 @@
     "build": "turbo run build",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
+    "postinstall": "npm run db:generate",
     "db:generate": "turbo run db:generate",
     "db:migrate": "turbo run db:migrate",
+    "db:deploy": "turbo run db:deploy",
     "db:studio": "cd packages/db && npx prisma studio"
   },
   "devDependencies": {
