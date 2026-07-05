@@ -10,11 +10,16 @@ export class UsersService {
     return this.prisma.user.findUnique({ where: { email } })
   }
 
-  findById(id: string) {
-    return this.prisma.user.findUnique({
+  async findById(id: string) {
+    const user = await this.prisma.user.findUnique({
       where: { id },
       include: { subscription: true },
     })
+    if (!user) return null
+    const sub = user.subscription
+    const isPremium =
+      !!sub && sub.status === 'active' && sub.plan !== 'free'
+    return { ...user, isPremium }
   }
 
   create(data: { email: string; name: string; passwordHash: string }) {

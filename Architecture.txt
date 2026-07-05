@@ -64,7 +64,7 @@ React Query (TanStack)         — Data fetching + caching
 
 Backend:
 Node.js + NestJS (TypeScript)  — Scalable, modular API
-PostgreSQL                     — Core data (users, lessons, progress)
+PostgreSQL/Neon                — Core data (users, lessons, progress)
 Redis                          — Sessions, caching, streak data
 Prisma ORM                     — Type-safe DB queries
 
@@ -97,3 +97,6 @@ Offline mode			No			Yes
 Job-specific vocabulary packs	No			Yes
 Progress reports		Weekly			Daily
 Price				Free			~$9.99/month or ~$79/year
+
+
+===============================================================================

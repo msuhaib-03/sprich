@@ -36,4 +36,14 @@ export class ProgressController {
   getMyProgress(@Request() req: { user: { id: string } }) {
     return this.progressService.getUserProgress(req.user.id)
   }
+
+  @Get('summary')
+  getSummary(@Request() req: { user: { id: string } }) {
+    return this.progressService.getSummary(req.user.id)
+  }
+
+  @Post('weekly-report')
+  weeklyReport(@Request() req: { user: { id: string } }) {
+    return this.progressService.generateWeeklyReport(req.user.id)
+  }
 }
