@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { api } from '@/lib/api'
+import { getTtsUrl } from '@/lib/tts'
 import { useAuthStore } from '@/store/auth'
 
 // ─── Scenarios (match the backend SpeakingScenario enum) ─────────────────────
@@ -51,26 +52,6 @@ interface Message {
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1'
 
-// Fetch TTS audio (auth'd) and return a playable object URL, or null.
-async function fetchAudio(text: string): Promise<string | null> {
-  try {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('sprich_token') : null
-    const res = await fetch(`${API_BASE}/speaking/tts`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      },
-      body: JSON.stringify({ text }),
-    })
-    if (!res.ok) return null
-    const blob = await res.blob()
-    return URL.createObjectURL(blob)
-  } catch {
-    return null
-  }
-}
-
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export default function SpeakPage() {
@@ -111,9 +92,9 @@ export default function SpeakPage() {
     endRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, loading])
 
-  // Play a piece of German text through the server TTS.
+  // Play a piece of German text through the server TTS (memory + disk cached).
   async function play(text: string) {
-    const url = await fetchAudio(text)
+    const url = await getTtsUrl(text)
     if (!url) {
       setTtsNote('Audio unavailable — is ELEVENLABS_API_KEY set on the API?')
       return

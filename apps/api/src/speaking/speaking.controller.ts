@@ -55,11 +55,13 @@ export class SpeakingController {
 
   @Post('tts')
   async tts(@Body() dto: TtsDto, @Res() res: Response) {
-    const audio = await this.speakingService.textToSpeech(dto.text, dto.voiceId)
+    const { audio, cached } = await this.speakingService.textToSpeech(dto.text, dto.voiceId)
     res.set({
       'Content-Type': 'audio/mpeg',
       'Content-Length': String(audio.length),
       'Cache-Control': 'no-store',
+      // Debug: HIT = served from disk, zero ElevenLabs credits spent.
+      'X-Audio-Cache': cached ? 'HIT' : 'MISS',
     })
     res.send(audio)
   }

@@ -8,31 +8,60 @@ import { ConfigService } from '@nestjs/config'
 import { PrismaService } from '../prisma/prisma.service'
 import { AiService } from '../ai/ai.service'
 import { SpeakingScenario } from '@prisma/client'
+import * as fs from 'fs'
+import * as path from 'path'
+import * as crypto from 'crypto'
 
 // A current PREMADE ElevenLabs voice (George). IMPORTANT: the free tier can
 // only use premade voices via the API — Voice Library voices return HTTP 402.
 // Override with ELEVENLABS_VOICE_ID using another *premade* voice id.
 const DEFAULT_VOICE_ID = 'JBFqnCBsd6RMkjVDRZzb'
 
+const TTS_MODEL = 'eleven_multilingual_v2'
+
 @Injectable()
 export class SpeakingService {
+  // Same text + voice ⇒ same audio, so cache generated MP3s on disk. Repeat
+  // plays (any user, any session) cost zero ElevenLabs credits. Swap this
+  // layer for R2/S3 when deploying multi-instance.
+  private cacheDir: string
+
   constructor(
     private config: ConfigService,
     private prisma: PrismaService,
     private ai: AiService,
-  ) {}
+  ) {
+    this.cacheDir =
+      this.config.get<string>('AUDIO_CACHE_DIR') || path.join(process.cwd(), '.audio-cache')
+    fs.mkdirSync(this.cacheDir, { recursive: true })
+  }
 
   /**
    * Generate German speech audio via ElevenLabs and return the raw MP3 bytes.
    * The API key stays server-side; the browser only ever receives audio.
+   * Disk-cached by (voice, model, text) — cache hits never touch ElevenLabs.
    */
-  async textToSpeech(text: string, voiceId?: string): Promise<Buffer> {
+  async textToSpeech(
+    text: string,
+    voiceId?: string,
+  ): Promise<{ audio: Buffer; cached: boolean }> {
+    const voice = voiceId || this.config.get<string>('ELEVENLABS_VOICE_ID') || DEFAULT_VOICE_ID
+
+    const key = crypto.createHash('sha256').update(`${voice}|${TTS_MODEL}|${text}`).digest('hex')
+    const cachePath = path.join(this.cacheDir, `${key}.mp3`)
+
+    // Cache first — works even if the key/quota is dead for already-heard audio.
+    try {
+      const audio = await fs.promises.readFile(cachePath)
+      return { audio, cached: true }
+    } catch {
+      /* miss — generate below */
+    }
+
     const apiKey = this.config.get<string>('ELEVENLABS_API_KEY')
     if (!apiKey) {
       throw new ServiceUnavailableException('Text-to-speech is not configured yet.')
     }
-
-    const voice = voiceId || this.config.get<string>('ELEVENLABS_VOICE_ID') || DEFAULT_VOICE_ID
 
     const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voice}`, {
       method: 'POST',
@@ -44,7 +73,7 @@ export class SpeakingService {
       body: JSON.stringify({
         text,
         // Multilingual model so German is pronounced correctly.
-        model_id: 'eleven_multilingual_v2',
+        model_id: TTS_MODEL,
         voice_settings: { stability: 0.5, similarity_boost: 0.75 },
       }),
     })
@@ -57,8 +86,10 @@ export class SpeakingService {
       )
     }
 
-    const arrayBuffer = await res.arrayBuffer()
-    return Buffer.from(arrayBuffer)
+    const audio = Buffer.from(await res.arrayBuffer())
+    // Persist for next time — fire and forget; a failed write only means a miss later.
+    fs.promises.writeFile(cachePath, audio).catch(() => {})
+    return { audio, cached: false }
   }
 
   /**
