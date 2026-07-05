@@ -1,26 +1,132 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, ServiceUnavailableException, HttpException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import Anthropic from '@anthropic-ai/sdk'
 
+type ChatMessage = { role: 'user' | 'assistant'; content: string }
+type Provider = 'anthropic' | 'gemini'
+
+// Anthropic model ids (used when ANTHROPIC_API_KEY is present).
+const CLAUDE_SMART = 'claude-sonnet-4-6'
+const CLAUDE_CHEAP = 'claude-haiku-4-5-20251001'
+
 @Injectable()
 export class AiService {
-  private client: Anthropic
+  private anthropic: Anthropic | null
+  private geminiKey?: string
+  private geminiModel: string
+  private provider: Provider
 
   constructor(private config: ConfigService) {
-    this.client = new Anthropic({
-      apiKey: this.config.get<string>('ANTHROPIC_API_KEY'),
-    })
+    const anthropicKey = this.config.get<string>('ANTHROPIC_API_KEY')
+    this.geminiKey = this.config.get<string>('GEMINI_API_KEY') || undefined
+    this.geminiModel = this.config.get<string>('GEMINI_MODEL') || 'gemini-2.0-flash'
+    this.anthropic = anthropicKey ? new Anthropic({ apiKey: anthropicKey }) : null
+
+    // Explicit override wins; otherwise prefer Claude if available, else Gemini.
+    const forced = this.config.get<string>('AI_PROVIDER')
+    if (forced === 'anthropic' || forced === 'gemini') {
+      this.provider = forced
+    } else if (this.anthropic) {
+      this.provider = 'anthropic'
+    } else if (this.geminiKey) {
+      this.provider = 'gemini'
+    } else {
+      this.provider = 'anthropic' // nothing configured — calls will error clearly
+    }
   }
 
+  // ── Provider-agnostic completion ──────────────────────────────────────────
+
+  private async complete(params: {
+    system?: string
+    messages: ChatMessage[]
+    maxTokens: number
+    cheap?: boolean
+    temperature?: number
+  }): Promise<string> {
+    if (this.provider === 'gemini') return this.completeGemini(params)
+    return this.completeAnthropic(params)
+  }
+
+  private async completeAnthropic(params: {
+    system?: string
+    messages: ChatMessage[]
+    maxTokens: number
+    cheap?: boolean
+    temperature?: number
+  }): Promise<string> {
+    if (!this.anthropic) {
+      throw new ServiceUnavailableException(
+        'AI is not configured. Set ANTHROPIC_API_KEY or GEMINI_API_KEY on the API.',
+      )
+    }
+    const res = await this.anthropic.messages.create({
+      model: params.cheap ? CLAUDE_CHEAP : CLAUDE_SMART,
+      max_tokens: params.maxTokens,
+      ...(params.temperature != null ? { temperature: params.temperature } : {}),
+      ...(params.system ? { system: params.system } : {}),
+      messages: params.messages,
+    })
+    return res.content[0].type === 'text' ? res.content[0].text : ''
+  }
+
+  private async completeGemini(params: {
+    system?: string
+    messages: ChatMessage[]
+    maxTokens: number
+    temperature?: number
+  }): Promise<string> {
+    if (!this.geminiKey) {
+      throw new ServiceUnavailableException(
+        'AI is not configured. Set GEMINI_API_KEY or ANTHROPIC_API_KEY on the API.',
+      )
+    }
+
+    // Gemini uses roles 'user' / 'model', and the conversation must start with
+    // a user turn — drop a leading assistant (greeting) message if present.
+    const msgs = [...params.messages]
+    while (msgs.length && msgs[0].role === 'assistant') msgs.shift()
+    const contents = msgs.map((m) => ({
+      role: m.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: m.content }],
+    }))
+
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${this.geminiModel}:generateContent?key=${this.geminiKey}`
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ...(params.system ? { system_instruction: { parts: [{ text: params.system }] } } : {}),
+        contents,
+        generationConfig: {
+          maxOutputTokens: params.maxTokens,
+          temperature: params.temperature ?? 0.7,
+        },
+      }),
+    })
+
+    if (!res.ok) {
+      const detail = await res.text().catch(() => '')
+      throw new HttpException(`AI request failed (${res.status}). ${detail.slice(0, 200)}`, 502)
+    }
+
+    const data = (await res.json()) as {
+      candidates?: { content?: { parts?: { text?: string }[] } }[]
+    }
+    const parts = data.candidates?.[0]?.content?.parts ?? []
+    return parts.map((p) => p.text ?? '').join('').trim()
+  }
+
+  // ── Features ──────────────────────────────────────────────────────────────
+
   /**
-   * Generate AI conversation for speaking practice.
-   * The system prompt embeds the scenario and current learner level
-   * so the AI adapts vocabulary complexity, speed, and corrections.
+   * Generate AI conversation for speaking practice. The system prompt embeds
+   * the scenario and learner level so the AI adapts complexity and corrections.
    */
   async speakingTurn(params: {
     scenario: string
     level: string
-    history: Array<{ role: 'user' | 'assistant'; content: string }>
+    history: ChatMessage[]
     userMessage: string
   }) {
     const systemPrompt = `You are a native German conversation partner helping a ${params.level} learner practice the "${params.scenario}" scenario.
@@ -34,38 +140,39 @@ Rules:
 - Keep responses conversational, natural — not textbook perfect
 - If the user freezes or makes big errors, gently guide them back`
 
-    const messages = [
+    const messages: ChatMessage[] = [
       ...params.history,
-      { role: 'user' as const, content: params.userMessage },
+      { role: 'user', content: params.userMessage },
     ]
 
-    const response = await this.client.messages.create({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 1024,
+    const raw = await this.complete({
       system: systemPrompt,
       messages,
+      maxTokens: 1024,
+      temperature: 0.8,
     })
 
-    const raw = response.content[0].type === 'text' ? response.content[0].text : ''
-
-    // Split prose response from JSON block
-    const jsonMatch = raw.match(/\{[\s\S]*\}$/)
-    const prose = jsonMatch ? raw.slice(0, raw.lastIndexOf(jsonMatch[0])).trim() : raw
+    // Split the prose reply from the trailing JSON block (tolerate code fences).
+    const cleaned = raw.replace(/```json/gi, '').replace(/```/g, '').trim()
+    const jsonMatch = cleaned.match(/\{[\s\S]*\}\s*$/)
+    const prose = jsonMatch ? cleaned.slice(0, cleaned.lastIndexOf(jsonMatch[0])).trim() : cleaned
     let meta: Record<string, unknown> = {}
     if (jsonMatch) {
-      try { meta = JSON.parse(jsonMatch[0]) } catch { /* malformed — ignore */ }
+      try {
+        meta = JSON.parse(jsonMatch[0])
+      } catch {
+        /* malformed — ignore */
+      }
     }
 
-    return { response: prose, meta }
+    return { response: prose || cleaned, meta }
   }
 
-  /**
-   * Explain a grammar rule with the WHY — the core differentiator.
-   */
+  /** Explain a grammar rule with the WHY — the core differentiator. */
   async explainGrammar(rule: string, example: string, level: string) {
-    const response = await this.client.messages.create({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 600,
+    return this.complete({
+      maxTokens: 600,
+      temperature: 0.5,
       messages: [
         {
           role: 'user',
@@ -73,13 +180,9 @@ Rules:
         },
       ],
     })
-
-    return response.content[0].type === 'text' ? response.content[0].text : ''
   }
 
-  /**
-   * Generate a weekly motivational report for the user.
-   */
+  /** Generate a short weekly motivational report for the user. */
   async generateWeeklyReport(stats: {
     name: string
     level: string
@@ -88,9 +191,9 @@ Rules:
     hesitationImprovement: number
     weeksUntilLevelComplete: number
   }) {
-    const response = await this.client.messages.create({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 200,
+    return this.complete({
+      maxTokens: 200,
+      cheap: true,
       messages: [
         {
           role: 'user',
@@ -98,7 +201,5 @@ Rules:
         },
       ],
     })
-
-    return response.content[0].type === 'text' ? response.content[0].text : ''
   }
 }
