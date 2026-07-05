@@ -90,7 +90,10 @@ export class SpeakingService {
     )
     form.append('model', 'whisper-large-v3-turbo')
     form.append('language', 'de')
-    form.append('response_format', 'json')
+    // verbose_json exposes per-segment no_speech_prob so we can drop
+    // hallucinations — Whisper invents phrases like "Vielen Dank" on silence.
+    form.append('response_format', 'verbose_json')
+    form.append('temperature', '0')
 
     const res = await fetch('https://api.groq.com/openai/v1/audio/transcriptions', {
       method: 'POST',
@@ -106,7 +109,19 @@ export class SpeakingService {
       )
     }
 
-    const data = (await res.json()) as { text?: string }
+    const data = (await res.json()) as {
+      text?: string
+      segments?: { text?: string; no_speech_prob?: number }[]
+    }
+
+    if (data.segments?.length) {
+      const spoken = data.segments.filter((s) => (s.no_speech_prob ?? 0) < 0.6)
+      return spoken
+        .map((s) => s.text ?? '')
+        .join(' ')
+        .replace(/\s+/g, ' ')
+        .trim()
+    }
     return (data.text ?? '').trim()
   }
 

@@ -88,6 +88,12 @@ export default function SpeakPage() {
   const recorderRef = useRef<MediaRecorder | null>(null)
   const chunksRef = useRef<Blob[]>([])
 
+  // Live input-level meter — lets the user SEE whether the mic hears them.
+  const [micLevel, setMicLevel] = useState(0)
+  const audioCtxRef = useRef<AudioContext | null>(null)
+  const meterRafRef = useRef(0)
+  const peakLevelRef = useRef(0)
+
   // Session end → scores + feedback
   const [finishing, setFinishing] = useState(false)
   const [sessionResult, setSessionResult] = useState<SessionResult | null>(null)
@@ -232,7 +238,10 @@ export default function SpeakPage() {
       return
     }
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      const stream = await navigator.mediaDevices.getUserMedia({
+        // autoGainControl boosts quiet laptop mics; the others clean up noise.
+        audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
+      })
       const mime = MediaRecorder.isTypeSupported('audio/webm')
         ? 'audio/webm'
         : MediaRecorder.isTypeSupported('audio/mp4')
@@ -243,10 +252,45 @@ export default function SpeakPage() {
       rec.ondataavailable = (e) => {
         if (e.data.size > 0) chunksRef.current.push(e.data)
       }
+
+      // Volume meter: sample the stream so the user sees their voice register.
+      const ctx = new AudioContext()
+      const analyser = ctx.createAnalyser()
+      analyser.fftSize = 512
+      ctx.createMediaStreamSource(stream).connect(analyser)
+      const samples = new Uint8Array(analyser.fftSize)
+      peakLevelRef.current = 0
+      const tick = () => {
+        analyser.getByteTimeDomainData(samples)
+        let sum = 0
+        for (let i = 0; i < samples.length; i++) {
+          const v = (samples[i] - 128) / 128
+          sum += v * v
+        }
+        const rms = Math.sqrt(sum / samples.length)
+        peakLevelRef.current = Math.max(peakLevelRef.current, rms)
+        setMicLevel(rms)
+        meterRafRef.current = requestAnimationFrame(tick)
+      }
+      tick()
+      audioCtxRef.current = ctx
+
       rec.onstop = async () => {
         stream.getTracks().forEach((t) => t.stop())
+        cancelAnimationFrame(meterRafRef.current)
+        audioCtxRef.current?.close().catch(() => {})
+        audioCtxRef.current = null
+        setMicLevel(0)
         setRecording(false)
         const blob = new Blob(chunksRef.current, { type: rec.mimeType || 'audio/webm' })
+        // If the whole take never rose above the noise floor, the OS is
+        // feeding us a silent/wrong input device — don't even send it.
+        if (peakLevelRef.current < 0.01) {
+          setTtsNote(
+            'Your microphone recorded only silence. Windows is likely using the wrong input device — check Settings → System → Sound → Input, pick your real mic, and watch its test bar move while you speak.',
+          )
+          return
+        }
         if (blob.size < 1000) {
           setTtsNote('Recording too short — tap the mic, speak, then tap ⏹.')
           return
@@ -267,7 +311,9 @@ export default function SpeakPage() {
             setInput(data.text)
             setTtsNote('')
           } else {
-            setTtsNote("Didn't catch that — try again, a little louder.")
+            setTtsNote(
+              "Didn't catch any speech — speak closer to the mic, and check the green bar moves while you talk.",
+            )
           }
         } catch {
           setTtsNote('Could not transcribe — check the API terminal for details.')
@@ -526,6 +572,19 @@ export default function SpeakPage() {
         )}
         <div ref={endRef} />
       </div>
+
+      {recording && (
+        <div className="flex items-center gap-3 pb-2">
+          <span className="text-xs font-bold text-red-400 animate-pulse">● REC</span>
+          <div className="flex-1 h-1.5 rounded-full bg-[var(--track)] overflow-hidden">
+            <div
+              className="h-full bg-emerald-500 transition-[width] duration-75"
+              style={{ width: `${Math.min(100, micLevel * 400)}%` }}
+            />
+          </div>
+          <span className="text-xs text-[var(--faint)]">speak — this bar should move</span>
+        </div>
+      )}
 
       {ttsNote && <p className="text-[var(--faint)] text-xs text-center pb-2">{ttsNote}</p>}
 
