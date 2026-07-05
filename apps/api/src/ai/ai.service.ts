@@ -183,7 +183,8 @@ export class AiService {
 
 Rules:
 - Respond PRIMARILY in German, at a complexity appropriate for ${params.level}
-- After your German response, add a JSON block: {"corrections": [...], "vocabulary": [...], "encouragement": "..."}
+- After your German response, add a JSON block: {"translation": "...", "corrections": [...], "vocabulary": [...], "encouragement": "..."}
+- translation: a natural English translation of your entire German response
 - corrections: array of {original, corrected, explanation} for any grammar/vocab errors
 - vocabulary: array of {german, english} for new words you used
 - encouragement: one short motivational line in English
@@ -216,6 +217,34 @@ Rules:
     }
 
     return { response: prose || cleaned, meta }
+  }
+
+  /** Plain English translation of German text (for the reveal button). */
+  async translateText(text: string) {
+    return this.complete({
+      maxTokens: 300,
+      temperature: 0.2,
+      messages: [
+        {
+          role: 'user',
+          content: `Translate this German text to natural English. Return ONLY the translation, nothing else:\n\n${text}`,
+        },
+      ],
+    })
+  }
+
+  /** Grammar + meaning + usage breakdown of one sentence from a conversation. */
+  async explainSentence(sentence: string, level: string) {
+    return this.complete({
+      maxTokens: 500,
+      temperature: 0.4,
+      messages: [
+        {
+          role: 'user',
+          content: `You are a German tutor helping a ${level} learner. Explain this German sentence:\n\n"${sentence}"\n\nCover, briefly:\n1. English translation\n2. Grammar breakdown — only what matters here (cases, verb position, word order, separable verbs...)\n3. One practical usage tip (when/how a native would say this)\n\nUnder 150 words. Plain text, no markdown headings.`,
+        },
+      ],
+    })
   }
 
   /** Explain a grammar rule with the WHY — the core differentiator. */

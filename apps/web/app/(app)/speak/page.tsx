@@ -20,9 +20,17 @@ const SCENARIOS = [
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 interface TurnMeta {
+  translation?: string
   corrections?: { original: string; corrected: string; explanation: string }[]
   vocabulary?: { german: string; english: string }[]
   encouragement?: string
+}
+
+// Per-message expandable panel (translation / explanation)
+interface Panel {
+  text?: string
+  open: boolean
+  loading?: boolean
 }
 interface Message {
   role: 'user' | 'assistant'
@@ -63,6 +71,10 @@ export default function SpeakPage() {
   const [autoplay, setAutoplay] = useState(true)
   const [ttsNote, setTtsNote] = useState('')
   const [listening, setListening] = useState(false)
+
+  // Hidden-by-default translation + on-demand explanation, keyed by message index
+  const [tPanels, setTPanels] = useState<Record<number, Panel>>({})
+  const [ePanels, setEPanels] = useState<Record<number, Panel>>({})
 
   const endRef = useRef<HTMLDivElement>(null)
   const recognitionRef = useRef<unknown>(null)
@@ -114,6 +126,8 @@ export default function SpeakPage() {
   function startScenario(id: string) {
     setScenario(id)
     setMessages([])
+    setTPanels({})
+    setEPanels({})
     // Kick off: ask the AI to open the conversation in role. We pass the
     // scenario id explicitly since the state update may not have flushed yet.
     void sendTurnWith(id, 'Beginne das Gespräch. Bitte fang du an.')
@@ -135,6 +149,55 @@ export default function SpeakPage() {
       setMessages([{ role: 'assistant', content: '(Could not start — please try again.)' }])
     } finally {
       setLoading(false)
+    }
+  }
+
+  // ── Translation (hidden until requested) + sentence explanation ──
+
+  async function toggleTranslation(i: number, m: Message) {
+    const cur = tPanels[i]
+    if (cur?.open) {
+      setTPanels((p) => ({ ...p, [i]: { ...cur, open: false } }))
+      return
+    }
+    if (cur?.text) {
+      setTPanels((p) => ({ ...p, [i]: { ...cur, open: true } }))
+      return
+    }
+    // The AI usually ships the translation in its meta — instant and free.
+    const fromMeta = m.meta?.translation
+    if (fromMeta) {
+      setTPanels((p) => ({ ...p, [i]: { text: fromMeta, open: true } }))
+      return
+    }
+    setTPanels((p) => ({ ...p, [i]: { open: true, loading: true } }))
+    try {
+      const res = await api.post<{ translation: string }>('/ai/translate', { text: m.content })
+      setTPanels((p) => ({ ...p, [i]: { text: res.translation, open: true } }))
+    } catch {
+      setTPanels((p) => ({ ...p, [i]: { text: '(Could not translate right now.)', open: true } }))
+    }
+  }
+
+  async function toggleExplain(i: number, m: Message) {
+    const cur = ePanels[i]
+    if (cur?.open) {
+      setEPanels((p) => ({ ...p, [i]: { ...cur, open: false } }))
+      return
+    }
+    if (cur?.text) {
+      setEPanels((p) => ({ ...p, [i]: { ...cur, open: true } }))
+      return
+    }
+    setEPanels((p) => ({ ...p, [i]: { open: true, loading: true } }))
+    try {
+      const res = await api.post<{ explanation: string }>('/ai/sentence/explain', {
+        sentence: m.content,
+        level: user?.level ?? 'A1',
+      })
+      setEPanels((p) => ({ ...p, [i]: { text: res.explanation, open: true } }))
+    } catch {
+      setEPanels((p) => ({ ...p, [i]: { text: '(Could not explain right now.)', open: true } }))
     }
   }
 
@@ -209,7 +272,7 @@ export default function SpeakPage() {
       {/* Header */}
       <div className="flex items-center justify-between gap-3 pb-4 border-b border-[var(--border)]">
         <button
-          onClick={() => { setScenario(null); setMessages([]) }}
+          onClick={() => { setScenario(null); setMessages([]); setTPanels({}); setEPanels({}) }}
           className="text-[var(--muted)] hover:text-[var(--text)] text-sm"
         >
           ← Scenarios
@@ -244,13 +307,51 @@ export default function SpeakPage() {
             >
               <p className="whitespace-pre-wrap leading-relaxed">{m.content}</p>
 
-              {m.role === 'assistant' && (
-                <button
-                  onClick={() => play(m.content)}
-                  className="mt-2 text-xs text-[var(--gold)] hover:opacity-80"
-                >
-                  🔊 Play
-                </button>
+              {m.role === 'assistant' && !m.content.startsWith('(') && (
+                <>
+                  <div className="mt-2 flex items-center gap-4">
+                    <button
+                      onClick={() => play(m.content)}
+                      className="text-xs text-[var(--gold)] hover:opacity-80"
+                    >
+                      🔊 Play
+                    </button>
+                    <button
+                      onClick={() => toggleTranslation(i, m)}
+                      className="text-xs text-[var(--muted)] hover:text-[var(--text)]"
+                    >
+                      🌐 {tPanels[i]?.open ? 'Hide translation' : 'Translate'}
+                    </button>
+                    <button
+                      onClick={() => toggleExplain(i, m)}
+                      className="text-xs text-[var(--muted)] hover:text-[var(--text)]"
+                    >
+                      💡 {ePanels[i]?.open ? 'Hide' : 'Explain'}
+                    </button>
+                  </div>
+
+                  {tPanels[i]?.open && (
+                    <div className="mt-2 pl-3 border-l-2 border-[var(--gold)]/40">
+                      {tPanels[i]?.loading ? (
+                        <span className="text-xs text-[var(--faint)]">Translating…</span>
+                      ) : (
+                        <p className="text-sm text-[var(--muted)] italic">{tPanels[i]?.text}</p>
+                      )}
+                    </div>
+                  )}
+
+                  {ePanels[i]?.open && (
+                    <div className="mt-2 pl-3 border-l-2 border-sky-400/40">
+                      {ePanels[i]?.loading ? (
+                        <span className="text-xs text-[var(--faint)]">Asking your tutor…</span>
+                      ) : (
+                        <p className="text-sm text-[var(--muted)] whitespace-pre-wrap">
+                          {ePanels[i]?.text}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </>
               )}
 
               {/* Corrections + vocab + encouragement */}
