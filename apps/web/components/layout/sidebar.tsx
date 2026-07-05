@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { LogOut } from 'lucide-react'
 import { useAuthStore } from '@/store/auth'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
 
@@ -48,22 +49,26 @@ export function Sidebar() {
       </nav>
 
       {/* User + logout */}
-      <div className="border-t border-[var(--border)] pt-4 px-3">
-        <div className="flex items-center gap-3 mb-3">
-          <div className="w-8 h-8 rounded-full gold-gradient flex items-center justify-center text-black font-bold text-sm">
-            {user?.name?.[0]?.toUpperCase() ?? '?'}
+      <div className="border-t border-[var(--border)] pt-4 px-3 space-y-3">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-8 h-8 shrink-0 rounded-full gold-gradient flex items-center justify-center text-black font-bold text-sm">
+              {user?.name?.[0]?.toUpperCase() ?? '?'}
+            </div>
+            <div className="overflow-hidden">
+              <p className="text-sm font-medium truncate">{user?.name}</p>
+              <p className="text-xs text-[var(--faint)] truncate">{user?.level ?? 'A1'} · {user?.xp ?? 0} XP</p>
+            </div>
           </div>
-          <div className="overflow-hidden">
-            <p className="text-sm font-medium truncate">{user?.name}</p>
-            <p className="text-xs text-[var(--faint)] truncate">{user?.level ?? 'A1'} · {user?.xp ?? 0} XP</p>
-          </div>
-        </div>
-        <div className="flex items-center justify-between">
-          <button onClick={logout} className="text-xs text-[var(--faint-2)] hover:text-[var(--muted)] transition-colors">
-            Log out
-          </button>
           <ThemeToggle />
         </div>
+        <button
+          onClick={logout}
+          className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-semibold border border-[var(--border)] text-[var(--muted)] transition-colors hover:text-red-400 hover:border-red-400/40 hover:bg-red-400/10"
+        >
+          <LogOut size={16} />
+          Log out
+        </button>
       </div>
     </aside>
   )
