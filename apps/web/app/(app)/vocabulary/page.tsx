@@ -339,7 +339,7 @@ export default function VocabularyPage() {
                   const isAdded = added.has(`${w.german}|${w.english}`)
                   return (
                     <div
-                      key={`${w.german}-${i}`}
+                      key={`${w.german}|${w.english}|${i}`}
                       className="flex items-start gap-3 p-4 rounded-xl border border-[var(--border)] bg-[var(--surface)]"
                     >
                       <div className="flex-1 min-w-0">
