@@ -1,0 +1,218 @@
+{
+  "level": "A2",
+  "chapter": 4,
+  "title": "Separable Verbs — The Prefix That Flies to the End",
+  "description": "German has verbs that split in two. The prefix detaches and shoots to the end of the sentence. Once you spot the pattern, sentences that looked scrambled suddenly make sense.",
+  "lessons": [
+    {
+      "order": 1,
+      "title": "How Separable Verbs Split",
+      "subtitle": "aufstehen → 'Ich stehe um 7 Uhr auf.' The prefix goes last.",
+      "type": "grammar",
+      "estimatedMinutes": 12,
+      "xpReward": 100,
+      "isPremium": true,
+      "hook": "You look up 'aufstehen' (to get up), build a sentence, and… where did the 'auf' go? It flew to the very end: 'Ich stehe um sieben Uhr auf.' This isn't a mistake — it's one of German's most systematic habits, and it's easy once you know the rule.",
+      "explain": "Many German verbs have a separable prefix (auf-, an-, ein-, mit-, aus-, ab-, zu-, vor-, fern-). In a normal main-clause sentence, the verb splits: the main part is conjugated in position 2, and the prefix detaches and moves to the END. So aufstehen → 'Ich stehe … auf', anrufen → 'Ich rufe … an'. The prefix is often the meaningful part, so read all the way to the end before deciding what the verb means. You can usually hear the stress on the prefix, which is a clue that a verb is separable.",
+      "examples": [
+        {
+          "german": "Ich stehe um sieben Uhr auf.",
+          "english": "I get up at seven o'clock.",
+          "breakdown": [
+            { "word": "Ich", "role": "subject", "color": "#3b82f6" },
+            { "word": "stehe", "role": "conjugated verb (aufstehen)", "color": "#a855f7" },
+            { "word": "um sieben Uhr", "role": "time", "color": "#ffffff" },
+            { "word": "auf", "role": "separated prefix → END", "color": "#f59e0b" }
+          ]
+        },
+        {
+          "german": "Er ruft seine Mutter an.",
+          "english": "He calls his mother.",
+          "breakdown": [
+            { "word": "Er", "role": "subject", "color": "#3b82f6" },
+            { "word": "ruft", "role": "conjugated verb (anrufen)", "color": "#a855f7" },
+            { "word": "seine Mutter", "role": "object", "color": "#f97316" },
+            { "word": "an", "role": "separated prefix → END", "color": "#f59e0b" }
+          ]
+        },
+        {
+          "german": "Wir kaufen am Samstag ein.",
+          "english": "We go shopping on Saturday.",
+          "breakdown": [
+            { "word": "Wir", "role": "subject", "color": "#3b82f6" },
+            { "word": "kaufen", "role": "conjugated verb (einkaufen)", "color": "#a855f7" },
+            { "word": "am Samstag", "role": "time", "color": "#ffffff" },
+            { "word": "ein", "role": "separated prefix → END", "color": "#f59e0b" }
+          ]
+        }
+      ],
+      "vocabulary": [
+        {
+          "german": "aufstehen",
+          "english": "to get up",
+          "exampleSentence": "Ich stehe früh auf.",
+          "exampleTranslation": "I get up early.",
+          "memoryHook": "Separable: auf + stehen. 'Ich stehe … auf'. Change of state → sein in the perfect."
+        },
+        {
+          "german": "anrufen",
+          "english": "to call (phone)",
+          "exampleSentence": "Ruf mich an!",
+          "exampleTranslation": "Call me!",
+          "memoryHook": "Separable: an + rufen. 'Ich rufe dich an.'"
+        },
+        {
+          "german": "einkaufen",
+          "english": "to shop / go shopping",
+          "exampleSentence": "Ich kaufe im Supermarkt ein.",
+          "exampleTranslation": "I shop at the supermarket.",
+          "memoryHook": "Separable: ein + kaufen. 'Ich kaufe … ein.'"
+        },
+        {
+          "german": "mitkommen",
+          "english": "to come along",
+          "exampleSentence": "Kommst du mit?",
+          "exampleTranslation": "Are you coming along?",
+          "memoryHook": "Separable: mit + kommen. 'Kommst du mit?' — a daily invitation."
+        },
+        {
+          "german": "fernsehen",
+          "english": "to watch TV",
+          "exampleSentence": "Am Abend sehe ich fern.",
+          "exampleTranslation": "In the evening I watch TV.",
+          "memoryHook": "Separable: fern + sehen. 'Ich sehe … fern.'"
+        }
+      ],
+      "exercises": [
+        {
+          "type": "multiple_choice",
+          "order": 1,
+          "prompt": "Where does the prefix of a separable verb go in a normal sentence?",
+          "options": ["it disappears", "right after the subject", "to the end of the sentence", "before the subject"],
+          "correctAnswer": "to the end of the sentence",
+          "explanation": "The conjugated part stays in position 2; the prefix detaches and moves to the end: 'Ich stehe um 7 Uhr auf.'"
+        },
+        {
+          "type": "fill_blank",
+          "order": 2,
+          "prompt": "Complete: 'Ich ___ meine Mutter an.' (I call my mother.) — verb: anrufen",
+          "correctAnswer": "rufe",
+          "hint": "Conjugate 'rufen'; the 'an' is already at the end.",
+          "explanation": "anrufen splits into 'rufe … an'. The conjugated 'rufe' goes to position 2 and 'an' stays at the end."
+        },
+        {
+          "type": "multiple_choice",
+          "order": 3,
+          "prompt": "Which sentence is correct?",
+          "options": ["Ich einkaufe am Samstag.", "Ich kaufe am Samstag ein.", "Ich kaufe ein am Samstag.", "Ich ein kaufe Samstag."],
+          "correctAnswer": "Ich kaufe am Samstag ein.",
+          "explanation": "einkaufen splits: 'kaufe' in position 2, 'ein' at the very end: 'Ich kaufe am Samstag ein.'"
+        }
+      ]
+    },
+    {
+      "order": 2,
+      "title": "Separable Verbs with Modals & in the Past",
+      "subtitle": "With a modal they rejoin; in the Perfect the 'ge' sits inside.",
+      "type": "grammar",
+      "estimatedMinutes": 12,
+      "xpReward": 100,
+      "isPremium": true,
+      "hook": "Good news: separable verbs only split in simple main clauses. Add a modal verb and they snap back together at the end. In the past tense, the 'ge-' even hides INSIDE the word. Two neat rules and you've got the whole system.",
+      "explain": "Two important cases: (1) With a modal, the separable verb stays whole as an infinitive at the end — 'Ich muss früh aufstehen' (not 'stehe auf'). (2) In the Perfect tense, the past participle keeps the prefix and inserts -ge- between the prefix and the stem: aufstehen → aufgestanden, anrufen → angerufen, einkaufen → eingekauft. So: 'Ich habe meine Mutter angerufen', 'Ich bin früh aufgestanden'. The prefix never gets lost — it just travels or wraps around the 'ge'.",
+      "examples": [
+        {
+          "german": "Ich muss früh aufstehen.",
+          "english": "I have to get up early.",
+          "breakdown": [
+            { "word": "Ich muss", "role": "modal in position 2", "color": "#a855f7" },
+            { "word": "früh", "role": "early", "color": "#ffffff" },
+            { "word": "aufstehen", "role": "separable verb stays WHOLE at the end", "color": "#f59e0b" }
+          ]
+        },
+        {
+          "german": "Ich habe meine Mutter angerufen.",
+          "english": "I called my mother.",
+          "breakdown": [
+            { "word": "Ich habe", "role": "helper haben", "color": "#a855f7" },
+            { "word": "meine Mutter", "role": "object", "color": "#f97316" },
+            { "word": "angerufen", "role": "participle: an + ge + rufen", "color": "#f59e0b" }
+          ]
+        },
+        {
+          "german": "Wir haben gestern eingekauft.",
+          "english": "We went shopping yesterday.",
+          "breakdown": [
+            { "word": "Wir haben", "role": "helper haben", "color": "#a855f7" },
+            { "word": "gestern", "role": "yesterday", "color": "#ffffff" },
+            { "word": "eingekauft", "role": "participle: ein + ge + kauft", "color": "#f59e0b" }
+          ]
+        }
+      ],
+      "vocabulary": [
+        {
+          "german": "aufgestanden",
+          "english": "got up (participle)",
+          "exampleSentence": "Ich bin um 6 Uhr aufgestanden.",
+          "exampleTranslation": "I got up at 6.",
+          "memoryHook": "aufstehen → aufgestanden (auf + ge + standen). Uses SEIN."
+        },
+        {
+          "german": "angerufen",
+          "english": "called (participle)",
+          "exampleSentence": "Hast du ihn angerufen?",
+          "exampleTranslation": "Did you call him?",
+          "memoryHook": "anrufen → angerufen (an + ge + rufen). Uses HABEN."
+        },
+        {
+          "german": "eingekauft",
+          "english": "shopped (participle)",
+          "exampleSentence": "Ich habe schon eingekauft.",
+          "exampleTranslation": "I've already shopped.",
+          "memoryHook": "einkaufen → eingekauft (ein + ge + kauft)."
+        },
+        {
+          "german": "abfahren",
+          "english": "to depart",
+          "exampleSentence": "Der Zug fährt gleich ab.",
+          "exampleTranslation": "The train departs soon.",
+          "memoryHook": "Separable: ab + fahren. Participle: abgefahren (uses sein)."
+        },
+        {
+          "german": "vorbereiten",
+          "english": "to prepare",
+          "exampleSentence": "Ich bereite das Essen vor.",
+          "exampleTranslation": "I prepare the meal.",
+          "memoryHook": "Separable: vor + bereiten. 'Ich bereite … vor.'"
+        }
+      ],
+      "exercises": [
+        {
+          "type": "multiple_choice",
+          "order": 1,
+          "prompt": "With a modal verb, a separable verb…",
+          "options": ["still splits", "stays whole (infinitive) at the end", "drops its prefix", "moves to the front"],
+          "correctAnswer": "stays whole (infinitive) at the end",
+          "explanation": "A modal sends the main verb to the end as a full infinitive, so it does NOT split: 'Ich muss früh aufstehen.'"
+        },
+        {
+          "type": "multiple_choice",
+          "order": 2,
+          "prompt": "What is the Perfect participle of 'anrufen'?",
+          "options": ["geanrufen", "angeruft", "angerufen", "anrufgen"],
+          "correctAnswer": "angerufen",
+          "hint": "prefix + ge + stem-participle",
+          "explanation": "Separable participles wrap the -ge- inside: an + ge + rufen = angerufen. 'Ich habe dich angerufen.'"
+        },
+        {
+          "type": "fill_blank",
+          "order": 3,
+          "prompt": "Complete: 'Ich bin früh ___.' (I got up early.) — verb: aufstehen",
+          "correctAnswer": "aufgestanden",
+          "hint": "auf + ge + standen; and aufstehen uses sein.",
+          "explanation": "aufstehen → aufgestanden, with 'sein' as the helper (change of state): 'Ich bin früh aufgestanden.'"
+        }
+      ]
+    }
+  ]
+}

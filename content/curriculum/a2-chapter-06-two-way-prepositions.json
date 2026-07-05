@@ -1,0 +1,219 @@
+{
+  "level": "A2",
+  "chapter": 6,
+  "title": "Two-Way Prepositions — Movement vs Location",
+  "description": "Nine prepositions can take EITHER the Accusative or the Dative. The choice is logical: movement toward a place uses Accusative; resting at a place uses Dative. Master the question 'wohin?' vs 'wo?'.",
+  "lessons": [
+    {
+      "order": 1,
+      "title": "wohin? (Akkusative) vs wo? (Dative)",
+      "subtitle": "The same preposition, two cases — decided by movement.",
+      "type": "grammar",
+      "estimatedMinutes": 13,
+      "xpReward": 110,
+      "isPremium": true,
+      "hook": "'I go INTO the house' vs 'I am IN the house.' Same little word 'in' — but German changes the case to show the difference. Movement into a place → Accusative. Being somewhere → Dative. One logical rule replaces a whole page of memorization.",
+      "explain": "Nine 'two-way' prepositions take Accusative OR Dative: in, an, auf, über, unter, vor, hinter, neben, zwischen. The rule: if there is MOVEMENT toward a destination (answers 'wohin?' — where to?), use the Accusative. If it describes a fixed LOCATION (answers 'wo?' — where?), use the Dative. Compare: 'Ich gehe in die Küche' (into the kitchen — Akk, movement) vs 'Ich bin in der Küche' (in the kitchen — Dat, location). Verbs of motion (gehen, fahren, legen, stellen) pair with Accusative; static verbs (sein, liegen, stehen, bleiben) pair with Dative.",
+      "examples": [
+        {
+          "german": "Ich gehe in die Küche.",
+          "english": "I go into the kitchen. (wohin?)",
+          "breakdown": [
+            { "word": "Ich gehe", "role": "movement verb", "color": "#a855f7" },
+            { "word": "in", "role": "two-way preposition", "color": "#8b5cf6" },
+            { "word": "die Küche", "role": "Accusative — movement (die stays die)", "color": "#f97316" }
+          ]
+        },
+        {
+          "german": "Ich bin in der Küche.",
+          "english": "I am in the kitchen. (wo?)",
+          "breakdown": [
+            { "word": "Ich bin", "role": "static verb (sein)", "color": "#a855f7" },
+            { "word": "in", "role": "two-way preposition", "color": "#8b5cf6" },
+            { "word": "der Küche", "role": "Dative — location (die → der)", "color": "#14b8a6" }
+          ]
+        },
+        {
+          "german": "Das Buch liegt auf dem Tisch.",
+          "english": "The book is (lying) on the table. (wo?)",
+          "breakdown": [
+            { "word": "Das Buch liegt", "role": "static verb (liegen)", "color": "#a855f7" },
+            { "word": "auf", "role": "two-way preposition", "color": "#8b5cf6" },
+            { "word": "dem Tisch", "role": "Dative — location (der → dem)", "color": "#14b8a6" }
+          ]
+        }
+      ],
+      "vocabulary": [
+        {
+          "german": "in",
+          "english": "in / into",
+          "exampleSentence": "Ich gehe in den Park. / Ich bin im Park.",
+          "exampleTranslation": "I go into the park. / I'm in the park.",
+          "memoryHook": "Movement → Akk (in den Park); location → Dat (im Park = in dem Park)."
+        },
+        {
+          "german": "auf",
+          "english": "on / onto",
+          "exampleSentence": "Das Glas steht auf dem Tisch.",
+          "exampleTranslation": "The glass is on the table.",
+          "memoryHook": "auf = on a horizontal surface. Location → Dative (auf dem Tisch)."
+        },
+        {
+          "german": "an",
+          "english": "at / on (vertical) / to",
+          "exampleSentence": "Das Bild hängt an der Wand.",
+          "exampleTranslation": "The picture hangs on the wall.",
+          "memoryHook": "an = at/against a vertical surface (an der Wand)."
+        },
+        {
+          "german": "neben",
+          "english": "next to / beside",
+          "exampleSentence": "Er sitzt neben mir.",
+          "exampleTranslation": "He sits next to me.",
+          "memoryHook": "Two-way: neben + Dat for location (neben mir)."
+        },
+        {
+          "german": "die Küche",
+          "english": "the kitchen",
+          "article": "die",
+          "gender": "feminine",
+          "plural": "die Küchen",
+          "exampleSentence": "Die Küche ist klein.",
+          "exampleTranslation": "The kitchen is small.",
+          "memoryHook": "-e ending → die. In Dative: in der Küche."
+        }
+      ],
+      "exercises": [
+        {
+          "type": "multiple_choice",
+          "order": 1,
+          "prompt": "Which question does the ACCUSATIVE answer with a two-way preposition?",
+          "options": ["wo? (where?)", "wohin? (where to?)", "wann? (when?)", "wer? (who?)"],
+          "correctAnswer": "wohin? (where to?)",
+          "explanation": "Accusative = movement toward a destination ('wohin?'). Dative = fixed location ('wo?'). 'Ich gehe in die Küche' (wohin → Akk)."
+        },
+        {
+          "type": "fill_blank",
+          "order": 2,
+          "prompt": "Location: 'Ich bin in ___ Küche.' (I'm in the kitchen.) — die Küche, Dative",
+          "correctAnswer": "der",
+          "hint": "No movement → Dative; feminine Dative.",
+          "explanation": "'sein' is static → Dative. Feminine Dative: die → der. 'Ich bin in der Küche.'"
+        },
+        {
+          "type": "multiple_choice",
+          "order": 3,
+          "prompt": "'Das Buch liegt auf ___ Tisch.' (The book is on the table.) — der Tisch",
+          "options": ["den", "dem", "der", "das"],
+          "correctAnswer": "dem",
+          "hint": "liegen = location → Dative; masculine.",
+          "explanation": "liegen describes location → Dative. Masculine Dative: der → dem. 'auf dem Tisch.'"
+        }
+      ]
+    },
+    {
+      "order": 2,
+      "title": "Contractions & Getting Around Town",
+      "subtitle": "im, ins, am, ans, zum, zur — and describing where things are.",
+      "type": "grammar",
+      "estimatedMinutes": 11,
+      "xpReward": 100,
+      "isPremium": true,
+      "hook": "Germans love shortcuts. 'in dem' becomes 'im', 'in das' becomes 'ins', 'an dem' becomes 'am'. These contractions are not slang — they're the standard, correct way to speak. Learn the handful and you'll instantly sound more natural.",
+      "explain": "Common preposition + article contractions: in dem → im, in das → ins, an dem → am, an das → ans, zu dem → zum, zu der → zur, bei dem → beim. Use them by default in speech: 'Ich gehe ins Kino' (into the cinema — movement/Akk), 'Ich bin im Kino' (in the cinema — location/Dat). Time expressions also use them: 'am Montag' (on Monday), 'im Sommer' (in summer). These are everywhere when you talk about places and schedules.",
+      "examples": [
+        {
+          "german": "Ich gehe ins Kino.",
+          "english": "I'm going to the cinema.",
+          "breakdown": [
+            { "word": "Ich gehe", "role": "movement", "color": "#a855f7" },
+            { "word": "ins Kino", "role": "in das → ins (Akkusative, movement)", "color": "#f97316" }
+          ]
+        },
+        {
+          "german": "Wir sind im Restaurant.",
+          "english": "We're at the restaurant.",
+          "breakdown": [
+            { "word": "Wir sind", "role": "static (sein)", "color": "#a855f7" },
+            { "word": "im Restaurant", "role": "in dem → im (Dative, location)", "color": "#14b8a6" }
+          ]
+        },
+        {
+          "german": "Am Montag gehe ich zur Arbeit.",
+          "english": "On Monday I go to work.",
+          "breakdown": [
+            { "word": "Am Montag", "role": "an dem → am (time)", "color": "#8b5cf6" },
+            { "word": "gehe ich", "role": "verb + subject (inversion)", "color": "#a855f7" },
+            { "word": "zur Arbeit", "role": "zu der → zur (Dative)", "color": "#14b8a6" }
+          ]
+        }
+      ],
+      "vocabulary": [
+        {
+          "german": "ins",
+          "english": "into the (in + das)",
+          "exampleSentence": "Ich gehe ins Bett.",
+          "exampleTranslation": "I'm going to bed.",
+          "memoryHook": "in das → ins. Movement → Accusative (neuter das)."
+        },
+        {
+          "german": "im",
+          "english": "in the (in + dem)",
+          "exampleSentence": "Im Sommer ist es warm.",
+          "exampleTranslation": "In summer it's warm.",
+          "memoryHook": "in dem → im. Location or time (im Winter, im Kino)."
+        },
+        {
+          "german": "am",
+          "english": "at the / on (an + dem)",
+          "exampleSentence": "Am Wochenende schlafe ich lange.",
+          "exampleTranslation": "On the weekend I sleep in.",
+          "memoryHook": "an dem → am. Days & weekend: am Montag, am Wochenende."
+        },
+        {
+          "german": "zum",
+          "english": "to the (zu + dem)",
+          "exampleSentence": "Ich gehe zum Arzt.",
+          "exampleTranslation": "I'm going to the doctor.",
+          "memoryHook": "zu dem → zum (masc/neut). Feminine: zu der → zur."
+        },
+        {
+          "german": "das Kino",
+          "english": "the cinema",
+          "article": "das",
+          "gender": "neuter",
+          "plural": "die Kinos",
+          "exampleSentence": "Das Kino ist neu.",
+          "exampleTranslation": "The cinema is new.",
+          "memoryHook": "das Kino → ins Kino (to), im Kino (at)."
+        }
+      ],
+      "exercises": [
+        {
+          "type": "multiple_choice",
+          "order": 1,
+          "prompt": "'in das' contracts to…",
+          "options": ["im", "ins", "am", "zum"],
+          "correctAnswer": "ins",
+          "explanation": "in + das → ins (used for movement into a neuter place): 'Ich gehe ins Kino.' Compare in + dem → im."
+        },
+        {
+          "type": "multiple_choice",
+          "order": 2,
+          "prompt": "Which is correct for 'We're at the restaurant' (location)?",
+          "options": ["Wir sind ins Restaurant.", "Wir sind im Restaurant.", "Wir gehen im Restaurant.", "Wir sind an Restaurant."],
+          "correctAnswer": "Wir sind im Restaurant.",
+          "explanation": "Location + 'sein' → Dative. in dem → im: 'Wir sind im Restaurant.' 'ins' would wrongly signal movement."
+        },
+        {
+          "type": "fill_blank",
+          "order": 3,
+          "prompt": "Complete: '___ Montag habe ich frei.' (On Monday I'm off.) — an + dem",
+          "correctAnswer": "Am",
+          "hint": "an dem → ?",
+          "explanation": "Days of the week use 'an dem' → 'am': 'Am Montag habe ich frei.'"
+        }
+      ]
+    }
+  ]
+}

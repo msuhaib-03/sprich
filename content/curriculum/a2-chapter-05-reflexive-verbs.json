@@ -1,0 +1,217 @@
+{
+  "level": "A2",
+  "chapter": 5,
+  "title": "Reflexive Verbs — Doing It to Yourself",
+  "description": "Some German verbs point back at the subject: you wash yourself, you feel yourself well, you look forward. These need a little reflexive pronoun — and they're everywhere in daily routine.",
+  "lessons": [
+    {
+      "order": 1,
+      "title": "Reflexive Pronouns — mich, dich, sich",
+      "subtitle": "The pronoun that mirrors the subject.",
+      "type": "grammar",
+      "estimatedMinutes": 12,
+      "xpReward": 100,
+      "isPremium": true,
+      "hook": "In English you rarely say 'I wash myself' — you just say 'I wash.' German is more explicit: 'Ich wasche mich.' That little 'mich' is a reflexive pronoun, and a whole family of everyday verbs (getting ready, feeling, relaxing) can't work without it.",
+      "explain": "A reflexive verb sends the action back onto the subject, so it needs a reflexive pronoun that matches: ich → mich, du → dich, er/sie/es → sich, wir → uns, ihr → euch, sie/Sie → sich. Example: sich waschen → ich wasche mich, du wäschst dich, er wäscht sich. Notice 'sich' covers he/she/it and they/you-formal. Most of these use the Accusative reflexive pronoun (shown here). Reflexive verbs are extremely common for daily routine and emotions, so learning the pronoun set pays off immediately.",
+      "examples": [
+        {
+          "german": "Ich wasche mich.",
+          "english": "I wash (myself).",
+          "breakdown": [
+            { "word": "Ich", "role": "subject", "color": "#3b82f6" },
+            { "word": "wasche", "role": "verb (sich waschen)", "color": "#a855f7" },
+            { "word": "mich", "role": "reflexive pronoun for 'ich'", "color": "#14b8a6" }
+          ]
+        },
+        {
+          "german": "Er freut sich.",
+          "english": "He is happy / looks forward.",
+          "breakdown": [
+            { "word": "Er", "role": "subject", "color": "#3b82f6" },
+            { "word": "freut", "role": "verb (sich freuen)", "color": "#a855f7" },
+            { "word": "sich", "role": "reflexive pronoun for er/sie/es", "color": "#14b8a6" }
+          ]
+        },
+        {
+          "german": "Wir treffen uns um acht.",
+          "english": "We meet (each other) at eight.",
+          "breakdown": [
+            { "word": "Wir", "role": "subject", "color": "#3b82f6" },
+            { "word": "treffen", "role": "verb (sich treffen)", "color": "#a855f7" },
+            { "word": "uns", "role": "reflexive pronoun for 'wir'", "color": "#14b8a6" },
+            { "word": "um acht", "role": "at eight", "color": "#ffffff" }
+          ]
+        }
+      ],
+      "vocabulary": [
+        {
+          "german": "sich waschen",
+          "english": "to wash (oneself)",
+          "exampleSentence": "Ich wasche mich jeden Morgen.",
+          "exampleTranslation": "I wash every morning.",
+          "memoryHook": "Reflexive + stem-changer: du wäschst dich, er wäscht sich."
+        },
+        {
+          "german": "sich freuen",
+          "english": "to be glad / look forward",
+          "exampleSentence": "Ich freue mich auf das Wochenende.",
+          "exampleTranslation": "I'm looking forward to the weekend.",
+          "memoryHook": "sich freuen auf + Akk = look forward to. A very common emotion verb."
+        },
+        {
+          "german": "sich treffen",
+          "english": "to meet (each other)",
+          "exampleSentence": "Wir treffen uns im Café.",
+          "exampleTranslation": "We're meeting at the café.",
+          "memoryHook": "With 'uns/euch' it means 'each other'. Reflexive + reciprocal."
+        },
+        {
+          "german": "sich fühlen",
+          "english": "to feel",
+          "exampleSentence": "Ich fühle mich gut.",
+          "exampleTranslation": "I feel good.",
+          "memoryHook": "Always reflexive: 'Ich fühle mich …' + adjective (gut, müde, krank)."
+        },
+        {
+          "german": "sich setzen",
+          "english": "to sit down",
+          "exampleSentence": "Setz dich, bitte!",
+          "exampleTranslation": "Sit down, please!",
+          "memoryHook": "'Setz dich!' — a friendly invitation to sit."
+        }
+      ],
+      "exercises": [
+        {
+          "type": "multiple_choice",
+          "order": 1,
+          "prompt": "Complete: 'Ich fühle ___ gut.' (I feel good.)",
+          "options": ["mich", "dich", "sich", "uns"],
+          "correctAnswer": "mich",
+          "hint": "Reflexive pronoun for 'ich'.",
+          "explanation": "The reflexive pronoun for 'ich' is 'mich': 'Ich fühle mich gut.'"
+        },
+        {
+          "type": "multiple_choice",
+          "order": 2,
+          "prompt": "Which reflexive pronoun goes with 'er/sie/es' AND 'sie/Sie'?",
+          "options": ["mich", "dich", "sich", "euch"],
+          "correctAnswer": "sich",
+          "explanation": "'sich' is used for er/sie/es and for sie/Sie: 'Er freut sich', 'Sie treffen sich'. It's the pronoun the verbs are named after (sich freuen)."
+        },
+        {
+          "type": "fill_blank",
+          "order": 3,
+          "prompt": "Complete: 'Wir treffen ___ um acht.' (We meet at eight.)",
+          "correctAnswer": "uns",
+          "hint": "Reflexive pronoun for 'wir'.",
+          "explanation": "The reflexive/reciprocal pronoun for 'wir' is 'uns': 'Wir treffen uns um acht' (we meet each other)."
+        }
+      ]
+    },
+    {
+      "order": 2,
+      "title": "Daily Routine with Reflexive Verbs",
+      "subtitle": "Describe your morning: get up, shower, get dressed, hurry.",
+      "type": "grammar",
+      "estimatedMinutes": 11,
+      "xpReward": 100,
+      "isPremium": true,
+      "hook": "Reflexive verbs are the language of routine. 'I get up, I shower, I get dressed, I hurry.' If you can string these together, you can describe an entire day in German — one of the first things a real conversation asks for.",
+      "explain": "Many daily-routine verbs are reflexive: sich duschen (to shower), sich anziehen (to get dressed), sich beeilen (to hurry), sich ausruhen (to rest). Some are also separable — sich anziehen splits AND is reflexive: 'Ich ziehe mich an.' In the Perfect tense they take haben and keep the reflexive pronoun: 'Ich habe mich geduscht.' Order tip: the reflexive pronoun usually comes right after the conjugated verb: 'Ich dusche mich', 'Morgens dusche ich mich.'",
+      "examples": [
+        {
+          "german": "Ich dusche mich und ziehe mich an.",
+          "english": "I shower and get dressed.",
+          "breakdown": [
+            { "word": "Ich dusche mich", "role": "sich duschen (reflexive)", "color": "#a855f7" },
+            { "word": "und", "role": "and", "color": "#ffffff" },
+            { "word": "ziehe mich an", "role": "sich anziehen (reflexive + separable)", "color": "#f59e0b" }
+          ]
+        },
+        {
+          "german": "Beeil dich, wir sind spät dran!",
+          "english": "Hurry up, we're late!",
+          "breakdown": [
+            { "word": "Beeil dich", "role": "sich beeilen — command form", "color": "#a855f7" },
+            { "word": "wir sind spät dran", "role": "we're late", "color": "#ffffff" }
+          ]
+        },
+        {
+          "german": "Am Abend ruhe ich mich aus.",
+          "english": "In the evening I rest.",
+          "breakdown": [
+            { "word": "Am Abend", "role": "in the evening", "color": "#ffffff" },
+            { "word": "ruhe", "role": "verb (sich ausruhen)", "color": "#a855f7" },
+            { "word": "mich", "role": "reflexive pronoun", "color": "#14b8a6" },
+            { "word": "aus", "role": "separated prefix → END", "color": "#f59e0b" }
+          ]
+        }
+      ],
+      "vocabulary": [
+        {
+          "german": "sich duschen",
+          "english": "to shower",
+          "exampleSentence": "Ich dusche mich morgens.",
+          "exampleTranslation": "I shower in the mornings.",
+          "memoryHook": "Reflexive: 'Ich dusche mich.' Perfect: 'Ich habe mich geduscht.'"
+        },
+        {
+          "german": "sich anziehen",
+          "english": "to get dressed",
+          "exampleSentence": "Zieh dich schnell an!",
+          "exampleTranslation": "Get dressed quickly!",
+          "memoryHook": "Reflexive AND separable: 'Ich ziehe mich an.' Opposite: sich ausziehen."
+        },
+        {
+          "german": "sich beeilen",
+          "english": "to hurry",
+          "exampleSentence": "Ich muss mich beeilen.",
+          "exampleTranslation": "I have to hurry.",
+          "memoryHook": "'Beeil dich!' = Hurry up! A phrase you'll hear (and need) often."
+        },
+        {
+          "german": "sich ausruhen",
+          "english": "to rest",
+          "exampleSentence": "Ruh dich aus!",
+          "exampleTranslation": "Get some rest!",
+          "memoryHook": "Reflexive + separable: 'Ich ruhe mich aus.'"
+        },
+        {
+          "german": "sich anziehen",
+          "english": "to put on / get dressed",
+          "exampleSentence": "Im Winter ziehe ich mich warm an.",
+          "exampleTranslation": "In winter I dress warmly.",
+          "memoryHook": "Pair with clothes vocabulary for a full routine description."
+        }
+      ],
+      "exercises": [
+        {
+          "type": "multiple_choice",
+          "order": 1,
+          "prompt": "Complete: 'Ich ___ mich jeden Morgen.' (I shower every morning.)",
+          "options": ["dusche", "duschst", "duscht", "duschen"],
+          "correctAnswer": "dusche",
+          "hint": "Conjugate sich duschen for 'ich'.",
+          "explanation": "sich duschen → 'Ich dusche mich'. The verb takes the normal -e ending for 'ich', and 'mich' is the reflexive pronoun."
+        },
+        {
+          "type": "multiple_choice",
+          "order": 2,
+          "prompt": "'sich anziehen' is special because it is…",
+          "options": ["only reflexive", "only separable", "both reflexive AND separable", "neither"],
+          "correctAnswer": "both reflexive AND separable",
+          "explanation": "sich anziehen is reflexive (needs mich/dich/sich) and separable (prefix 'an' goes to the end): 'Ich ziehe mich an.'"
+        },
+        {
+          "type": "fill_blank",
+          "order": 3,
+          "prompt": "Complete the Perfect: 'Ich habe mich ___.' (I showered.) — verb: sich duschen",
+          "correctAnswer": "geduscht",
+          "hint": "Regular participle: ge + stem + t.",
+          "explanation": "sich duschen → geduscht, with 'haben' and the reflexive pronoun kept: 'Ich habe mich geduscht.'"
+        }
+      ]
+    }
+  ]
+}

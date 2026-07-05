@@ -21,12 +21,19 @@ function articleFromGender(gender?: string | null): string | null {
   }
 }
 
-/** Lower rank = better match: exact German headword, then prefix, then the rest. */
+/**
+ * Lower rank = better match. Exact headword wins, then prefix, then contains;
+ * within each, single short words beat long multi-word phrases and titles.
+ */
 function rank(german: string, lowerTerm: string): number {
   const g = german.toLowerCase()
-  if (g === lowerTerm) return 0
-  if (g.startsWith(lowerTerm)) return 1
-  return 2
+  const multiWord = g.includes(' ') ? 1 : 0
+  let tier: number
+  if (g === lowerTerm) tier = 0
+  else if (g.startsWith(lowerTerm)) tier = 2
+  else tier = 4
+  // Nudge phrases below single words in the same tier, then favour brevity.
+  return tier + multiWord + Math.min(g.length, 40) / 100
 }
 
 @Injectable()
@@ -94,29 +101,52 @@ export class VocabularyService {
   async searchDictionary(search?: string, limit = 50) {
     const take = Math.min(Math.max(limit, 1), 100)
     const term = search?.trim()
+    if (!term) return []
 
-    const where: Prisma.DictionaryEntryWhereInput = term
-      ? {
+    const select = { german: true, english: true, pos: true, gender: true, example: true } as const
+    const insensitive = 'insensitive' as const
+
+    // Tiered fetch so the most relevant matches are guaranteed to be present,
+    // not just whatever happened to be alphabetically first.
+    const [exact, prefix, contains] = await Promise.all([
+      this.prisma.dictionaryEntry.findMany({
+        where: { german: { equals: term, mode: insensitive } },
+        take,
+        select,
+      }),
+      this.prisma.dictionaryEntry.findMany({
+        where: { german: { startsWith: term, mode: insensitive } },
+        orderBy: { german: 'asc' },
+        take,
+        select,
+      }),
+      this.prisma.dictionaryEntry.findMany({
+        where: {
           OR: [
-            { german: { contains: term, mode: 'insensitive' } },
-            { english: { contains: term, mode: 'insensitive' } },
+            { german: { contains: term, mode: insensitive } },
+            { english: { contains: term, mode: insensitive } },
           ],
-        }
-      : {}
+        },
+        orderBy: { german: 'asc' },
+        take: take * 2,
+        select,
+      }),
+    ])
 
-    const entries = await this.prisma.dictionaryEntry.findMany({
-      where,
-      orderBy: { german: 'asc' },
-      take,
-      select: { german: true, english: true, pos: true, gender: true, example: true },
-    })
-
-    // Prioritise exact / prefix matches on the German headword.
-    if (term) {
-      const lower = term.toLowerCase()
-      entries.sort((a, b) => rank(a.german, lower) - rank(b.german, lower))
+    // Merge in priority order, de-duplicate, then rank so single, short,
+    // common words beat long multi-word phrases and proper-noun titles.
+    const seen = new Set<string>()
+    const merged: typeof exact = []
+    for (const e of [...exact, ...prefix, ...contains]) {
+      const key = `${e.german}|${e.english}`
+      if (seen.has(key)) continue
+      seen.add(key)
+      merged.push(e)
     }
-    return entries
+
+    const lower = term.toLowerCase()
+    merged.sort((a, b) => rank(a.german, lower) - rank(b.german, lower))
+    return merged.slice(0, take)
   }
 
   /** Add an existing curriculum/vocab word to the user's review deck. */

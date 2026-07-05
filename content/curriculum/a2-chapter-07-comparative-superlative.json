@@ -1,0 +1,216 @@
+{
+  "level": "A2",
+  "chapter": 7,
+  "title": "Comparative & Superlative — Bigger, Biggest",
+  "description": "Compare things like a native: faster than, bigger than, the best. German builds comparisons with tidy endings — plus a few high-frequency irregulars you'll use every day.",
+  "lessons": [
+    {
+      "order": 1,
+      "title": "The Comparative — '-er als'",
+      "subtitle": "Add -er and use 'als' for 'than'.",
+      "type": "grammar",
+      "estimatedMinutes": 11,
+      "xpReward": 100,
+      "isPremium": true,
+      "hook": "English says 'faster', 'bigger', 'more beautiful.' German keeps it simple: almost every adjective just adds -er, and 'than' is always 'als'. No 'more' needed — even long words: 'interessanter' (more interesting). One ending does the whole job.",
+      "explain": "To compare two things, add -er to the adjective and use 'als' for 'than': schnell → schneller, 'Ich bin schneller als du' (I'm faster than you). Short adjectives with a, o, u often add an umlaut too: alt → älter, groß → größer, jung → jünger. A few are irregular and must be memorized: gut → besser (good → better), viel → mehr (much → more), gern → lieber (gladly → rather), hoch → höher. Use 'so … wie' for 'as … as': 'so groß wie' (as big as).",
+      "examples": [
+        {
+          "german": "Anna ist schneller als Tom.",
+          "english": "Anna is faster than Tom.",
+          "breakdown": [
+            { "word": "Anna ist", "role": "subject + sein", "color": "#3b82f6" },
+            { "word": "schneller", "role": "comparative: schnell + er", "color": "#a855f7" },
+            { "word": "als Tom", "role": "'als' = than", "color": "#ffffff" }
+          ]
+        },
+        {
+          "german": "Berlin ist größer als München.",
+          "english": "Berlin is bigger than Munich.",
+          "breakdown": [
+            { "word": "Berlin ist", "role": "subject + sein", "color": "#3b82f6" },
+            { "word": "größer", "role": "groß → größer (umlaut!)", "color": "#a855f7" },
+            { "word": "als München", "role": "than Munich", "color": "#ffffff" }
+          ]
+        },
+        {
+          "german": "Kaffee schmeckt besser als Tee.",
+          "english": "Coffee tastes better than tea.",
+          "breakdown": [
+            { "word": "Kaffee schmeckt", "role": "subject + verb", "color": "#3b82f6" },
+            { "word": "besser", "role": "irregular: gut → besser", "color": "#a855f7" },
+            { "word": "als Tee", "role": "than tea", "color": "#ffffff" }
+          ]
+        }
+      ],
+      "vocabulary": [
+        {
+          "german": "schnell",
+          "english": "fast",
+          "exampleSentence": "Das Auto ist schnell.",
+          "exampleTranslation": "The car is fast.",
+          "memoryHook": "Comparative: schneller. No umlaut."
+        },
+        {
+          "german": "groß",
+          "english": "big / tall",
+          "exampleSentence": "Er ist größer als ich.",
+          "exampleTranslation": "He is taller than I am.",
+          "memoryHook": "Umlaut in comparative: groß → größer."
+        },
+        {
+          "german": "gut",
+          "english": "good",
+          "exampleSentence": "Dein Deutsch wird besser.",
+          "exampleTranslation": "Your German is getting better.",
+          "memoryHook": "IRREGULAR: gut → besser → am besten. Memorize this one cold."
+        },
+        {
+          "german": "als",
+          "english": "than",
+          "exampleSentence": "Ich bin älter als du.",
+          "exampleTranslation": "I'm older than you.",
+          "memoryHook": "Always 'als' for 'than' in a comparison. (Different from 'wie' = as/like.)"
+        },
+        {
+          "german": "viel",
+          "english": "much / a lot",
+          "exampleSentence": "Ich habe mehr Zeit heute.",
+          "exampleTranslation": "I have more time today.",
+          "memoryHook": "IRREGULAR: viel → mehr → am meisten."
+        }
+      ],
+      "exercises": [
+        {
+          "type": "multiple_choice",
+          "order": 1,
+          "prompt": "How do you say 'than' in a comparison?",
+          "options": ["wie", "als", "denn", "dass"],
+          "correctAnswer": "als",
+          "explanation": "German uses 'als' for 'than': 'schneller als', 'größer als'. Use 'wie' only for 'as…as' (so groß wie)."
+        },
+        {
+          "type": "multiple_choice",
+          "order": 2,
+          "prompt": "What is the comparative of 'gut'?",
+          "options": ["guter", "gutter", "besser", "mehr"],
+          "correctAnswer": "besser",
+          "explanation": "gut is irregular: gut → besser → am besten (good → better → best). This is one of the most-used adjectives, so memorize it."
+        },
+        {
+          "type": "fill_blank",
+          "order": 3,
+          "prompt": "Complete: 'Berlin ist ___ als München.' (Berlin is bigger than Munich.) — groß",
+          "correctAnswer": "größer",
+          "hint": "Add -er and an umlaut.",
+          "explanation": "groß → größer (with umlaut). 'Berlin ist größer als München.'"
+        }
+      ]
+    },
+    {
+      "order": 2,
+      "title": "The Superlative — 'am …-sten'",
+      "subtitle": "The most, the biggest, the best.",
+      "type": "grammar",
+      "estimatedMinutes": 11,
+      "xpReward": 100,
+      "isPremium": true,
+      "hook": "'The fastest', 'the biggest', 'the best.' To top a comparison, German uses a neat formula: am + adjective + -sten. 'am schnellsten', 'am größten', 'am besten'. It looks unusual at first, but it's a single reliable pattern.",
+      "explain": "The most common superlative form is 'am …-sten' (used after verbs / as an adverb): schnell → am schnellsten, groß → am größten. If the adjective ends in -d, -t, -s, -z, add -esten for pronunciation: alt → am ältesten. Irregulars carry through: gut → am besten, viel → am meisten, gern → am liebsten. When the superlative sits BEFORE a noun, it takes the article + -ste ending: 'der schnellste Zug' (the fastest train), 'die beste Idee' (the best idea).",
+      "examples": [
+        {
+          "german": "Anna läuft am schnellsten.",
+          "english": "Anna runs the fastest.",
+          "breakdown": [
+            { "word": "Anna läuft", "role": "subject + verb", "color": "#3b82f6" },
+            { "word": "am schnellsten", "role": "superlative: am + schnell + sten", "color": "#a855f7" }
+          ]
+        },
+        {
+          "german": "Das ist die beste Idee.",
+          "english": "That's the best idea.",
+          "breakdown": [
+            { "word": "Das ist", "role": "that is", "color": "#3b82f6" },
+            { "word": "die beste", "role": "superlative before a noun (gut → beste)", "color": "#a855f7" },
+            { "word": "Idee", "role": "noun: idea", "color": "#ec4899" }
+          ]
+        },
+        {
+          "german": "Ich trinke am liebsten Kaffee.",
+          "english": "I like drinking coffee most (of all).",
+          "breakdown": [
+            { "word": "Ich trinke", "role": "subject + verb", "color": "#3b82f6" },
+            { "word": "am liebsten", "role": "gern → am liebsten (favourite)", "color": "#a855f7" },
+            { "word": "Kaffee", "role": "object", "color": "#f97316" }
+          ]
+        }
+      ],
+      "vocabulary": [
+        {
+          "german": "am schnellsten",
+          "english": "the fastest",
+          "exampleSentence": "Der ICE fährt am schnellsten.",
+          "exampleTranslation": "The ICE (train) goes the fastest.",
+          "memoryHook": "am + schnell + sten. The standard superlative shape."
+        },
+        {
+          "german": "am besten",
+          "english": "the best",
+          "exampleSentence": "Das schmeckt am besten.",
+          "exampleTranslation": "That tastes the best.",
+          "memoryHook": "gut → besser → am besten. Fully irregular; extremely common."
+        },
+        {
+          "german": "am liebsten",
+          "english": "most preferably / favourite",
+          "exampleSentence": "Am liebsten esse ich Pizza.",
+          "exampleTranslation": "My favourite thing to eat is pizza.",
+          "memoryHook": "gern → lieber → am liebsten. Use it to name your favourite."
+        },
+        {
+          "german": "die Idee",
+          "english": "the idea",
+          "article": "die",
+          "gender": "feminine",
+          "plural": "die Ideen",
+          "exampleSentence": "Das ist eine gute Idee.",
+          "exampleTranslation": "That's a good idea.",
+          "memoryHook": "die Idee → die beste Idee (superlative before a noun)."
+        },
+        {
+          "german": "hoch",
+          "english": "high",
+          "exampleSentence": "Der Berg ist am höchsten.",
+          "exampleTranslation": "The mountain is the highest.",
+          "memoryHook": "Irregular: hoch → höher → am höchsten (the 'c' drops in comparative)."
+        }
+      ],
+      "exercises": [
+        {
+          "type": "multiple_choice",
+          "order": 1,
+          "prompt": "What is the standard superlative pattern (after a verb)?",
+          "options": ["most + adjective", "adjective + -er", "am + adjective + -sten", "der + adjective"],
+          "correctAnswer": "am + adjective + -sten",
+          "explanation": "The adverbial superlative is 'am …-sten': am schnellsten, am größten, am besten."
+        },
+        {
+          "type": "multiple_choice",
+          "order": 2,
+          "prompt": "Superlative of 'gut'?",
+          "options": ["am guten", "am besten", "am meisten", "am gutsten"],
+          "correctAnswer": "am besten",
+          "explanation": "gut → besser → am besten. This irregular chain is one of the most useful to know by heart."
+        },
+        {
+          "type": "fill_blank",
+          "order": 3,
+          "prompt": "Complete: 'Anna läuft ___ .' (Anna runs the fastest.) — schnell",
+          "correctAnswer": "am schnellsten",
+          "hint": "am + schnell + sten",
+          "explanation": "schnell → am schnellsten. 'Anna läuft am schnellsten.'"
+        }
+      ]
+    }
+  ]
+}

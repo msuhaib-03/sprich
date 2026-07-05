@@ -1,0 +1,220 @@
+{
+  "level": "A2",
+  "chapter": 8,
+  "title": "Subordinate Clauses — weil, dass, wenn",
+  "description": "Join ideas like a native: because, that, when/if. These conjunctions do something remarkable — they kick the verb to the very end of their clause. It's the final big word-order rule of A2.",
+  "lessons": [
+    {
+      "order": 1,
+      "title": "weil & dass — Verb to the End",
+      "subtitle": "'because' and 'that' send the conjugated verb to the last position.",
+      "type": "grammar",
+      "estimatedMinutes": 13,
+      "xpReward": 110,
+      "isPremium": true,
+      "hook": "'I'm learning German because I want a job in Germany.' In English the verb stays put. In German, 'weil' (because) does something wild: it throws the conjugated verb all the way to the end. 'Ich lerne Deutsch, weil ich einen Job in Deutschland will.' Weird once, natural forever.",
+      "explain": "Subordinating conjunctions like weil (because) and dass (that) start a subordinate clause, and in that clause the conjugated verb moves to the FINAL position. There's always a comma before the conjunction. Compare: main clause 'Ich will einen Job' (verb second) becomes '…, weil ich einen Job will' (verb last). With dass: 'Ich denke, dass Deutsch wichtig ist' (I think that German is important). If there are two verbs, the conjugated one still goes last: '…, weil ich arbeiten muss.'",
+      "examples": [
+        {
+          "german": "Ich lerne Deutsch, weil ich in Deutschland arbeiten will.",
+          "english": "I'm learning German because I want to work in Germany.",
+          "breakdown": [
+            { "word": "Ich lerne Deutsch", "role": "main clause (verb 2nd)", "color": "#3b82f6" },
+            { "word": "weil", "role": "conjunction → verb goes last", "color": "#8b5cf6" },
+            { "word": "ich in Deutschland arbeiten", "role": "subject + info", "color": "#ffffff" },
+            { "word": "will", "role": "conjugated verb → END", "color": "#a855f7" }
+          ]
+        },
+        {
+          "german": "Ich denke, dass Deutsch wichtig ist.",
+          "english": "I think that German is important.",
+          "breakdown": [
+            { "word": "Ich denke", "role": "main clause", "color": "#3b82f6" },
+            { "word": "dass", "role": "conjunction → verb last", "color": "#8b5cf6" },
+            { "word": "Deutsch wichtig", "role": "subject + adjective", "color": "#ffffff" },
+            { "word": "ist", "role": "verb → END", "color": "#a855f7" }
+          ]
+        },
+        {
+          "german": "Sie bleibt zu Hause, weil sie krank ist.",
+          "english": "She stays home because she is sick.",
+          "breakdown": [
+            { "word": "Sie bleibt zu Hause", "role": "main clause", "color": "#3b82f6" },
+            { "word": "weil", "role": "conjunction", "color": "#8b5cf6" },
+            { "word": "sie krank", "role": "subject + adjective", "color": "#ffffff" },
+            { "word": "ist", "role": "verb → END", "color": "#a855f7" }
+          ]
+        }
+      ],
+      "vocabulary": [
+        {
+          "german": "weil",
+          "english": "because",
+          "exampleSentence": "Ich bleibe hier, weil es regnet.",
+          "exampleTranslation": "I'm staying here because it's raining.",
+          "memoryHook": "Sends the verb to the end. Always a comma before 'weil'."
+        },
+        {
+          "german": "dass",
+          "english": "that (conjunction)",
+          "exampleSentence": "Ich hoffe, dass du kommst.",
+          "exampleTranslation": "I hope that you come.",
+          "memoryHook": "dass (two s) = the conjunction 'that'. Don't confuse with 'das' (the/that article)."
+        },
+        {
+          "german": "denken",
+          "english": "to think",
+          "exampleSentence": "Ich denke, dass es gut ist.",
+          "exampleTranslation": "I think that it's good.",
+          "memoryHook": "Often introduces a dass-clause: 'Ich denke, dass …'."
+        },
+        {
+          "german": "wichtig",
+          "english": "important",
+          "exampleSentence": "Deutsch ist wichtig für den Job.",
+          "exampleTranslation": "German is important for the job.",
+          "memoryHook": "Common adjective; frequent in dass-clauses."
+        },
+        {
+          "german": "krank",
+          "english": "sick / ill",
+          "exampleSentence": "Ich bin heute krank.",
+          "exampleTranslation": "I'm sick today.",
+          "memoryHook": "Pairs with weil: '…, weil ich krank bin.'"
+        }
+      ],
+      "exercises": [
+        {
+          "type": "multiple_choice",
+          "order": 1,
+          "prompt": "After 'weil', where does the conjugated verb go?",
+          "options": ["second position", "right after weil", "to the end of the clause", "it is dropped"],
+          "correctAnswer": "to the end of the clause",
+          "explanation": "weil is a subordinating conjunction: the conjugated verb moves to the end. 'Ich lerne Deutsch, weil ich einen Job will.'"
+        },
+        {
+          "type": "multiple_choice",
+          "order": 2,
+          "prompt": "Which is correct?",
+          "options": ["Ich denke, dass Deutsch ist wichtig.", "Ich denke, dass Deutsch wichtig ist.", "Ich denke, dass ist Deutsch wichtig.", "Ich denke dass wichtig Deutsch ist."],
+          "correctAnswer": "Ich denke, dass Deutsch wichtig ist.",
+          "explanation": "In the dass-clause the verb 'ist' goes to the very end: 'dass Deutsch wichtig ist.' A comma always precedes 'dass'."
+        },
+        {
+          "type": "fill_blank",
+          "order": 3,
+          "prompt": "Complete: 'Sie bleibt zu Hause, weil sie krank ___.' (…because she is sick.)",
+          "correctAnswer": "ist",
+          "hint": "The verb goes to the end of the weil-clause.",
+          "explanation": "The conjugated verb 'ist' lands at the end of the weil-clause: '…, weil sie krank ist.'"
+        }
+      ]
+    },
+    {
+      "order": 2,
+      "title": "wenn — When & If",
+      "subtitle": "Conditions and repeated events, and starting with the clause.",
+      "type": "grammar",
+      "estimatedMinutes": 12,
+      "xpReward": 100,
+      "isPremium": true,
+      "hook": "'When I have time, I'll call you.' 'If it rains, we'll stay home.' German uses one word — 'wenn' — for both 'when' (repeated/future) and 'if'. And like weil, it sends the verb to the end. Plus a neat twist when the sentence STARTS with the wenn-clause.",
+      "explain": "'wenn' introduces conditions ('if') and repeated/future time ('when(ever)'), and — like all subordinating conjunctions — pushes the verb to the end: 'Ich rufe dich an, wenn ich Zeit habe.' When the wenn-clause comes FIRST, the whole clause fills position 1, so the main clause's verb comes immediately after the comma (verb-comma-verb): 'Wenn ich Zeit habe, rufe ich dich an.' Note: for a single past event ('when' = as/at that time), German uses 'als' instead of 'wenn' — but for conditions and repeated events, 'wenn' is your word.",
+      "examples": [
+        {
+          "german": "Ich rufe dich an, wenn ich Zeit habe.",
+          "english": "I'll call you when I have time.",
+          "breakdown": [
+            { "word": "Ich rufe dich an", "role": "main clause (separable verb!)", "color": "#3b82f6" },
+            { "word": "wenn", "role": "conjunction → verb last", "color": "#8b5cf6" },
+            { "word": "ich Zeit", "role": "subject + object", "color": "#ffffff" },
+            { "word": "habe", "role": "verb → END", "color": "#a855f7" }
+          ]
+        },
+        {
+          "german": "Wenn es regnet, bleiben wir zu Hause.",
+          "english": "If it rains, we'll stay home.",
+          "breakdown": [
+            { "word": "Wenn es regnet", "role": "wenn-clause FIRST = position 1", "color": "#8b5cf6" },
+            { "word": "bleiben", "role": "main verb right after the comma", "color": "#a855f7" },
+            { "word": "wir zu Hause", "role": "subject + place", "color": "#ffffff" }
+          ]
+        },
+        {
+          "german": "Wenn ich müde bin, trinke ich Kaffee.",
+          "english": "When(ever) I'm tired, I drink coffee.",
+          "breakdown": [
+            { "word": "Wenn ich müde bin", "role": "wenn-clause (verb 'bin' last)", "color": "#8b5cf6" },
+            { "word": "trinke", "role": "main verb after comma", "color": "#a855f7" },
+            { "word": "ich Kaffee", "role": "subject + object", "color": "#ffffff" }
+          ]
+        }
+      ],
+      "vocabulary": [
+        {
+          "german": "wenn",
+          "english": "when / if",
+          "exampleSentence": "Wenn du willst, komme ich mit.",
+          "exampleTranslation": "If you want, I'll come along.",
+          "memoryHook": "Conditions + repeated events. Verb to the end. For one past event, use 'als'."
+        },
+        {
+          "german": "regnen",
+          "english": "to rain",
+          "exampleSentence": "Es regnet heute.",
+          "exampleTranslation": "It's raining today.",
+          "memoryHook": "Weather verb with 'es': es regnet. In a clause: '…, wenn es regnet.'"
+        },
+        {
+          "german": "bleiben",
+          "english": "to stay",
+          "exampleSentence": "Wir bleiben zu Hause.",
+          "exampleTranslation": "We're staying home.",
+          "memoryHook": "Static verb; often in wenn-sentences about plans."
+        },
+        {
+          "german": "die Zeit",
+          "english": "time",
+          "article": "die",
+          "gender": "feminine",
+          "exampleSentence": "Wenn ich Zeit habe, lese ich.",
+          "exampleTranslation": "When I have time, I read.",
+          "memoryHook": "'wenn ich Zeit habe' — a phrase you'll reuse constantly."
+        },
+        {
+          "german": "zu Hause",
+          "english": "at home",
+          "exampleSentence": "Ich bin zu Hause.",
+          "exampleTranslation": "I'm at home.",
+          "memoryHook": "'zu Hause' = at home (location). 'nach Hause' = (to) home (movement)."
+        }
+      ],
+      "exercises": [
+        {
+          "type": "multiple_choice",
+          "order": 1,
+          "prompt": "When the wenn-clause comes first, what comes right after the comma?",
+          "options": ["the subject", "the main clause's conjugated verb", "another conjunction", "nothing"],
+          "correctAnswer": "the main clause's conjugated verb",
+          "explanation": "The whole wenn-clause fills position 1, so the main verb follows immediately: 'Wenn es regnet, bleiben wir zu Hause.' (verb-comma-verb)."
+        },
+        {
+          "type": "fill_blank",
+          "order": 2,
+          "prompt": "Complete: 'Ich rufe dich an, wenn ich Zeit ___.' (…when I have time.)",
+          "correctAnswer": "habe",
+          "hint": "Verb goes to the end of the wenn-clause.",
+          "explanation": "The verb 'habe' moves to the end of the wenn-clause: '…, wenn ich Zeit habe.'"
+        },
+        {
+          "type": "multiple_choice",
+          "order": 3,
+          "prompt": "For a single completed past event ('when I was young'), German prefers…",
+          "options": ["wenn", "als", "dass", "weil"],
+          "correctAnswer": "als",
+          "explanation": "Use 'als' for one specific past event ('Als ich jung war…'). 'wenn' is for conditions and repeated/future events."
+        }
+      ]
+    }
+  ]
+}
