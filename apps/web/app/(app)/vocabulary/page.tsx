@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import { api } from '@/lib/api'
+import { playTts } from '@/lib/tts'
 
 // ─── Types ─────────────────────────────────────────────────────────────────
 
@@ -55,6 +56,26 @@ function articleColor(article: string | null) {
   }
 }
 
+// The sounds that trip up every German beginner — ä/ö/ü (umlauts), ß (eszett,
+// the "Greek beta" letter = sharp ss), and the key letter combinations.
+const SOUNDS: { symbol: string; name: string; how: string; example: string; meaning: string }[] = [
+  { symbol: 'ä', name: 'a-umlaut', how: 'Like the "e" in "bed" (short) or the "ai" in "air" (long).', example: 'Mädchen', meaning: 'girl' },
+  { symbol: 'ö', name: 'o-umlaut', how: 'Say "ay" as in "day", hold your tongue there, then round your lips into an O.', example: 'schön', meaning: 'beautiful' },
+  { symbol: 'ü', name: 'u-umlaut', how: 'Say "ee", keep your tongue there, then round your lips tightly like whistling.', example: 'fünf', meaning: 'five' },
+  { symbol: 'ß', name: 'eszett (sharp S)', how: 'Looks like a Greek beta (β) — but it is simply a sharp, hissed "ss" sound.', example: 'heißen', meaning: 'to be called' },
+  { symbol: 'sch', name: '', how: 'Exactly like English "sh" in "shoe".', example: 'Schule', meaning: 'school' },
+  { symbol: 'ch (after a, o, u)', name: 'hard ch', how: 'A throaty "kh" from the back of the mouth, like Scottish "loch".', example: 'Buch', meaning: 'book' },
+  { symbol: 'ch (after e, i)', name: 'soft ch', how: 'A soft hiss at the front of the mouth, like whispering "hue".', example: 'ich', meaning: 'I' },
+  { symbol: 'ei', name: '', how: 'Like English "eye". (Rule: say the SECOND letter\'s English name.)', example: 'nein', meaning: 'no' },
+  { symbol: 'ie', name: '', how: 'A long "ee" as in "see". (Same rule: say the second letter.)', example: 'Liebe', meaning: 'love' },
+  { symbol: 'eu / äu', name: '', how: 'Like "oy" in "boy".', example: 'Deutsch', meaning: 'German' },
+  { symbol: 'w', name: '', how: 'Like English "v" — Wasser sounds like "vasser".', example: 'Wasser', meaning: 'water' },
+  { symbol: 'v', name: '', how: 'Usually like English "f" — Vater sounds like "fahter".', example: 'Vater', meaning: 'father' },
+  { symbol: 'z', name: '', how: 'Like "ts" in "cats" — even at the start of a word.', example: 'Zeit', meaning: 'time' },
+  { symbol: 'j', name: '', how: 'Like English "y" in "yes".', example: 'ja', meaning: 'yes' },
+  { symbol: 'r', name: '', how: 'A soft gargle from the back of the throat (not the English r).', example: 'rot', meaning: 'red' },
+]
+
 // SM-2 grade buttons → quality score
 const GRADES = [
   { label: 'Again', sub: '< 1 min', quality: 1, cls: 'border-red-500/30 text-red-400 hover:bg-red-500/10' },
@@ -66,7 +87,7 @@ const GRADES = [
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export default function VocabularyPage() {
-  const [tab, setTab] = useState<'review' | 'dictionary'>('review')
+  const [tab, setTab] = useState<'review' | 'dictionary' | 'sounds'>('review')
   const [stats, setStats] = useState<Stats | null>(null)
   const [wotd, setWotd] = useState<VocabWord | null>(null)
 
@@ -197,9 +218,18 @@ export default function VocabularyPage() {
       {wotd && (
         <div className="rounded-2xl border border-[#d4a843]/20 bg-gradient-to-br from-[#d4a843]/8 to-transparent p-5 mb-8">
           <p className="text-[var(--gold)] text-xs uppercase tracking-wider mb-2 font-medium">✨ Word of the day</p>
-          <p className="text-2xl font-black">
-            {wotd.article && <span className={articleColor(wotd.article)}>{wotd.article} </span>}
-            {wotd.german}
+          <p className="text-2xl font-black flex items-center gap-3">
+            <span>
+              {wotd.article && <span className={articleColor(wotd.article)}>{wotd.article} </span>}
+              {wotd.german}
+            </span>
+            <button
+              onClick={() => playTts(`${wotd.article ?? ''} ${wotd.german}. ${wotd.exampleSentence}`)}
+              className="text-base text-[var(--gold)] hover:opacity-80"
+              title="Hear it spoken"
+            >
+              🔊
+            </button>
           </p>
           <p className="text-[var(--muted)] text-sm mt-1">{wotd.english}</p>
           <p className="text-[var(--faint)] text-sm mt-3 italic">
@@ -221,7 +251,7 @@ export default function VocabularyPage() {
 
       {/* Tabs */}
       <div className="flex gap-2 mb-6 border-b border-[var(--border)]">
-        {(['review', 'dictionary'] as const).map((t) => (
+        {(['review', 'dictionary', 'sounds'] as const).map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
@@ -229,7 +259,11 @@ export default function VocabularyPage() {
               tab === t ? 'border-[#d4a843] text-[var(--gold)]' : 'border-transparent text-[var(--faint)] hover:text-[var(--text)]'
             }`}
           >
-            {t === 'review' ? `Review${stats?.due ? ` · ${stats.due}` : ''}` : 'Dictionary'}
+            {t === 'review'
+              ? `Review${stats?.due ? ` · ${stats.due}` : ''}`
+              : t === 'dictionary'
+                ? 'Dictionary'
+                : 'Sounds 🔊'}
           </button>
         ))}
       </div>
@@ -255,19 +289,34 @@ export default function VocabularyPage() {
             </div>
           ) : (
             <div>
-              {/* Flashcard */}
-              <button
+              {/* Flashcard (div, not button — it contains the 🔊 button) */}
+              <div
+                role="button"
+                tabIndex={0}
                 onClick={() => setRevealed(true)}
-                className="w-full text-left rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-8 min-h-[260px] flex flex-col justify-center transition-colors hover:border-[var(--border-strong)]"
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setRevealed(true) }}
+                className="w-full text-left rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-8 min-h-[260px] flex flex-col justify-center transition-colors hover:border-[var(--border-strong)] cursor-pointer"
               >
                 <p className="text-[var(--faint)] text-xs uppercase tracking-wider mb-4">
                   {current.vocab.level} · {current.vocab.grammaticalCase ?? 'vocabulary'}
                 </p>
-                <p className="text-4xl font-black mb-2">
-                  {current.vocab.article && (
-                    <span className={articleColor(current.vocab.article)}>{current.vocab.article} </span>
-                  )}
-                  {current.vocab.german}
+                <p className="text-4xl font-black mb-2 flex items-center gap-3">
+                  <span>
+                    {current.vocab.article && (
+                      <span className={articleColor(current.vocab.article)}>{current.vocab.article} </span>
+                    )}
+                    {current.vocab.german}
+                  </span>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      playTts(`${current.vocab.article ?? ''} ${current.vocab.german}`)
+                    }}
+                    className="text-lg text-[var(--gold)] hover:opacity-80"
+                    title="Hear the word"
+                  >
+                    🔊
+                  </button>
                 </p>
                 {current.vocab.plural && (
                   <p className="text-[var(--faint)] text-sm">plural: die {current.vocab.plural}</p>
@@ -287,7 +336,7 @@ export default function VocabularyPage() {
                 ) : (
                   <p className="text-[var(--faint-2)] text-sm mt-6">Tap to reveal the meaning</p>
                 )}
-              </button>
+              </div>
 
               {/* Grade buttons */}
               {revealed && (
@@ -358,6 +407,13 @@ export default function VocabularyPage() {
                         <span className="shrink-0 text-[var(--faint-2)] text-xs italic mt-1">{w.pos}</span>
                       )}
                       <button
+                        onClick={() => playTts(w.german)}
+                        title="Hear it"
+                        className="shrink-0 w-8 h-8 rounded-lg text-sm border border-[var(--border)] text-[var(--muted)] hover:text-[var(--text)] transition-colors"
+                      >
+                        🔊
+                      </button>
+                      <button
                         onClick={() => addDictToDeck(w)}
                         disabled={isAdded}
                         title={isAdded ? 'In your deck' : 'Add to review deck'}
@@ -387,6 +443,43 @@ export default function VocabularyPage() {
               </p>
             </>
           )}
+        </div>
+      )}
+
+      {/* ── Sounds tab: how to pronounce the tricky German letters ── */}
+      {tab === 'sounds' && (
+        <div>
+          <p className="text-[var(--muted)] text-sm mb-6">
+            German spelling is far more consistent than English — learn these once and you can
+            pronounce almost any word you read. Tap <span className="text-[var(--gold)]">🔊</span> to
+            hear each example spoken by a native-style voice.
+          </p>
+          <div className="space-y-2">
+            {SOUNDS.map((s) => (
+              <div
+                key={s.symbol}
+                className="flex items-center gap-4 p-4 rounded-xl border border-[var(--border)] bg-[var(--surface)]"
+              >
+                <div className="shrink-0 w-24">
+                  <p className="text-xl font-black gold-text leading-tight">{s.symbol}</p>
+                  {s.name && <p className="text-[var(--faint)] text-[10px] mt-0.5">{s.name}</p>}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm text-[var(--text-soft)]">{s.how}</p>
+                  <p className="text-[var(--faint)] text-xs mt-1">
+                    <span className="font-semibold text-[var(--muted)]">{s.example}</span> — {s.meaning}
+                  </p>
+                </div>
+                <button
+                  onClick={() => playTts(s.example)}
+                  title={`Hear "${s.example}"`}
+                  className="shrink-0 w-9 h-9 rounded-lg border border-[var(--border)] text-[var(--muted)] hover:text-[var(--text)] transition-colors"
+                >
+                  🔊
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>

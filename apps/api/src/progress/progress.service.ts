@@ -164,6 +164,19 @@ export class ProgressService {
         ? Math.round(entries.reduce((sum, e) => sum + e.score, 0) / entries.length)
         : 0
 
+    const [speakingCount, speakingAvg, lastSession] = await Promise.all([
+      this.prisma.speakingSession.count({ where: { userId } }),
+      this.prisma.speakingSession.aggregate({
+        where: { userId },
+        _avg: { overallScore: true },
+      }),
+      this.prisma.speakingSession.findFirst({
+        where: { userId },
+        orderBy: { createdAt: 'desc' },
+        select: { scenario: true, overallScore: true, createdAt: true },
+      }),
+    ])
+
     return {
       name: user.name,
       level: user.level,
@@ -177,6 +190,11 @@ export class ProgressService {
       completionPct,
       avgScore,
       vocab: { total: vocabTotal, mastered: vocabMastered },
+      speaking: {
+        sessions: speakingCount,
+        avgScore: Math.round(speakingAvg._avg.overallScore ?? 0),
+        last: lastSession,
+      },
       weeklyActivity,
       recent: entries.slice(0, 5).map((e) => ({
         title: e.lesson.title,

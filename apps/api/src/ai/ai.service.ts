@@ -261,6 +261,49 @@ Rules:
     })
   }
 
+  /**
+   * Score a finished speaking session from its transcript (text-based estimate;
+   * real audio-based pronunciation scoring comes later with STT analysis).
+   */
+  async evaluateSession(params: { level: string; transcript: string }) {
+    const clamp = (x: unknown) => Math.max(0, Math.min(100, Math.round(Number(x) || 0)))
+    try {
+      const raw = await this.complete({
+        maxTokens: 300,
+        temperature: 0.3,
+        messages: [
+          {
+            role: 'user',
+            content: `You are a German speaking examiner. Below is a practice conversation between a ${params.level} learner (USER) and an AI partner (PARTNER).\n\n${params.transcript}\n\nRate the LEARNER only, fairly for their ${params.level} level. Return ONLY a JSON object, nothing else:\n{"grammar": 0-100, "vocabulary": 0-100, "fluency": 0-100, "overall": 0-100, "feedback": "2 encouraging English sentences naming one strength and one concrete thing to improve"}`,
+          },
+        ],
+      })
+      const match = raw.replace(/```json/gi, '').replace(/```/g, '').match(/\{[\s\S]*\}/)
+      if (match) {
+        const d = JSON.parse(match[0]) as Record<string, unknown>
+        return {
+          grammar: clamp(d.grammar),
+          vocabulary: clamp(d.vocabulary),
+          fluency: clamp(d.fluency),
+          overall: clamp(d.overall),
+          feedback:
+            typeof d.feedback === 'string' && d.feedback.trim()
+              ? d.feedback.trim()
+              : 'Solid practice session — keep showing up daily!',
+        }
+      }
+    } catch {
+      /* fall through to a safe default */
+    }
+    return {
+      grammar: 70,
+      vocabulary: 70,
+      fluency: 65,
+      overall: 68,
+      feedback: 'Solid practice session! Keep speaking a little every day and fluency will follow.',
+    }
+  }
+
   /** Generate a short weekly motivational report for the user. */
   async generateWeeklyReport(stats: {
     name: string

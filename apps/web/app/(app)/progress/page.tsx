@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { api } from '@/lib/api'
 
 interface Summary {
@@ -16,6 +17,11 @@ interface Summary {
   completionPct: number
   avgScore: number
   vocab: { total: number; mastered: number }
+  speaking: {
+    sessions: number
+    avgScore: number
+    last: { scenario: string; overallScore: number; createdAt: string } | null
+  }
   weeklyActivity: { label: string; count: number }[]
   recent: { title: string; score: number; completedAt: string }[]
 }
@@ -150,6 +156,46 @@ export default function ProgressPage() {
             ? 'Complete lessons to start building your vocabulary deck.'
             : `${summary.vocab.mastered} words locked into long-term memory`}
         </p>
+      </div>
+
+      {/* Speaking practice */}
+      <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 mb-6">
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-[var(--faint)] text-xs uppercase tracking-wider font-medium">Speaking practice</p>
+          {summary.speaking.sessions > 0 && (
+            <p className="text-sm font-bold gold-text">avg {summary.speaking.avgScore}</p>
+          )}
+        </div>
+        {summary.speaking.sessions === 0 ? (
+          <p className="text-[var(--muted)] text-sm">
+            No sessions yet —{' '}
+            <Link href="/speak" className="text-[var(--gold)] underline hover:opacity-80">
+              start your first conversation
+            </Link>
+            . Even five minutes counts.
+          </p>
+        ) : (
+          <div className="flex items-center gap-8 flex-wrap">
+            <div>
+              <p className="text-2xl font-black">{summary.speaking.sessions}</p>
+              <p className="text-[var(--faint)] text-xs">session{summary.speaking.sessions === 1 ? '' : 's'}</p>
+            </div>
+            <div>
+              <p className="text-2xl font-black">{summary.speaking.avgScore}</p>
+              <p className="text-[var(--faint)] text-xs">avg score</p>
+            </div>
+            {summary.speaking.last && (
+              <div className="min-w-0">
+                <p className="text-sm font-semibold capitalize truncate">
+                  {summary.speaking.last.scenario.replace(/_/g, ' ')}
+                </p>
+                <p className="text-[var(--faint)] text-xs">
+                  last session · scored {summary.speaking.last.overallScore}
+                </p>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* AI insight */}

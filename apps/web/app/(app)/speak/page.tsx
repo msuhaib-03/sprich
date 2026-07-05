@@ -32,6 +32,17 @@ interface Panel {
   open: boolean
   loading?: boolean
 }
+
+// Returned by POST /speaking/sessions when a practice session is finished
+interface SessionResult {
+  overallScore: number
+  grammarScore: number
+  vocabularyScore: number
+  fluencyScore: number
+  wordsPerMinute: number
+  aiFeedback: string
+  xpEarned: number
+}
 interface Message {
   role: 'user' | 'assistant'
   content: string
@@ -70,14 +81,23 @@ export default function SpeakPage() {
   const [loading, setLoading] = useState(false)
   const [autoplay, setAutoplay] = useState(true)
   const [ttsNote, setTtsNote] = useState('')
-  const [listening, setListening] = useState(false)
+
+  // Mic recording → server STT (Groq Whisper)
+  const [recording, setRecording] = useState(false)
+  const [transcribing, setTranscribing] = useState(false)
+  const recorderRef = useRef<MediaRecorder | null>(null)
+  const chunksRef = useRef<Blob[]>([])
+
+  // Session end → scores + feedback
+  const [finishing, setFinishing] = useState(false)
+  const [sessionResult, setSessionResult] = useState<SessionResult | null>(null)
+  const sessionStartRef = useRef<number>(Date.now())
 
   // Hidden-by-default translation + on-demand explanation, keyed by message index
   const [tPanels, setTPanels] = useState<Record<number, Panel>>({})
   const [ePanels, setEPanels] = useState<Record<number, Panel>>({})
 
   const endRef = useRef<HTMLDivElement>(null)
-  const recognitionRef = useRef<unknown>(null)
 
   const scenarioMeta = SCENARIOS.find((s) => s.id === scenario)
 
@@ -128,6 +148,8 @@ export default function SpeakPage() {
     setMessages([])
     setTPanels({})
     setEPanels({})
+    setSessionResult(null)
+    sessionStartRef.current = Date.now()
     // Kick off: ask the AI to open the conversation in role. We pass the
     // scenario id explicitly since the state update may not have flushed yet.
     void sendTurnWith(id, 'Beginne das Gespräch. Bitte fang du an.')
@@ -201,40 +223,137 @@ export default function SpeakPage() {
     }
   }
 
-  // ── Voice input via the browser Web Speech API (optional) ──
-  function toggleMic() {
-    const w = window as unknown as { SpeechRecognition?: unknown; webkitSpeechRecognition?: unknown }
-    const SR = (w.SpeechRecognition ?? w.webkitSpeechRecognition) as
-      | (new () => {
-          lang: string
-          interimResults: boolean
-          onresult: (e: { results: { [k: number]: { [k: number]: { transcript: string } } } }) => void
-          onend: () => void
-          start: () => void
-          stop: () => void
-        })
-      | undefined
-    if (!SR) {
-      setTtsNote('Voice input needs Chrome/Edge. You can type instead.')
+  // ── Voice input: record with MediaRecorder, transcribe on the server via
+  // Groq Whisper. (The browser Web Speech API streams audio to Google and
+  // fails silently on many setups — this path is reliable everywhere.) ──
+  async function toggleMic() {
+    if (recording) {
+      recorderRef.current?.stop()
       return
     }
-    if (listening) {
-      ;(recognitionRef.current as { stop: () => void } | null)?.stop()
-      return
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      const mime = MediaRecorder.isTypeSupported('audio/webm')
+        ? 'audio/webm'
+        : MediaRecorder.isTypeSupported('audio/mp4')
+          ? 'audio/mp4'
+          : ''
+      const rec = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream)
+      chunksRef.current = []
+      rec.ondataavailable = (e) => {
+        if (e.data.size > 0) chunksRef.current.push(e.data)
+      }
+      rec.onstop = async () => {
+        stream.getTracks().forEach((t) => t.stop())
+        setRecording(false)
+        const blob = new Blob(chunksRef.current, { type: rec.mimeType || 'audio/webm' })
+        if (blob.size < 1000) {
+          setTtsNote('Recording too short — tap the mic, speak, then tap ⏹.')
+          return
+        }
+        setTranscribing(true)
+        try {
+          const form = new FormData()
+          form.append('audio', blob, 'speech.webm')
+          const token = localStorage.getItem('sprich_token')
+          const res = await fetch(`${API_BASE}/speaking/stt`, {
+            method: 'POST',
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
+            body: form,
+          })
+          if (!res.ok) throw new Error()
+          const data = (await res.json()) as { text?: string }
+          if (data.text) {
+            setInput(data.text)
+            setTtsNote('')
+          } else {
+            setTtsNote("Didn't catch that — try again, a little louder.")
+          }
+        } catch {
+          setTtsNote('Could not transcribe — check the API terminal for details.')
+        } finally {
+          setTranscribing(false)
+        }
+      }
+      recorderRef.current = rec
+      rec.start()
+      setRecording(true)
+      setTtsNote('')
+    } catch {
+      setTtsNote('Microphone blocked — allow mic access for this site in your browser.')
     }
-    const rec = new SR()
-    rec.lang = 'de-DE'
-    rec.interimResults = false
-    rec.onresult = (e) => setInput(e.results[0][0].transcript)
-    rec.onend = () => setListening(false)
-    recognitionRef.current = rec
-    setListening(true)
-    rec.start()
   }
 
-  const micSupported =
-    typeof window !== 'undefined' &&
-    ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)
+  // ── Finish the session: save, score, award XP ──
+  async function finishSession() {
+    if (!scenario || finishing) return
+    setFinishing(true)
+    try {
+      const res = await api.post<SessionResult>('/speaking/sessions', {
+        scenario,
+        messages: messages
+          .filter((m) => !m.content.startsWith('('))
+          .map((m) => ({ role: m.role, content: m.content })),
+        durationSeconds: Math.max(0, Math.round((Date.now() - sessionStartRef.current) / 1000)),
+        level: user?.level ?? 'A1',
+      })
+      setSessionResult(res)
+    } catch {
+      setTtsNote('Could not save the session — please try again.')
+    } finally {
+      setFinishing(false)
+    }
+  }
+
+  // ── Session summary (after Finish) ──
+  if (sessionResult) {
+    return (
+      <div className="max-w-xl mx-auto px-6 py-16 text-center">
+        <div className="text-5xl mb-4">🎉</div>
+        <h1 className="text-3xl font-black mb-2">Session complete!</h1>
+        <p className="text-[var(--muted)] mb-8">
+          {scenarioMeta?.icon} {scenarioMeta?.title} · <span className="gold-text font-bold">+{sessionResult.xpEarned} XP</span>
+        </p>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+          {[
+            { label: 'Overall', value: sessionResult.overallScore, accent: true },
+            { label: 'Grammar', value: sessionResult.grammarScore },
+            { label: 'Vocabulary', value: sessionResult.vocabularyScore },
+            { label: 'Fluency', value: sessionResult.fluencyScore },
+          ].map((s) => (
+            <div
+              key={s.label}
+              className={`p-4 rounded-2xl border ${s.accent ? 'border-[#d4a843]/30 bg-[#d4a843]/5' : 'border-[var(--border)] bg-[var(--surface)]'}`}
+            >
+              <p className={`text-2xl font-black ${s.accent ? 'gold-text' : 'text-[var(--text)]'}`}>{s.value}</p>
+              <p className="text-[var(--faint)] text-xs mt-1">{s.label}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="rounded-2xl border border-[#d4a843]/20 bg-gradient-to-br from-[#d4a843]/8 to-transparent p-5 mb-8 text-left">
+          <p className="text-[var(--gold)] text-xs uppercase tracking-wider mb-2 font-medium">🤖 Coach feedback</p>
+          <p className="text-sm leading-relaxed">{sessionResult.aiFeedback}</p>
+        </div>
+
+        <div className="flex gap-3 justify-center">
+          <button
+            onClick={() => { const s = scenario!; startScenario(s) }}
+            className="px-5 py-3 rounded-xl gold-gradient text-black font-bold text-sm hover:opacity-90"
+          >
+            Practice again
+          </button>
+          <button
+            onClick={() => { setSessionResult(null); setScenario(null); setMessages([]); setTPanels({}); setEPanels({}) }}
+            className="px-5 py-3 rounded-xl border border-[var(--border)] text-sm font-semibold hover:bg-[var(--overlay)]"
+          >
+            All scenarios
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   // ── Scenario picker ──
   if (!scenario) {
@@ -281,17 +400,29 @@ export default function SpeakPage() {
           <p className="font-bold text-sm">{scenarioMeta?.icon} {scenarioMeta?.title}</p>
           <p className="text-[var(--faint)] text-xs">Level {user?.level ?? 'A1'}</p>
         </div>
-        <button
-          onClick={() => setAutoplay((a) => !a)}
-          className={`text-xs px-3 py-1.5 rounded-lg border transition-colors ${
-            autoplay
-              ? 'border-[var(--gold)]/40 text-[var(--gold)]'
-              : 'border-[var(--border)] text-[var(--faint)]'
-          }`}
-          title="Automatically play audio for replies"
-        >
-          🔊 Auto {autoplay ? 'on' : 'off'}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setAutoplay((a) => !a)}
+            className={`text-xs px-3 py-1.5 rounded-lg border transition-colors ${
+              autoplay
+                ? 'border-[var(--gold)]/40 text-[var(--gold)]'
+                : 'border-[var(--border)] text-[var(--faint)]'
+            }`}
+            title="Automatically play audio for replies"
+          >
+            🔊 Auto {autoplay ? 'on' : 'off'}
+          </button>
+          {messages.some((m) => m.role === 'user') && (
+            <button
+              onClick={finishSession}
+              disabled={finishing}
+              className="text-xs px-3 py-1.5 rounded-lg gold-gradient text-black font-bold disabled:opacity-50"
+              title="End the session — get your scores and XP"
+            >
+              {finishing ? 'Scoring…' : '✓ Finish'}
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Messages */}
@@ -403,24 +534,35 @@ export default function SpeakPage() {
         onSubmit={(e) => { e.preventDefault(); if (input.trim() && !loading) sendTurn(input.trim()) }}
         className="flex items-center gap-2 pt-3 border-t border-[var(--border)]"
       >
-        {micSupported && (
-          <button
-            type="button"
-            onClick={toggleMic}
-            className={`shrink-0 w-11 h-11 rounded-xl border flex items-center justify-center transition-colors ${
-              listening
-                ? 'border-red-500/50 bg-red-500/10 text-red-400 animate-pulse'
-                : 'border-[var(--border)] text-[var(--muted)] hover:text-[var(--text)]'
-            }`}
-            title="Speak (German)"
-          >
-            🎙️
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={toggleMic}
+          disabled={transcribing}
+          className={`shrink-0 w-11 h-11 rounded-xl border flex items-center justify-center transition-colors ${
+            recording
+              ? 'border-red-500/50 bg-red-500/10 text-red-400 animate-pulse'
+              : 'border-[var(--border)] text-[var(--muted)] hover:text-[var(--text)] disabled:opacity-50'
+          }`}
+          title={recording ? 'Tap to stop recording' : 'Record your reply (German)'}
+        >
+          {transcribing ? (
+            <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+          ) : recording ? (
+            '⏹'
+          ) : (
+            '🎙️'
+          )}
+        </button>
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder={listening ? 'Listening…' : 'Type your reply in German…'}
+          placeholder={
+            recording
+              ? 'Recording — speak German, tap ⏹ when done…'
+              : transcribing
+                ? 'Transcribing…'
+                : 'Type your reply in German…'
+          }
           className="flex-1 px-4 py-3 rounded-xl bg-[var(--surface)] border border-[var(--border)] focus:border-[var(--gold)]/40 focus:outline-none"
         />
         <button
