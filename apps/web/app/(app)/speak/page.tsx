@@ -414,14 +414,14 @@ export default function SpeakPage() {
 
   // ── Conversation view ──
   return (
-    <div className="max-w-2xl mx-auto px-6 py-6 flex flex-col h-screen">
+    <div className="max-w-2xl mx-auto px-6 py-4 md:py-6 flex flex-col h-full w-full">
       {/* Header */}
       <div className="flex items-center justify-between gap-3 pb-4 border-b border-[var(--border)]">
         <button
           onClick={() => { setScenario(null); setMessages([]); setTPanels({}); setEPanels({}) }}
-          className="text-[var(--muted)] hover:text-[var(--text)] text-sm"
+          className="text-[var(--muted)] hover:text-[var(--text)] text-sm shrink-0"
         >
-          ← Scenarios
+          ←<span className="hidden sm:inline"> Scenarios</span>
         </button>
         <div className="text-center">
           <p className="font-bold text-sm">{scenarioMeta?.icon} {scenarioMeta?.title}</p>

@@ -21,7 +21,7 @@ export function Sidebar() {
   const { user, logout } = useAuthStore()
 
   return (
-    <aside className="w-60 shrink-0 h-screen sticky top-0 flex flex-col border-r border-[var(--border)] bg-[var(--surface-2)] px-3 py-6">
+    <aside className="hidden md:flex w-60 shrink-0 h-full flex-col border-r border-[var(--border)] bg-[var(--surface-2)] px-3 py-6">
       {/* Logo */}
       <Link href="/dashboard" className="px-3 mb-8 block">
         <span className="text-xl font-black gold-text">Sprich</span>

@@ -116,7 +116,7 @@ export default function LessonPlayer({ params }: { params: Promise<{ lessonId: s
   // ── Loading / error ──
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center h-full">
         <span className="w-6 h-6 border-2 border-[#d4a843] border-t-transparent rounded-full animate-spin" />
       </div>
     )
@@ -133,7 +133,7 @@ export default function LessonPlayer({ params }: { params: Promise<{ lessonId: s
   const progressPct = ((stages.indexOf(stage) + (stage === 'practice' ? exerciseIndex / (lesson.exercises.length || 1) : 0)) / stages.length) * 100
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-full flex flex-col">
       {/* Top bar */}
       <div className="sticky top-0 bg-[var(--bg)]/90 backdrop-blur z-10 border-b border-[var(--border)]">
         <div className="max-w-2xl mx-auto px-6 py-3 flex items-center gap-4">

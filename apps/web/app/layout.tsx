@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 
@@ -9,11 +9,21 @@ export const metadata: Metadata = {
   description:
     'The only German learning app that teaches you WHY, not just what. From A1 to C2 — with real grammar reasoning, AI conversation, and public speaking confidence.',
   keywords: ['learn german', 'german language', 'deutsch lernen', 'A1 B1 B2 C1 german'],
+  applicationName: 'Sprich',
+  // iOS "Add to Home Screen" standalone-app behavior + home-screen icon.
+  appleWebApp: { capable: true, statusBarStyle: 'black-translucent', title: 'Sprich' },
+  icons: { apple: '/icons/apple-touch-icon.png' },
   openGraph: {
     title: 'Sprich — Learn German Properly',
     description: 'Not just what — but WHY. Master German from the ground up.',
     siteName: 'Sprich',
   },
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#0b0b0e',
 }
 
 // Runs before paint: apply the saved theme (default: dark) to avoid a flash.

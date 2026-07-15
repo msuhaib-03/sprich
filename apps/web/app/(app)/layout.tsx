@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuthStore } from '@/store/auth'
 import { Sidebar } from '@/components/layout/sidebar'
+import { MobileHeader, MobileBottomNav } from '@/components/layout/mobile-nav'
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
@@ -33,12 +34,20 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   if (!token) return null
 
+  // Fixed-height shell: on mobile the header sits above and the tab bar below
+  // a scrollable <main>, so nothing ever overlaps content. Desktop keeps the
+  // sidebar. [height:100dvh] tracks mobile browser chrome; h-screen is the
+  // fallback where dvh is unsupported.
   return (
-    <div className="flex min-h-screen bg-[var(--bg)]">
+    <div className="flex h-screen [height:100dvh] bg-[var(--bg)]">
       <Sidebar />
-      <main className="flex-1 overflow-y-auto">
-        {children}
-      </main>
+      <div className="flex-1 flex flex-col min-w-0">
+        <MobileHeader />
+        <main className="flex-1 overflow-y-auto">
+          {children}
+        </main>
+        <MobileBottomNav />
+      </div>
     </div>
   )
 }

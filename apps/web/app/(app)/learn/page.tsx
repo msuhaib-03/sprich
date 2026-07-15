@@ -62,7 +62,7 @@ export default function LearnPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center h-full">
         <span className="w-6 h-6 border-2 border-[#d4a843] border-t-transparent rounded-full animate-spin" />
       </div>
     )
@@ -104,10 +104,10 @@ export default function LearnPage() {
                 </div>
               </div>
 
-              <p className="text-[var(--muted)] text-sm mb-4 pl-12">{chapter.description}</p>
+              <p className="text-[var(--muted)] text-sm mb-4 sm:pl-12">{chapter.description}</p>
 
               {/* Lessons */}
-              <div className="space-y-2 pl-12">
+              <div className="space-y-2 sm:pl-12">
                 {chapter.lessons.map((lesson) => {
                   const done = !!progress[lesson.id]
                   const locked = lesson.isPremium && !user?.isPremium
