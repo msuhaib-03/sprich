@@ -19,7 +19,8 @@ export class UsersService {
     const sub = user.subscription
     const isPremium =
       !!sub && sub.status === 'active' && sub.plan !== 'free'
-    return { ...user, isPremium }
+    const { passwordHash: _passwordHash, ...safe } = user
+    return { ...safe, isPremium }
   }
 
   create(data: { email: string; name: string; passwordHash: string }) {

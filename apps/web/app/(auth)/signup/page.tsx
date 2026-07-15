@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { api } from '@/lib/api'
-import { useAuthStore } from '@/store/auth'
+import { useAuthStore, type User } from '@/store/auth'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
@@ -21,11 +21,8 @@ export default function SignupPage() {
     setError('')
     setLoading(true)
     try {
-      const res = await api.post<{ accessToken: string; userId: string }>('/auth/register', form)
-      const me = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1'}/users/me`, {
-        headers: { Authorization: `Bearer ${res.accessToken}` },
-      }).then((r) => r.json())
-      setAuth(res.accessToken, me)
+      const res = await api.post<{ accessToken: string; user: User }>('/auth/register', form)
+      setAuth(res.accessToken, res.user)
       router.push('/onboarding')
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Something went wrong')

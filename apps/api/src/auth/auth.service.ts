@@ -23,9 +23,13 @@ export class AuthService {
 
   async login(user: { id: string; email: string }) {
     const payload = { sub: user.id, email: user.email }
+    // Return the full profile inline so the client never needs a second
+    // GET /users/me round-trip right after auth — that extra hop was pure
+    // added latency, worse than usual on a cold free-tier DB connection.
+    const profile = await this.usersService.findById(user.id)
     return {
       accessToken: this.jwtService.sign(payload),
-      userId: user.id,
+      user: profile,
     }
   }
 
@@ -33,7 +37,10 @@ export class AuthService {
     const existing = await this.usersService.findByEmail(dto.email)
     if (existing) throw new ConflictException('Email already in use')
 
-    const passwordHash = await bcrypt.hash(dto.password, 12)
+    // Cost 10 is bcrypt's own standard default — plenty secure, and 4x
+    // cheaper than the previous cost 12 (bcrypt's cost is exponential).
+    // Matters more on a CPU-throttled free-tier host than a beefy one.
+    const passwordHash = await bcrypt.hash(dto.password, 10)
     const user = await this.usersService.create({
       email: dto.email,
       name: dto.name,
