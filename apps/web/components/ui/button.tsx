@@ -14,7 +14,14 @@ export function Button({ variant = 'gold', loading, children, className = '', di
   }
   return (
     <button className={`${base} ${variants[variant]} ${className}`} disabled={disabled ?? loading} {...props}>
-      {loading && <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />}
+      {/* Always mounted (visibility toggled via style, not conditional render) so
+          React never has to insert/remove this node — that's what made it fragile
+          against DOM mutations from browser extensions (insertBefore crashes). */}
+      <span
+        aria-hidden={!loading}
+        style={{ display: loading ? 'inline-flex' : 'none' }}
+        className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"
+      />
       {children}
     </button>
   )

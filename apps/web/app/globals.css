@@ -94,3 +94,26 @@ body {
 }
 
 a, button { transition: all 0.15s ease; }
+
+/* Chrome/Edge/Safari force a white background + their own text color on
+   autofilled inputs, ignoring normal background-color rules. Repaint with
+   an inset box-shadow (the one thing they don't override) so autofilled
+   fields still match the app's theme instead of flashing white. */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px var(--track) inset !important;
+  box-shadow: 0 0 0 1000px var(--track) inset !important;
+  -webkit-text-fill-color: var(--text) !important;
+  caret-color: var(--text);
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+/* Edge injects its own "reveal password" icon (::-ms-reveal) into every
+   type="password" field, which overlaps and fights with our custom eye
+   toggle in Input. We own the toggle, so suppress Edge's native one. */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}

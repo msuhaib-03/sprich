@@ -1,44 +1,50 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { api } from '@/lib/api'
-import { useAuthStore, type User } from '@/store/auth'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { api } from "@/lib/api";
+import { useAuthStore, type User } from "@/store/auth";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export default function SignupPage() {
-  const router = useRouter()
-  const setAuth = useAuthStore((s) => s.setAuth)
+  const router = useRouter();
+  const setAuth = useAuthStore((s) => s.setAuth);
 
-  const [form, setForm] = useState({ name: '', email: '', password: '' })
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setError('')
-    setLoading(true)
+    e.preventDefault();
+    setError("");
+    setLoading(true);
     try {
-      const res = await api.post<{ accessToken: string; user: User }>('/auth/register', form)
-      setAuth(res.accessToken, res.user)
-      router.push('/onboarding')
+      const res = await api.post<{ accessToken: string; user: User }>(
+        "/auth/register",
+        form,
+      );
+      setAuth(res.accessToken, res.user);
+      router.push("/onboarding");
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Something went wrong')
+      setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   return (
     <div className="min-h-screen bg-[var(--bg)] flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
-
         {/* Logo */}
         <div className="text-center mb-8">
-          <Link href="/" className="text-2xl font-black gold-text">Sprich</Link>
-          <p className="text-[var(--faint)] text-sm mt-1">Start your German journey</p>
+          <Link href="/" className="text-2xl font-black gold-text">
+            Sprich
+          </Link>
+          <p className="text-[var(--faint)] text-sm mt-1">
+            Start Your Language Journey
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -81,10 +87,15 @@ export default function SignupPage() {
         </form>
 
         <p className="text-center text-[var(--faint)] text-sm mt-6">
-          Already have an account?{' '}
-          <Link href="/login" className="text-[var(--gold)] hover:text-[var(--gold-light)]">Log in</Link>
+          Already have an account?{" "}
+          <Link
+            href="/login"
+            className="text-[var(--gold)] hover:text-[var(--gold-light)]"
+          >
+            Log in
+          </Link>
         </p>
       </div>
     </div>
-  )
+  );
 }

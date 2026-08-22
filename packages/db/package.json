@@ -11,11 +11,11 @@
     "db:seed": "ts-node src/seed.ts"
   },
   "dependencies": {
-    "@prisma/client": "^6.2.1"
+    "@prisma/client": "^6.19.3"
   },
   "devDependencies": {
-    "prisma": "^6.2.1",
-    "typescript": "^5.7.3",
-    "ts-node": "^10.9.2"
+    "prisma": "^6.19.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
   }
 }

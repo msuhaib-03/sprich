@@ -1,44 +1,50 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { api } from '@/lib/api'
-import { useAuthStore, type User } from '@/store/auth'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { api } from "@/lib/api";
+import { useAuthStore, type User } from "@/store/auth";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export default function LoginPage() {
-  const router = useRouter()
-  const setAuth = useAuthStore((s) => s.setAuth)
+  const router = useRouter();
+  const setAuth = useAuthStore((s) => s.setAuth);
 
-  const [form, setForm] = useState({ email: '', password: '' })
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [form, setForm] = useState({ email: "", password: "" });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setError('')
-    setLoading(true)
+    e.preventDefault();
+    setError("");
+    setLoading(true);
     try {
-      const res = await api.post<{ accessToken: string; user: User }>('/auth/login', form)
-      setAuth(res.accessToken, res.user)
+      const res = await api.post<{ accessToken: string; user: User }>(
+        "/auth/login",
+        form,
+      );
+      setAuth(res.accessToken, res.user);
       // If onboarding not done, send there; otherwise dashboard
-      const needsOnboarding = !res.user.profile || !res.user.goal
-      router.push(needsOnboarding ? '/onboarding' : '/dashboard')
+      const needsOnboarding = !res.user.profile || !res.user.goal;
+      router.push(needsOnboarding ? "/onboarding" : "/dashboard");
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Invalid email or password')
+      setError(
+        err instanceof Error ? err.message : "Invalid email or password",
+      );
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   return (
     <div className="min-h-screen bg-[var(--bg)] flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
-
         <div className="text-center mb-8">
-          <Link href="/" className="text-2xl font-black gold-text">Sprich</Link>
+          <Link href="/" className="text-2xl font-black gold-text">
+            Sprich
+          </Link>
           <p className="text-[var(--faint)] text-sm mt-1">Welcome back</p>
         </div>
 
@@ -73,10 +79,15 @@ export default function LoginPage() {
         </form>
 
         <p className="text-center text-[var(--faint)] text-sm mt-6">
-          Don&apos;t have an account?{' '}
-          <Link href="/signup" className="text-[var(--gold)] hover:text-[var(--gold-light)]">Sign up free</Link>
+          Don&apos;t have an account?{" "}
+          <Link
+            href="/signup"
+            className="text-[var(--gold)] hover:text-[var(--gold-light)]"
+          >
+            Sign up free
+          </Link>
         </p>
       </div>
     </div>
-  )
+  );
 }
