@@ -66,6 +66,14 @@ export default function LoginPage() {
             onChange={(e) => setForm({ ...form, password: e.target.value })}
             required
           />
+          <div className="text-right -mt-2">
+            <Link
+              href="/forgot-password"
+              className="text-[var(--faint)] text-sm hover:text-[var(--gold)]"
+            >
+              Forgot password?
+            </Link>
+          </div>
 
           {error && (
             <p className="text-red-400 text-sm bg-red-400/10 border border-red-400/20 rounded-lg px-4 py-3">

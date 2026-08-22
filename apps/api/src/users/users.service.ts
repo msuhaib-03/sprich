@@ -27,6 +27,10 @@ export class UsersService {
     return this.prisma.user.create({ data })
   }
 
+  updatePasswordHash(id: string, passwordHash: string) {
+    return this.prisma.user.update({ where: { id }, data: { passwordHash } })
+  }
+
   updateOnboarding(
     id: string,
     data: {
