@@ -23,7 +23,10 @@ export class AiService {
     this.geminiKey = this.config.get<string>('GEMINI_API_KEY') || undefined
     this.geminiModel = this.config.get<string>('GEMINI_MODEL') || 'gemini-2.0-flash'
     this.groqKey = this.config.get<string>('GROQ_API_KEY') || undefined
-    this.groqModel = this.config.get<string>('GROQ_MODEL') || 'llama-3.3-70b-versatile'
+    // llama-3.3-70b-versatile was retired by Groq — gpt-oss-120b is the
+    // current best fit (verified: handles this app's prompt+JSON format
+    // cleanly, keeps its chain-of-thought out of the returned content).
+    this.groqModel = this.config.get<string>('GROQ_MODEL') || 'openai/gpt-oss-120b'
     this.anthropic = anthropicKey ? new Anthropic({ apiKey: anthropicKey }) : null
 
     // Explicit override wins; otherwise prefer Claude → Gemini → Groq by key presence.
