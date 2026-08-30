@@ -102,6 +102,7 @@ model User {
   name           String
   avatarUrl      String?
   passwordHash   String?
+  googleId       String?     @unique
   level          GermanLevel @default(A1)
   profile        UserProfile @default(complete_beginner)
   goal           UserGoal    @default(fun_learning)

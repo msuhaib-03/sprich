@@ -9,9 +9,17 @@ import { EmailService } from './email.service'
 import { RegisterDto } from './dto/register.dto'
 
 const RESET_TOKEN_TTL_MS = 60 * 60 * 1000 // 1 hour
+const OAUTH_CODE_TTL_MS = 60 * 1000 // 1 minute — just long enough for one redirect + one exchange call
 
 @Injectable()
 export class AuthService {
+  // One-time codes used to hand a freshly-issued OAuth token to the browser
+  // without ever putting the real token in a URL (URLs end up in browser
+  // history). Each code is random, works once, and expires in a minute.
+  // Plain in-memory Map is enough here — this app runs as one server
+  // process and the codes only need to live for a few seconds.
+  private oauthCodes = new Map<string, { accessToken: string; expiresAt: number }>()
+
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
@@ -59,6 +67,41 @@ export class AuthService {
     return this.login(user)
   }
 
+  async validateOAuthUser(data: { googleId: string; email: string; name: string }) {
+    let user = await this.usersService.findByGoogleId(data.googleId)
+
+    if (!user) {
+      const existing = await this.usersService.findByEmail(data.email)
+      user = existing
+        ? await this.usersService.linkGoogleId(existing.id, data.googleId)
+        : await this.usersService.createFromGoogle(data)
+    }
+
+    return this.login(user)
+  }
+
+  // Step 1 of the OAuth redirect: turn a real access token into a one-time
+  // code that's safe to put in a URL.
+  createOAuthExchangeCode(accessToken: string) {
+    const code = randomBytes(32).toString('hex')
+    this.oauthCodes.set(code, { accessToken, expiresAt: Date.now() + OAUTH_CODE_TTL_MS })
+    return code
+  }
+
+  // Step 2: the frontend trades the code for the real token. Works only
+  // once — we delete it immediately whether it was valid or not.
+  exchangeOAuthCode(code: string) {
+    const entry = this.oauthCodes.get(code)
+    this.oauthCodes.delete(code)
+    if (!entry || entry.expiresAt < Date.now()) return null
+    return entry.accessToken
+  }
+
+  // First of a possibly comma-separated WEB_URL list, trailing slash stripped.
+  getWebUrl() {
+    return (this.config.get<string>('WEB_URL') ?? 'http://localhost:3000').split(',')[0].replace(/\/$/, '')
+  }
+
   private hashToken(token: string) {
     return createHash('sha256').update(token).digest('hex')
   }
@@ -84,8 +127,7 @@ export class AuthService {
       },
     })
 
-    const webUrl = (this.config.get<string>('WEB_URL') ?? 'http://localhost:3000').split(',')[0].replace(/\/$/, '')
-    const resetUrl = `${webUrl}/reset-password?token=${rawToken}`
+    const resetUrl = `${this.getWebUrl()}/reset-password?token=${rawToken}`
     await this.emailService.sendPasswordResetEmail(user.email, resetUrl)
 
     return genericResponse

@@ -8,6 +8,7 @@ import { AuthService } from './auth.service'
 import { EmailService } from './email.service'
 import { JwtStrategy } from './strategies/jwt.strategy'
 import { LocalStrategy } from './strategies/local.strategy'
+import { GoogleStrategy } from './strategies/google.strategy'
 import { UsersModule } from '../users/users.module'
 
 @Module({
@@ -25,7 +26,7 @@ import { UsersModule } from '../users/users.module'
     ThrottlerModule.forRoot([{ ttl: 60_000, limit: 3 }]),
   ],
   controllers: [AuthController],
-  providers: [AuthService, EmailService, JwtStrategy, LocalStrategy],
+  providers: [AuthService, EmailService, JwtStrategy, LocalStrategy, GoogleStrategy],
   exports: [AuthService],
 })
 export class AuthModule {}

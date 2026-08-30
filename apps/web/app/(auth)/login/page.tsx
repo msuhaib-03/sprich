@@ -7,6 +7,7 @@ import { api } from "@/lib/api";
 import { useAuthStore, type User } from "@/store/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { GoogleButton } from "@/components/ui/google-button";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -85,6 +86,16 @@ export default function LoginPage() {
             Log in
           </Button>
         </form>
+
+        <div className="flex items-center gap-3 my-6">
+          <div className="flex-1 h-px bg-[var(--border)]" />
+          <span className="text-[var(--faint)] text-xs uppercase tracking-wider">
+            or continue with
+          </span>
+          <div className="flex-1 h-px bg-[var(--border)]" />
+        </div>
+
+        <GoogleButton />
 
         <p className="text-center text-[var(--faint)] text-sm mt-6">
           Don&apos;t have an account?{" "}

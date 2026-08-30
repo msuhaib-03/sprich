@@ -11,6 +11,7 @@ generated
 
 # Local scratch (large downloads, not committed)
 tmp/
+SECURITY-FIXES.md
 
 # Generated TTS audio cache (server disk cache)
 .audio-cache/
