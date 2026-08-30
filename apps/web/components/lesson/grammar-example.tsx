@@ -14,7 +14,7 @@ export interface ExampleData {
 
 /**
  * Renders a German sentence with each word color-coded by its grammatical role,
- * plus a breakdown legend below. This is Sprich's signature teaching tool —
+ * plus a breakdown legend below. This is doLang's signature teaching tool —
  * the learner SEES why each word takes the form it does.
  */
 export function GrammarExample({ example }: { example: ExampleData }) {

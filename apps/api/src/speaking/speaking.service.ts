@@ -41,7 +41,7 @@ export class SpeakingService {
     // app at boot on Render, because a constructor throw fails Nest's
     // dependency injection for every route, including the health check.
     const dir =
-      this.config.get<string>('AUDIO_CACHE_DIR') || path.join(os.tmpdir(), 'sprich-audio-cache')
+      this.config.get<string>('AUDIO_CACHE_DIR') || path.join(os.tmpdir(), 'dolang-audio-cache')
     try {
       fs.mkdirSync(dir, { recursive: true })
       this.cacheDir = dir

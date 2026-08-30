@@ -62,7 +62,7 @@ export default function PremiumPage() {
           <p className="text-[var(--muted)] text-sm mt-1">
             {sub?.currentPeriodEnd
               ? `Renews ${new Date(sub.currentPeriodEnd).toLocaleDateString()}`
-              : 'Enjoy full access to everything Sprich offers.'}
+              : 'Enjoy full access to everything doLang offers.'}
           </p>
         </div>
       ) : (

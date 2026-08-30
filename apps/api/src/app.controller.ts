@@ -14,6 +14,6 @@ export class AppController {
   @Get(['', 'health'])
   async health() {
     await this.prisma.$queryRaw`SELECT 1`
-    return { status: 'ok', service: 'sprich-api' }
+    return { status: 'ok', service: 'dolang-api' }
   }
 }

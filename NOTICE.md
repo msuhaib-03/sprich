@@ -2,7 +2,7 @@
 
 ## Dictionary data — FreeDict German–English (deu-eng)
 
-Sprich's in-app dictionary is built from the **FreeDict** German–English
+doLang's in-app dictionary is built from the **FreeDict** German–English
 dictionary, which is itself derived from the **Ding** dictionary.
 
 - Source: https://download.freedict.org/dictionaries/deu-eng/
@@ -18,7 +18,7 @@ dictionary, which is itself derived from the **Ding** dictionary.
 Because this data is licensed under the GPLv3/AGPLv3 (copyleft):
 
 1. **Attribution must remain visible** to end users wherever the dictionary
-   data is shown (Sprich shows a credit line in the dictionary UI).
+   data is shown (doLang shows a credit line in the dictionary UI).
 2. Under the **AGPLv3**, if you make this dictionary available to users over a
    network, you must offer them the **corresponding source form** of the
    AGPL-covered work. The corresponding source is the original Ding dictionary
@@ -30,5 +30,5 @@ If these obligations are incompatible with your commercial/closed-source goals,
 replace this dataset with a permissively licensed alternative (e.g. a curated,
 owned core vocabulary, or CC-BY-SA Wiktionary data with attribution).
 
-The rest of the Sprich application code is **not** covered by these licenses;
+The rest of the doLang application code is **not** covered by these licenses;
 this notice applies only to the imported dictionary data.

@@ -1,12 +1,12 @@
 import type { MetadataRoute } from 'next'
 
 // Served at /manifest.webmanifest and auto-linked by Next.js. This is what
-// makes Sprich installable from the browser (Android: "Install app" /
+// makes doLang installable from the browser (Android: "Install app" /
 // "Add to Home Screen"; iOS: Share → Add to Home Screen).
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Sprich — Learn German Properly',
-    short_name: 'Sprich',
+    name: 'doLang — Learn German Properly',
+    short_name: 'doLang',
     description:
       'Learn German from A1 to C2 with real grammar reasoning, AI conversation practice, and native-speaker audio.',
     start_url: '/dashboard',

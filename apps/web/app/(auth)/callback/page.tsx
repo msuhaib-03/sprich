@@ -24,7 +24,7 @@ function OAuthCallback() {
       .then(({ accessToken }) => {
         // lib/api.ts reads the token from here on every request, so it has
         // to land in localStorage before the /users/me call below.
-        localStorage.setItem("sprich_token", accessToken);
+        localStorage.setItem("dolang_token", accessToken);
         return api.get<User>("/users/me").then((user) => {
           setAuth(accessToken, user);
           const needsOnboarding = !user.profile || !user.goal;
@@ -32,7 +32,7 @@ function OAuthCallback() {
         });
       })
       .catch(() => {
-        localStorage.removeItem("sprich_token");
+        localStorage.removeItem("dolang_token");
         setError("Could not complete sign-in — please try again.");
       });
   }, [code, setAuth, router]);

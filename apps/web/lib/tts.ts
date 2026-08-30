@@ -26,7 +26,7 @@ export async function getTtsUrl(text: string): Promise<string | null> {
   const hit = memoryCache.get(text)
   if (hit) return hit
   try {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('sprich_token') : null
+    const token = typeof window !== 'undefined' ? localStorage.getItem('dolang_token') : null
     const res = await fetch(`${BASE}/speaking/tts`, {
       method: 'POST',
       headers: {

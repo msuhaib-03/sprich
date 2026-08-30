@@ -29,15 +29,15 @@ export const useAuthStore = create<AuthState>()(
       token: null,
       user: null,
       setAuth: (token, user) => {
-        localStorage.setItem('sprich_token', token)
+        localStorage.setItem('dolang_token', token)
         set({ token, user })
       },
       setUser: (user) => set({ user }),
       logout: () => {
-        localStorage.removeItem('sprich_token')
+        localStorage.removeItem('dolang_token')
         set({ token: null, user: null })
       },
     }),
-    { name: 'sprich-auth', partialize: (s) => ({ token: s.token, user: s.user }) },
+    { name: 'dolang-auth', partialize: (s) => ({ token: s.token, user: s.user }) },
   ),
 )

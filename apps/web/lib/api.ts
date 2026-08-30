@@ -2,7 +2,7 @@ const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1'
 
 function getToken() {
   if (typeof window === 'undefined') return null
-  return localStorage.getItem('sprich_token')
+  return localStorage.getItem('dolang_token')
 }
 
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> {

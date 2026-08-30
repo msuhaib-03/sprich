@@ -1,8 +1,8 @@
-# Sprich — Learn German Properly
+# doLang — Learn German Properly
 
 > The first German learning app that teaches you **WHY**, not just what.
 
-## What makes Sprich different
+## What makes doLang different
 
 Every other app teaches you sentences. We teach you the logic behind them.
 

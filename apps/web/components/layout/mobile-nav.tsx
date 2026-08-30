@@ -23,7 +23,7 @@ export function MobileHeader() {
   return (
     <header className="md:hidden shrink-0 flex items-center justify-between gap-2 px-4 h-14 border-b border-[var(--border)] bg-[var(--surface-2)]">
       <Link href="/dashboard" className="flex items-baseline gap-2 min-w-0">
-        <span className="text-lg font-black gold-text">Sprich</span>
+        <span className="text-lg font-black gold-text">doLang</span>
         <span className="text-[11px] text-[var(--faint)] truncate">
           {user?.level ?? 'A1'} · {user?.xp ?? 0} XP
         </span>

@@ -56,7 +56,7 @@ function ResetPasswordForm() {
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <Link href="/" className="text-2xl font-black gold-text">
-            Sprich
+            doLang
           </Link>
           <p className="text-[var(--faint)] text-sm mt-1">
             Set a new password

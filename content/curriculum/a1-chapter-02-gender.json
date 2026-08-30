@@ -122,7 +122,7 @@
         {
           "type": "multiple_choice",
           "order": 3,
-          "prompt": "Which color represents feminine nouns on Sprich?",
+          "prompt": "Which color represents feminine nouns on doLang?",
           "options": ["Blue", "Green", "Pink/Red", "Gold"],
           "correctAnswer": "Pink/Red",
           "explanation": "Our color system: Blue = der (masculine), Pink = die (feminine), Green = das (neuter). These colors are used consistently across every lesson, exercise, and grammar breakdown on the platform."

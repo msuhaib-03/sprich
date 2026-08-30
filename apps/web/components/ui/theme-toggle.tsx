@@ -10,7 +10,7 @@ function apply(theme: Theme) {
   root.classList.remove('light', 'dark')
   root.classList.add(theme)
   try {
-    localStorage.setItem('sprich-theme', theme)
+    localStorage.setItem('dolang-theme', theme)
   } catch {
     /* ignore storage errors */
   }

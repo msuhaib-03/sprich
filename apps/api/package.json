@@ -1,5 +1,5 @@
 {
-  "name": "@sprich/api",
+  "name": "@dolang/api",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -18,7 +18,7 @@
     "@nestjs/platform-express": "^11.1.27",
     "@nestjs/throttler": "^6.5.0",
     "@prisma/client": "^6.2.1",
-    "@sprich/types": "*",
+    "@dolang/types": "*",
     "bcryptjs": "^3.0.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.15.1",
