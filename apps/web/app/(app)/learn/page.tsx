@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { api } from '@/lib/api'
 import { useAuthStore } from '@/store/auth'
+import { Skeleton } from '@/components/ui/skeleton'
 
 interface LessonSummary {
   id: string
@@ -62,8 +63,30 @@ export default function LearnPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <span className="w-6 h-6 border-2 border-[#d4a843] border-t-transparent rounded-full animate-spin" />
+      <div className="max-w-3xl mx-auto px-6 py-10">
+        <div className="mb-8">
+          <Skeleton className="h-4 w-16 mb-2" />
+          <Skeleton className="h-8 w-64 mb-2" />
+          <Skeleton className="h-4 w-72" />
+        </div>
+        <div className="space-y-8">
+          {[0, 1].map((c) => (
+            <div key={c}>
+              <div className="flex items-center gap-3 mb-4">
+                <Skeleton className="w-9 h-9 rounded-xl shrink-0" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-5 w-40" />
+                  <Skeleton className="h-3 w-20" />
+                </div>
+              </div>
+              <div className="space-y-2 sm:pl-12">
+                {[0, 1, 2].map((l) => (
+                  <Skeleton key={l} className="h-16 w-full" />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     )
   }

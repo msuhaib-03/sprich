@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { api } from '@/lib/api'
+import { Skeleton } from '@/components/ui/skeleton'
 
 interface Row {
   rank: number
@@ -47,8 +48,36 @@ export default function LeaderboardPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <span className="w-6 h-6 border-2 border-[#d4a843] border-t-transparent rounded-full animate-spin" />
+      <div className="max-w-3xl mx-auto px-6 py-10">
+        <div className="mb-8">
+          <Skeleton className="h-4 w-24 mb-2" />
+          <Skeleton className="h-8 w-72 mb-2" />
+          <Skeleton className="h-4 w-80" />
+        </div>
+
+        <div className="grid grid-cols-3 gap-3 mb-4">
+          {[0, 1, 2].map((i) => (
+            <div key={i} className={`p-5 rounded-2xl border border-[var(--border)] bg-[var(--surface)] ${i === 0 ? 'sm:-translate-y-2' : ''}`}>
+              <Skeleton className="h-8 w-8 mx-auto mb-3 rounded-full" />
+              <Skeleton className="h-4 w-20 mx-auto mb-2" />
+              <Skeleton className="h-6 w-14 mx-auto mb-1" />
+              <Skeleton className="h-3 w-24 mx-auto" />
+            </div>
+          ))}
+        </div>
+
+        <div className="space-y-2 mb-10">
+          {[0, 1, 2, 3, 4].map((i) => (
+            <Skeleton key={i} className="h-14 w-full" />
+          ))}
+        </div>
+
+        <Skeleton className="h-6 w-32 mb-5" />
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
+          {[0, 1, 2, 3, 4, 5].map((i) => (
+            <Skeleton key={i} className="h-20 w-full" />
+          ))}
+        </div>
       </div>
     )
   }

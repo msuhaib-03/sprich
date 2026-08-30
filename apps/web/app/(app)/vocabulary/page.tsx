@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { api } from '@/lib/api'
 import { playTts } from '@/lib/tts'
+import { Skeleton } from '@/components/ui/skeleton'
 
 // ─── Types ─────────────────────────────────────────────────────────────────
 
@@ -272,8 +273,13 @@ export default function VocabularyPage() {
       {tab === 'review' && (
         <div>
           {reviewLoading ? (
-            <div className="flex justify-center py-16">
-              <span className="w-6 h-6 border-2 border-[#d4a843] border-t-transparent rounded-full animate-spin" />
+            <div>
+              <Skeleton className="w-full min-h-[260px] rounded-2xl" />
+              <div className="grid grid-cols-4 gap-2 mt-4">
+                {[0, 1, 2, 3].map((i) => (
+                  <Skeleton key={i} className="h-14 w-full rounded-xl" />
+                ))}
+              </div>
             </div>
           ) : !current ? (
             <div className="text-center py-16 rounded-2xl border border-[var(--border)] bg-[var(--surface)]">
@@ -373,8 +379,10 @@ export default function VocabularyPage() {
           />
 
           {dictLoading ? (
-            <div className="flex justify-center py-10">
-              <span className="w-5 h-5 border-2 border-[#d4a843] border-t-transparent rounded-full animate-spin" />
+            <div className="space-y-2">
+              {[0, 1, 2, 3, 4].map((i) => (
+                <Skeleton key={i} className="h-16 w-full" />
+              ))}
             </div>
           ) : dict.length === 0 ? (
             <p className="text-[var(--faint)] text-center py-10">

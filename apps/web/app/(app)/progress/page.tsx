@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { api } from '@/lib/api'
+import { Skeleton } from '@/components/ui/skeleton'
 
 interface Summary {
   name: string
@@ -54,8 +55,29 @@ export default function ProgressPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <span className="w-6 h-6 border-2 border-[#d4a843] border-t-transparent rounded-full animate-spin" />
+      <div className="max-w-3xl mx-auto px-6 py-10">
+        <div className="mb-8">
+          <Skeleton className="h-4 w-16 mb-2" />
+          <Skeleton className="h-8 w-72 mb-2" />
+          <Skeleton className="h-4 w-80" />
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          {[0, 1, 2, 3].map((i) => (
+            <div key={i} className="p-5 rounded-2xl border border-[var(--border)] bg-[var(--surface)]">
+              <Skeleton className="h-3 w-16 mb-3" />
+              <Skeleton className="h-7 w-12 mb-2" />
+              <Skeleton className="h-3 w-14" />
+            </div>
+          ))}
+        </div>
+
+        {[0, 1, 2, 3].map((i) => (
+          <div key={i} className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 mb-6">
+            <Skeleton className="h-3 w-32 mb-4" />
+            <Skeleton className="h-3 w-full" />
+          </div>
+        ))}
       </div>
     )
   }

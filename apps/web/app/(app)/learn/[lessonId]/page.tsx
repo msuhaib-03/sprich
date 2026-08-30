@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { api } from '@/lib/api'
 import { useAuthStore } from '@/store/auth'
 import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
 import { GrammarExample, ExampleData } from '@/components/lesson/grammar-example'
 
 // ─── Types ──────────────────────────────────────────────────────────────────
@@ -116,8 +117,17 @@ export default function LessonPlayer({ params }: { params: Promise<{ lessonId: s
   // ── Loading / error ──
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <span className="w-6 h-6 border-2 border-[#d4a843] border-t-transparent rounded-full animate-spin" />
+      <div className="flex flex-col h-full">
+        <div className="max-w-2xl mx-auto px-6 py-3 flex items-center gap-4 w-full">
+          <Skeleton className="w-6 h-6 rounded-lg shrink-0" />
+          <Skeleton className="h-2 flex-1 rounded-full" />
+        </div>
+        <div className="flex-1 max-w-2xl mx-auto w-full px-6 py-10">
+          <Skeleton className="h-4 w-24 mb-4" />
+          <Skeleton className="h-8 w-full mb-2" />
+          <Skeleton className="h-8 w-3/4 mb-8" />
+          <Skeleton className="h-40 w-full rounded-2xl" />
+        </div>
       </div>
     )
   }
