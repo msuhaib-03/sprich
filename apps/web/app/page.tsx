@@ -111,9 +111,13 @@ export default function LandingPage() {
       {/* Nav */}
       <nav className="fixed top-0 inset-x-0 z-50 border-b border-[var(--border)] bg-[var(--bg)]/90 backdrop-blur-md">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <span className="text-xl font-bold tracking-tight gold-text">
-            doLang
-          </span>
+          <img
+            src="/doLang.svg"
+            alt="doLang"
+            width={107}
+            height={31}
+            className="h-6 w-auto sm:h-7 md:h-8 lg:h-9"
+          />
           <div className="flex items-center gap-4">
             <ThemeToggle />
             <Link
@@ -469,7 +473,13 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="border-t border-[var(--border)] py-8 px-6">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <span className="font-bold gold-text">doLang</span>
+          <img
+            src="/doLang.svg"
+            alt="doLang"
+            width={107}
+            height={31}
+            className="h-5 w-auto sm:h-6 md:h-6 lg:h-7"
+          />
           <p className="text-[var(--faint)] text-sm">
             © {new Date().getFullYear()} doLang. Built for every Pakistani going
             to Germany.
