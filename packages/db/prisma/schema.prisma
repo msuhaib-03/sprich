@@ -123,6 +123,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@index([xp])
   @@map("users")
 }
 
@@ -193,6 +194,7 @@ model Exercise {
   hint          String?
   audioUrl      String?
 
+  @@index([lessonId])
   @@map("exercises")
 }
 
@@ -298,6 +300,7 @@ model SpeakingSession {
 
   createdAt DateTime @default(now())
 
+  @@index([userId])
   @@map("speaking_sessions")
 }
 

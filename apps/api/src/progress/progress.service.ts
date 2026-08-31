@@ -128,24 +128,38 @@ export class ProgressService {
       },
     })
 
-    const [entries, totalLessonsAtLevel, vocabTotal, vocabMastered] = await Promise.all([
-      this.prisma.userProgress.findMany({
-        where: { userId },
-        orderBy: { completedAt: 'desc' },
-        select: {
-          score: true,
-          completedAt: true,
-          lesson: {
-            select: { title: true, chapter: { select: { level: true, number: true } } },
+    // One round-trip for everything that only depends on userId/user.level —
+    // the speaking-session queries below used to run in a second, separate
+    // Promise.all after this one, even though nothing here feeds them.
+    const [entries, totalLessonsAtLevel, vocabTotal, vocabMastered, speakingCount, speakingAvg, lastSession] =
+      await Promise.all([
+        this.prisma.userProgress.findMany({
+          where: { userId },
+          orderBy: { completedAt: 'desc' },
+          select: {
+            score: true,
+            completedAt: true,
+            lesson: {
+              select: { title: true, chapter: { select: { level: true, number: true } } },
+            },
           },
-        },
-      }),
-      this.prisma.lesson.count({ where: { chapter: { level: user.level } } }),
-      this.prisma.sRSCard.count({ where: { userId } }),
-      this.prisma.sRSCard.count({
-        where: { userId, repetitions: { gte: MASTERED_REPETITIONS } },
-      }),
-    ])
+        }),
+        this.prisma.lesson.count({ where: { chapter: { level: user.level } } }),
+        this.prisma.sRSCard.count({ where: { userId } }),
+        this.prisma.sRSCard.count({
+          where: { userId, repetitions: { gte: MASTERED_REPETITIONS } },
+        }),
+        this.prisma.speakingSession.count({ where: { userId } }),
+        this.prisma.speakingSession.aggregate({
+          where: { userId },
+          _avg: { overallScore: true },
+        }),
+        this.prisma.speakingSession.findFirst({
+          where: { userId },
+          orderBy: { createdAt: 'desc' },
+          select: { scenario: true, overallScore: true, createdAt: true },
+        }),
+      ])
 
     // Completion at the user's current level.
     const completedAtLevel = entries.filter((e) => e.lesson.chapter.level === user.level).length
@@ -170,19 +184,6 @@ export class ProgressService {
       entries.length > 0
         ? Math.round(entries.reduce((sum, e) => sum + e.score, 0) / entries.length)
         : 0
-
-    const [speakingCount, speakingAvg, lastSession] = await Promise.all([
-      this.prisma.speakingSession.count({ where: { userId } }),
-      this.prisma.speakingSession.aggregate({
-        where: { userId },
-        _avg: { overallScore: true },
-      }),
-      this.prisma.speakingSession.findFirst({
-        where: { userId },
-        orderBy: { createdAt: 'desc' },
-        select: { scenario: true, overallScore: true, createdAt: true },
-      }),
-    ])
 
     return {
       name: user.name,
@@ -213,18 +214,23 @@ export class ProgressService {
 
   /** Top learners by XP, plus the caller's own rank (even outside the top). */
   async getLeaderboard(userId: string) {
-    const [top, me] = await Promise.all([
+    // `higher`'s count needs me.xp, so it can't join a Promise.all with `me`
+    // — but it doesn't depend on `top` at all. Fetching `me` alone first
+    // (a single indexed PK lookup, fast) lets `top` and `higher` run
+    // together afterward instead of `higher` paying for its own separate
+    // round-trip once everything else has already finished.
+    const me = await this.prisma.user.findUniqueOrThrow({
+      where: { id: userId },
+      select: { id: true, name: true, level: true, xp: true, streak: true },
+    })
+    const [top, higher] = await Promise.all([
       this.prisma.user.findMany({
         orderBy: [{ xp: 'desc' }, { createdAt: 'asc' }],
         take: 20,
         select: { id: true, name: true, level: true, xp: true, streak: true },
       }),
-      this.prisma.user.findUniqueOrThrow({
-        where: { id: userId },
-        select: { id: true, name: true, level: true, xp: true, streak: true },
-      }),
+      this.prisma.user.count({ where: { xp: { gt: me.xp } } }),
     ])
-    const higher = await this.prisma.user.count({ where: { xp: { gt: me.xp } } })
 
     return {
       top: top.map((u, i) => ({
