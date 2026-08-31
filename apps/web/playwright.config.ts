@@ -7,7 +7,7 @@ const API_URL = process.env.PLAYWRIGHT_API_URL ?? 'http://localhost:4000'
 // dotenv (used by @nestjs/config) never overwrites a var that's already set
 // in process.env, so passing this via webServer.env safely wins over
 // apps/api/.env's own DATABASE_URL. See e2e/README.md.
-const testDbEnv = process.env.PLAYWRIGHT_TEST_DATABASE_URL
+const testDbEnv: Record<string, string> = process.env.PLAYWRIGHT_TEST_DATABASE_URL
   ? { DATABASE_URL: process.env.PLAYWRIGHT_TEST_DATABASE_URL }
   : {}
 

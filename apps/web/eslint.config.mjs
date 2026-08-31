@@ -12,6 +12,11 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Playwright E2E tests aren't part of the Next app — e.g. Playwright's
+    // fixture `use` parameter trips the react-hooks/rules-of-hooks rule.
+    "e2e/**",
+    "playwright-report/**",
+    "test-results/**",
   ]),
 ]);
 
