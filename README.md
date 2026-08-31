@@ -50,7 +50,7 @@ git clone https://github.com/msuhaib-03/sprich.git
 cd sprich
 npm install
 
-cp .env.example .env
+# create apps/api/.env and apps/web/.env.local with your keys
 cp apps/web/.env.local.example apps/web/.env.local
 # fill in your keys
 
