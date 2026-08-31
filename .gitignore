@@ -15,3 +15,8 @@ SECURITY-FIXES.md
 
 # Generated TTS audio cache (server disk cache)
 .audio-cache/
+
+# Playwright
+playwright-report/
+test-results/
+blob-report/

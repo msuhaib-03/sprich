@@ -15,6 +15,10 @@
     "lint": {
       "dependsOn": ["^lint"]
     },
+    "test:e2e": {
+      "cache": false,
+      "persistent": false
+    },
     "db:generate": {
       "cache": false
     },
