@@ -29,3 +29,7 @@ Or from the repo root: `npm run test:e2e` (via Turborepo).
 
 - `PLAYWRIGHT_WEB_URL` (default `http://localhost:3000`)
 - `PLAYWRIGHT_API_URL` (default `http://localhost:4000`)
+
+## CI
+
+`.github/workflows/e2e.yml` runs this suite on every push/PR to `main`/`development`. It uses an ephemeral `postgres:16` service container as the test database (a fresh one per run, unrelated to the Supabase test schema used for local dev above) — no manual provisioning needed there. On failure, the HTML report and trace/screenshot artifacts are uploaded to the workflow run.
