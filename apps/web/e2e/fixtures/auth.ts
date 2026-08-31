@@ -51,10 +51,10 @@ export const test = base.extend<AuthFixtures>({
   },
 
   onboardedUser: async ({ request }, use) => {
-    const { accessToken } = await registerUser(request)
+    const { accessToken, password } = await registerUser(request)
     await completeOnboarding(request, accessToken)
     const user = await getMe(request, accessToken)
-    await use({ accessToken, user })
+    await use({ accessToken, user, password })
   },
 
   onboardedPage: async ({ page, onboardedUser }, use) => {

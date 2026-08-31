@@ -21,6 +21,10 @@ export interface E2EUser {
 export interface RegisteredUser {
   accessToken: string
   user: E2EUser
+  // The plaintext password used at registration — only the hash is ever
+  // persisted server-side, so tests that need to drive the login UI (rather
+  // than just seeding a token) have to carry this from registration time.
+  password: string
 }
 
 let counter = 0
@@ -50,7 +54,8 @@ export async function registerUser(
   }
   const res = await request.post(`${API_BASE}/auth/register`, { data })
   await assertOk(res, 'registerUser')
-  return res.json()
+  const body = await res.json()
+  return { ...body, password: data.password }
 }
 
 // GermanLevel/UserProfile/UserGoal enum values from packages/db/prisma/schema.prisma.
