@@ -142,13 +142,13 @@ export default function LandingPage() {
           The Language app that teaches you WHY
         </div>
 
-        <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-[1.05] mb-6 max-w-4xl mx-auto">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.05] mb-6 max-w-4xl mx-auto">
           Stop memorizing.
           <br />
           <span className="gold-text">Start understanding.</span>
         </h1>
 
-        <p className="text-lg md:text-xl text-[var(--muted)] max-w-2xl mx-auto mb-10 leading-relaxed">
+        <p className="text-base sm:text-lg lg:text-xl text-[var(--muted)] max-w-2xl mx-auto mb-10 leading-relaxed">
           Duolingo gives you sentences. We give you the grammar logic behind
           them. From complete beginner to C2 — with real reasoning, AI speaking
           practice, and the confidence to use German in public.
@@ -185,7 +185,7 @@ export default function LandingPage() {
       {/* Problem Section */}
       <section className="py-20 px-6 bg-[var(--surface)]">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-4">
             What other apps won&apos;t tell you
           </h2>
           <p className="text-[var(--muted)] text-center mb-12 max-w-xl mx-auto">
@@ -215,7 +215,7 @@ export default function LandingPage() {
       <section id="how-it-works" className="py-24 px-6">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
               This is what we show you
             </h2>
             <p className="text-[var(--muted)] max-w-xl mx-auto">
@@ -359,7 +359,7 @@ export default function LandingPage() {
       {/* Features */}
       <section className="py-24 px-6 bg-[var(--surface)]">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-4">
             Built different. Actually.
           </h2>
           <p className="text-[var(--muted)] text-center mb-16 max-w-xl mx-auto">
@@ -385,7 +385,7 @@ export default function LandingPage() {
       {/* Comparison */}
       <section className="py-24 px-6">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-4">
             How we compare
           </h2>
           <p className="text-[var(--muted)] text-center mb-12">
@@ -450,7 +450,7 @@ export default function LandingPage() {
       {/* CTA */}
       <section className="py-24 px-6 text-center">
         <div className="max-w-2xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-black mb-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-4">
             doLang.
             <br />
             <span className="text-[var(--faint)]">
