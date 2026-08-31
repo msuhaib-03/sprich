@@ -5,8 +5,11 @@ test.describe('dashboard', () => {
     await onboardedPage.goto('/dashboard')
 
     // Pure client-store read (no API call) — should render immediately.
+    // The level roadmap section further down also renders the level as
+    // plain text (e.g. a lone "A1" badge), so the stat value needs a
+    // testid rather than getByText to avoid a strict-mode multi-match.
     await expect(onboardedPage.getByText('Current level')).toBeVisible()
-    await expect(onboardedPage.getByText(onboardedUser.user.level, { exact: true })).toBeVisible()
+    await expect(onboardedPage.getByTestId('stat-level')).toHaveText(onboardedUser.user.level)
     await expect(onboardedPage.getByText('Streak')).toBeVisible()
     await expect(onboardedPage.getByText('XP earned')).toBeVisible()
   })

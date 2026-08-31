@@ -7,7 +7,9 @@ test.describe('premium', () => {
     await onboardedPage.goto('/premium')
 
     await expect(onboardedPage.getByRole('heading', { name: 'Unlock the full journey' })).toBeVisible()
-    await expect(onboardedPage.getByText('$9.99/mo')).toBeVisible()
+    // Billing cycle defaults to 'annual' (apps/web/app/(app)/premium/page.tsx),
+    // so $79/yr is what a first-time visitor actually sees, not $9.99/mo.
+    await expect(onboardedPage.getByText('$79')).toBeVisible()
     await expect(onboardedPage.getByRole('button', { name: /Upgrade to Premium/i })).toBeVisible()
   })
 

@@ -40,14 +40,14 @@ export default function DashboardPage() {
       {/* Stats row */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         {[
-          { label: 'Current level', value: level, sub: 'German level', accent: true },
-          { label: 'Streak', value: `${user?.streak ?? 0}`, sub: 'days in a row', accent: false },
-          { label: 'XP earned', value: `${user?.xp ?? 0}`, sub: 'total experience', accent: false },
-          { label: 'Daily goal', value: `${user?.dailyMinutes ?? 30}m`, sub: 'per day', accent: false },
+          { label: 'Current level', value: level, sub: 'German level', accent: true, testid: 'stat-level' },
+          { label: 'Streak', value: `${user?.streak ?? 0}`, sub: 'days in a row', accent: false, testid: 'stat-streak' },
+          { label: 'XP earned', value: `${user?.xp ?? 0}`, sub: 'total experience', accent: false, testid: 'stat-xp' },
+          { label: 'Daily goal', value: `${user?.dailyMinutes ?? 30}m`, sub: 'per day', accent: false, testid: 'stat-daily-goal' },
         ].map((stat) => (
           <div key={stat.label} className={`p-5 rounded-2xl border ${stat.accent ? 'border-[#d4a843]/30 bg-[#d4a843]/5' : 'border-[var(--border)] bg-[var(--surface)]'}`}>
             <p className="text-[var(--faint)] text-xs mb-2">{stat.label}</p>
-            <p className={`text-2xl font-black ${stat.accent ? 'gold-text' : 'text-[var(--text)]'}`}>{stat.value}</p>
+            <p data-testid={stat.testid} className={`text-2xl font-black ${stat.accent ? 'gold-text' : 'text-[var(--text)]'}`}>{stat.value}</p>
             <p className="text-[var(--faint-2)] text-xs mt-1">{stat.sub}</p>
           </div>
         ))}
