@@ -19,6 +19,7 @@ export default defineConfig({
   workers: process.env.CI ? 2 : undefined,
   reporter: 'html',
   globalSetup: './e2e/global-setup.ts',
+  globalTeardown: './e2e/global-teardown.ts',
 
   use: {
     baseURL: WEB_URL,
