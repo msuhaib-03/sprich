@@ -58,6 +58,7 @@ export default function LoginPage() {
             onChange={(e) => setForm({ ...form, email: e.target.value })}
             required
             autoFocus
+            data-testid="login-email"
           />
           <Input
             label="Password"
@@ -66,6 +67,7 @@ export default function LoginPage() {
             value={form.password}
             onChange={(e) => setForm({ ...form, password: e.target.value })}
             required
+            data-testid="login-password"
           />
           <div className="text-right -mt-2">
             <Link
@@ -77,12 +79,15 @@ export default function LoginPage() {
           </div>
 
           {error && (
-            <p className="text-red-400 text-sm bg-red-400/10 border border-red-400/20 rounded-lg px-4 py-3">
+            <p
+              className="text-red-400 text-sm bg-red-400/10 border border-red-400/20 rounded-lg px-4 py-3"
+              data-testid="login-error"
+            >
               {error}
             </p>
           )}
 
-          <Button type="submit" loading={loading} className="w-full mt-2">
+          <Button type="submit" loading={loading} className="w-full mt-2" data-testid="login-submit">
             Log in
           </Button>
         </form>

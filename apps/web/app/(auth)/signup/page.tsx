@@ -57,6 +57,7 @@ export default function SignupPage() {
             onChange={(e) => setForm({ ...form, name: e.target.value })}
             required
             autoFocus
+            data-testid="signup-name"
           />
           <Input
             label="Email"
@@ -65,6 +66,7 @@ export default function SignupPage() {
             value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
             required
+            data-testid="signup-email"
           />
           <Input
             label="Password"
@@ -74,15 +76,19 @@ export default function SignupPage() {
             onChange={(e) => setForm({ ...form, password: e.target.value })}
             required
             minLength={8}
+            data-testid="signup-password"
           />
 
           {error && (
-            <p className="text-red-400 text-sm bg-red-400/10 border border-red-400/20 rounded-lg px-4 py-3">
+            <p
+              className="text-red-400 text-sm bg-red-400/10 border border-red-400/20 rounded-lg px-4 py-3"
+              data-testid="signup-error"
+            >
               {error}
             </p>
           )}
 
-          <Button type="submit" loading={loading} className="w-full mt-2">
+          <Button type="submit" loading={loading} className="w-full mt-2" data-testid="signup-submit">
             Create account
           </Button>
         </form>

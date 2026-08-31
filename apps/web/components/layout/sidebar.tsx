@@ -35,6 +35,7 @@ export function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
+              data-testid={`nav-${item.href.slice(1)}`}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
                 active
                   ? 'bg-[#d4a843]/10 text-[var(--gold)]'
