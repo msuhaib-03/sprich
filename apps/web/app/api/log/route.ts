@@ -5,16 +5,19 @@ import { logRequest } from '@/lib/log'
 // node:crypto isn't available on the edge runtime.
 export const runtime = 'nodejs'
 
+const SESSION_COOKIE = 'dolang_session'
+
 /**
  * Client-side beacon sink. `apps/web/lib/api.ts` fires a `navigator.sendBeacon`
- * here for every call it makes to the NestJS API — those calls go browser -> API
+ * here for every call it makes to the API — those calls go browser -> API
  * directly and never touch Vercel, so this handler is how they show up in
  * Vercel's logs (with the acting user, or "anonymous").
  *
- * Identity is NOT taken from the client: the beacon sends the bearer token and
- * this handler verifies its signature against JWT_SECRET (the same secret the
- * API signs with) before trusting `sub`/`email`. A missing, malformed, expired,
- * or tampered token logs as anonymous. The token itself is never logged.
+ * Identity is NOT taken from the client body: it comes from the `dolang_session`
+ * cookie, which the browser sends with this same-origin beacon
+ * (Domain=.dolang.website). This handler verifies the JWT signature against
+ * JWT_SECRET before trusting `sub`/`email`. A missing, malformed, expired, or
+ * tampered cookie logs as anonymous. The cookie value is never logged.
  */
 
 let warnedNoSecret = false
@@ -49,15 +52,15 @@ function verifyJwt(token: string): { sub?: string; email?: string } | null {
 }
 
 export async function POST(req: NextRequest) {
-  let body: { route?: string; method?: string; token?: string } = {}
-
+  let body: { route?: string; method?: string } = {}
   try {
     body = await req.json()
   } catch {
     // sendBeacon can deliver an empty/truncated body on page unload — log anyway.
   }
 
-  const claims = body.token ? verifyJwt(body.token) : null
+  const token = req.cookies.get(SESSION_COOKIE)?.value
+  const claims = token ? verifyJwt(token) : null
 
   logRequest({
     userId: claims?.sub ?? null,

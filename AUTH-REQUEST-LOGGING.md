@@ -1,21 +1,64 @@
-# Auth request logging & the Google-OAuth "anonymous" fix
+# Auth sessions & request logging
 
-Reference for how `/api/log` attributes API requests to users, why Google OAuth
-logins used to show up as `anonymous`, and what changed.
+How a doLang session works (HttpOnly cookie), and how `/api/log` attributes API
+requests to users in Vercel's logs.
 
 ---
 
-## 1. How request logging works
+## 1. Session model — HttpOnly cookie
 
-The web app calls the NestJS API **directly from the browser**
-(`apps/web/lib/api.ts` → `fetch(NEXT_PUBLIC_API_URL + path)` with an
-`Authorization: Bearer` header). Those requests never pass through Vercel, so
-Vercel's logs can't see them.
+The signed JWT (`{ sub: User.id, email }`, 7-day expiry) lives in a cookie set by
+the API, **not** in `localStorage` and **never** in a URL or in JS reach.
 
-To get them into Vercel's logs, `lib/api.ts` fires a fire-and-forget
-`navigator.sendBeacon` for every `api.get/post/patch` call to a Next.js route
-handler at **`apps/web/app/api/log/route.ts`**, which runs as a Vercel function
-and emits one structured line per request:
+```
+dolang_session = <JWT>
+  HttpOnly; Secure; SameSite=Lax; Domain=.dolang.website; Path=/; Max-Age=604800
+```
+
+`SameSite=Lax` is sufficient because the web app and the API are the **same
+site**:
+
+| | Production | Local dev |
+|---|---|---|
+| web | `https://dolang.website` (Vercel) | `http://localhost:3000` |
+| api | `https://api.dolang.website` (Render) | `http://localhost:4000` |
+
+Both sides share the registrable domain (`dolang.website` / `localhost`), so the
+cookie is first-party. The only cross-site step — the Google OAuth redirect — is
+a top-level GET, which `SameSite=Lax` allows, and the cookie is set on our own
+`api.dolang.website` callback response anyway. **No `SameSite=None`.**
+
+Where it's defined: `apps/api/src/auth/session-cookie.ts`
+(`setSessionCookie` / `clearSessionCookie`, `secure` and `domain` from
+`NODE_ENV` + `COOKIE_DOMAIN`).
+
+### Login paths (all set the cookie, return `{ user }`)
+
+| Path | File |
+|---|---|
+| `POST /auth/register` | `apps/api/src/auth/auth.controller.ts` |
+| `POST /auth/login` | same |
+| `GET /auth/google/callback` | same — sets the cookie on the 302 and redirects straight to `/dashboard` or `/onboarding`. No `?code=`, no client-side exchange. |
+| `POST /auth/logout` | clears the cookie (idempotent) |
+
+### Reading it
+
+- API: `JwtStrategy` (`apps/api/src/auth/strategies/jwt.strategy.ts`) extracts the
+  JWT from `req.cookies['dolang_session']` only — no `Authorization` header.
+- Frontend: `apps/web/lib/api.ts` sends every request with
+  `credentials: 'include'`. There is no token in JS. `store/auth.ts` holds only
+  the `user` profile (cached for a flash-free reload; the cookie is the truth).
+- Route guard: `apps/web/app/(app)/layout.tsx` calls `GET /users/me` on mount →
+  `authed` | `401 → /login` | network error → retry UI. No infinite spinner.
+
+---
+
+## 2. Request logging (`/api/log`)
+
+The browser calls the API directly (`dolang.website` → `api.dolang.website`), so
+those requests never pass through Vercel. To make them visible in Vercel's logs,
+`apps/web/lib/api.ts` fires a fire-and-forget `navigator.sendBeacon` to
+`apps/web/app/api/log/route.ts` for every `api.*` call. It emits one line:
 
 ```
 [REQUEST] {"event":"request","userId":"cmr8…","email":"user@example.com",
@@ -23,162 +66,96 @@ and emits one structured line per request:
            "referer":null,"timestamp":"2026-09-01T17:18:11.069Z"}
 ```
 
-`sendBeacon` **cannot set request headers**, so the beacon body carries the
-context. Identity is established server-side (see §3).
+**Identity is server-verified, never client-supplied.** The beacon body is only
+`{ route, method }`. The `dolang_session` cookie rides the same-origin beacon
+automatically (`Domain=.dolang.website`); the route handler verifies its HS256
+signature against `JWT_SECRET` (`verifyJwt`, zero-dep `node:crypto`) and takes
+`userId`/`email` from the verified `sub`/`email`.
 
-View: Vercel project → **Logs** → filter `[REQUEST]`.
-
-Files:
-
-| File | Role |
+| Cookie on the beacon | Logged identity |
 |---|---|
-| `apps/web/lib/api.ts` — `reportCall()` | fires the beacon: `{ route, method, token }` |
-| `apps/web/app/api/log/route.ts` | verifies the token, calls `logRequest()` |
-| `apps/web/lib/log.ts` — `logRequest()` | the single `console.log('[REQUEST]', …)` line |
+| valid, unexpired, signature matches | real `userId` + `email` |
+| missing / malformed / tampered / expired | `anonymous` |
+| any, but `JWT_SECRET` unset on Vercel | `anonymous` (+ one `console.warn`) |
+
+The cookie value is never written to a log line. View: Vercel → **Logs** →
+filter `[REQUEST]`.
+
+Files: `apps/web/lib/api.ts` (`reportCall`), `apps/web/app/api/log/route.ts`
+(`verifyJwt`), `apps/web/lib/log.ts` (`logRequest`).
 
 ---
 
-## 2. The bug: Google OAuth users logged as `anonymous`
+## 3. Deployment / infra runbook
 
-After a Google login, the `GET /users/me` call fired right after the OAuth
-callback logged as:
+Nothing works until the API is same-site with the web app.
 
-```json
-{ "userId": "anonymous", "email": null, "route": "/users/me", "method": "GET" }
-```
+1. **Render** → the API service → add custom domain **`api.dolang.website`**.
+2. **DNS** → `CNAME api.dolang.website → <render target host>`; wait for the TLS
+   cert to issue.
+3. **Google Cloud Console** → OAuth client → Authorized redirect URIs → add
+   `https://api.dolang.website/api/v1/auth/google/callback`.
+4. **Render env:**
+   - `GOOGLE_CALLBACK_URL=https://api.dolang.website/api/v1/auth/google/callback`
+   - `WEB_URL=https://dolang.website`
+   - `COOKIE_DOMAIN=.dolang.website`
+   - `NODE_ENV=production` (makes the cookie `Secure`)
+   - `JWT_SECRET` — unchanged
+5. **Vercel env:**
+   - `NEXT_PUBLIC_API_URL=https://api.dolang.website/api/v1`
+   - `JWT_SECRET` — same value as Render (used by `/api/log`)
+6. Redeploy **both**. Existing `localStorage` sessions are dead — users log in
+   once more.
 
-Email/password users were always attributed correctly.
-
-### Root cause
-
-Two layers:
-
-1. **The symptom.** `/api/log` used to read identity from the **client Zustand
-   store** (`localStorage['dolang-auth'].state.user`). The OAuth callback page
-   populated that store *after* it made its `/users/me` request:
-
-   ```
-   POST /auth/oauth/exchange  ->  { accessToken }        (no user in the response)
-   localStorage.setItem('dolang_token', accessToken)     (backend auth now works)
-   api.get('/users/me')   ── logging beacon fires HERE ──> store.user is still null -> "anonymous"
-     .then(user => setAuth(accessToken, user))            (store.user set only now)
-   ```
-
-   The JWT was valid the whole time — the NestJS backend authenticated the
-   Google user correctly. Only the **log attribution** was wrong, and only for
-   that one in-callback request.
-
-2. **The underlying weakness.** `/api/log` *trusted* `userId`/`email` sent in
-   the beacon body. A client could assert any identity.
-
-### Why email/password was fine
-
-`POST /auth/login` returns `{ accessToken, user }` in **one** response, so
-`login/page.tsx` calls `setAuth(token, user)` synchronously — the store is fully
-populated before any logged request, and there is no `/users/me` round-trip at
-all. The Google flow diverged because `googleCallback` kept only
-`req.user.accessToken` when creating the one-time exchange code and discarded
-the `user` object, forcing the callback page to re-fetch `/users/me`.
+Local dev needs no new vars: `COOKIE_DOMAIN` unset → host-only cookie on
+`localhost`; `NODE_ENV !== 'production'` → cookie not `Secure`.
 
 ---
 
-## 3. The fix
+## 4. Verification
 
-Two coordinated changes. The JWT + `Bearer` architecture is unchanged — no new
-auth mechanism, no changes to `JwtStrategy`, the passport guards, or how
-`/users/me` authenticates.
+**Local** (`npm run dev`):
+- Email/pw login → response has `Set-Cookie: dolang_session; HttpOnly; SameSite=Lax`;
+  `document.cookie` does **not** contain it; `/dashboard` loads; Next dev
+  `[REQUEST]` log shows the real `userId`.
+- Hard refresh on `/dashboard` → still authed.
+- Log out → cookie cleared; `/users/me` → 401; `/dashboard` → `/login`.
+- Google (needs local Google creds): `/auth/google/callback` → `302` to
+  `/dashboard` **with** `Set-Cookie`; no `/callback?code=`.
 
-### A. Google OAuth converges with email/password
+**Type/lint:** `apps/api` + `apps/web` `tsc --noEmit`; `apps/web` eslint (the
+changed files; `speak/page.tsx` has pre-existing `Date.now`-in-render warnings
+unrelated to this work).
 
-The one-time OAuth exchange code now carries the **full login result**, so the
-exchange endpoint returns the exact same `{ accessToken, user }` shape as
-`POST /auth/login`.
+**E2E:** `npm run test:e2e` — fixtures now authenticate the browser context via
+the API (`page.request` shares the cookie jar); no `localStorage` seeding.
 
-| File | Change |
-|---|---|
-| `apps/api/src/auth/auth.service.ts` | `oauthCodes` map stores `{ payload: {accessToken, user}, expiresAt }` instead of a bare token. `createOAuthExchangeCode(payload)` / `exchangeOAuthCode()` pass the whole object. |
-| `apps/api/src/auth/auth.controller.ts` | `googleCallback` hands `req.user` (the full result from `validateOAuthUser`) to `createOAuthExchangeCode`. `POST /auth/oauth/exchange` returns the full result. |
-| `apps/web/app/(auth)/callback/page.tsx` | Uses the returned `user` directly: `setAuth(accessToken, user)`. **The `GET /users/me` call is deleted** — nothing left to race. Deterministic, no timers. |
-
-`sub` in the JWT is the **database `User.id`** (e.g. `cmqhz2spb0000va2sjz7ok28i`),
-never the `googleId` — set by `AuthService.login()`, which both flows call.
-
-### B. `/api/log` verifies identity server-side
-
-The beacon now sends the **bearer token**, not a client-claimed id. The route
-handler verifies the token's signature before trusting it.
-
-| File | Change |
-|---|---|
-| `apps/web/lib/api.ts` | beacon body is `{ route, method, token: getToken() }`. `getLoggedInUser()` removed. |
-| `apps/web/app/api/log/route.ts` | `verifyJwt()` — zero-dependency HS256 check with `node:crypto` (`createHmac` + `timingSafeEqual`), validates signature against `JWT_SECRET` and rejects expired `exp`. Identity comes from the verified `sub`/`email`. `runtime = 'nodejs'`. |
-| `apps/web/lib/log.ts` | added `event: 'request'` to the payload. |
-
-Behaviour:
-
-| Beacon token | Logged identity |
-|---|---|
-| valid, unexpired, signature matches | real `userId` + `email` from `sub`/`email` |
-| missing | `anonymous` |
-| malformed / wrong signature / tampered | `anonymous` |
-| expired | `anonymous` |
-| any, but `JWT_SECRET` unset on the server | `anonymous` (+ one `console.warn`) |
-
-The token itself is **never written to a log line**. OAuth authorization codes
-still never reach the logs (they only transit the `/callback?code=` URL and the
-in-memory Map).
+**Production** (after the runbook + deploy):
+- `curl -I https://api.dolang.website/api/v1/` → reachable over TLS.
+- Desktop **and iPhone Safari**: Google login lands on `/dashboard`
+  authenticated; hard refresh persists; incognito behaves the same; Vercel
+  `[REQUEST]` shows the real `userId` for both email/pw and Google.
+- `Set-Cookie` shows `Domain=.dolang.website; SameSite=Lax; Secure; HttpOnly`.
 
 ---
 
-## 4. Deployment requirement
+## 5. History
 
-**`JWT_SECRET` must be set in the web app's environment**, with the **same value
-as the API's `JWT_SECRET`**:
-
-- Vercel: project → Settings → Environment Variables → `JWT_SECRET` (server-side,
-  **not** `NEXT_PUBLIC_`).
-- Local: `apps/web/.env.local` (see `apps/web/.env.local.example`).
-
-Until it's set, `/api/log` verification fails closed and every request logs as
-`anonymous` — safe, but the feature is inert.
-
-`apps/web/.env*` is gitignored (`apps/web/.gitignore` → `.env*`), so this is a
-manual deploy step, not something carried in the repo.
+- The old model: JWT in `localStorage`, sent as `Authorization: Bearer`; Google
+  OAuth used a one-time code held in an **in-memory `Map` on the API**, traded
+  for the token by a client-side `/callback` page.
+- That map did not survive Render restarts / cold starts, so the exchange could
+  hang (→ iPhone stuck on the callback spinner) or the client never stored a
+  token (→ every request logged `anonymous`).
+- Moving to a first-party HttpOnly cookie set directly on the OAuth redirect
+  removed the exchange step, the in-memory state, and the `localStorage` token
+  entirely.
 
 ---
 
-## 5. Verification
+## 6. Not done
 
-Run `npm run dev` with `JWT_SECRET` set in `apps/web/.env.local`.
-
-- **Type/lint:** `apps/api` and `apps/web` both pass `tsc --noEmit`.
-- **`verifyJwt` unit check:** sign a token with the shared secret (`jsonwebtoken`,
-  `{ expiresIn: '7d' }`) → verifier returns `{ sub, email, iat, exp }`; wrong
-  secret / tampered signature / expired / garbage / no-secret → `null`.
-- **Email/password (Test A):** log in → dashboard → the `[REQUEST]` lines for
-  follow-up calls show the real `userId` + `email`.
-- **Spoof check:** hand-edit `dolang_token` in localStorage → `/api/log` logs
-  `anonymous` (signature fails).
-- **Logout (Test D):** `getToken()` is null → beacon carries no token →
-  `anonymous`.
-- **Google OAuth (Tests B / C / E / F):** needs the real Google consent screen —
-  verify on the deployment. Evidence in code: `/auth/oauth/exchange` now returns
-  the identical `{ accessToken, user }` contract as `/auth/login`, the callback
-  no longer calls `/users/me`, and `/auth/me` (same JWT guard Google users hit)
-  resolves the user from a bearer token in local testing.
-- **e2e:** `apps/web/e2e/auth.spec.ts` is unaffected — it seeds `localStorage`
-  directly and never exercises the callback page or `/api/log`.
-
----
-
-## 6. Deferred: HttpOnly session cookie
-
-Not done — the audit explicitly discouraged an auth rewrite, and the acceptance
-criteria are met without one.
-
-A future hardening would issue the JWT as an `HttpOnly; Secure; SameSite=Lax`
-cookie on all login paths. `/api/log` (and a Next middleware) could then read the
-session server-side with no token in the beacon body at all, and the token would
-no longer be reachable from frontend JavaScript. This touches every auth entry
-point, `lib/api.ts`, the `(app)/layout.tsx` hydration guard, and the e2e
-fixtures, so it's a separate piece of work.
+- Opaque / DB-backed sessions with server-side revocation. The session is still a
+  stateless JWT; logout clears the cookie but a copied token stays valid until
+  its 7-day expiry.
+- Refresh-token rotation.

@@ -50,7 +50,7 @@ test.describe('auth', () => {
     await onboardedPage.getByRole('button', { name: 'Log out' }).click()
 
     await expect(onboardedPage).toHaveURL(/\/login$/)
-    const token = await onboardedPage.evaluate(() => window.localStorage.getItem('dolang_token'))
-    expect(token).toBeNull()
+    const cookies = await onboardedPage.context().cookies()
+    expect(cookies.find((c) => c.name === 'dolang_session')).toBeFalsy()
   })
 })

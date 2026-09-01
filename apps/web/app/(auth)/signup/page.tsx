@@ -11,7 +11,7 @@ import { GoogleButton } from "@/components/ui/google-button";
 
 export default function SignupPage() {
   const router = useRouter();
-  const setAuth = useAuthStore((s) => s.setAuth);
+  const setUser = useAuthStore((s) => s.setUser);
 
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [error, setError] = useState("");
@@ -22,11 +22,8 @@ export default function SignupPage() {
     setError("");
     setLoading(true);
     try {
-      const res = await api.post<{ accessToken: string; user: User }>(
-        "/auth/register",
-        form,
-      );
-      setAuth(res.accessToken, res.user);
+      const { user } = await api.post<{ user: User }>("/auth/register", form);
+      setUser(user);
       router.push("/onboarding");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Something went wrong");

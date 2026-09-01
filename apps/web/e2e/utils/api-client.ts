@@ -1,9 +1,10 @@
 import type { APIRequestContext } from '@playwright/test'
 
-// apps/web/lib/api.ts is browser-only (guards on `window`/localStorage), so
-// E2E setup calls go straight to the API with Playwright's own request
-// context instead of reusing it.
-const API_BASE = `${process.env.PLAYWRIGHT_API_URL ?? 'http://localhost:4000'}/api/v1`
+// apps/web/lib/api.ts is browser-only (guards on `window`), so E2E setup calls
+// go straight to the API with Playwright's own request context. That context
+// stores Set-Cookie from /auth/register and sends `dolang_session` on every
+// later call — same session model as the browser.
+export const API_BASE = `${process.env.PLAYWRIGHT_API_URL ?? 'http://localhost:4000'}/api/v1`
 
 export interface E2EUser {
   id: string
@@ -19,11 +20,9 @@ export interface E2EUser {
 }
 
 export interface RegisteredUser {
-  accessToken: string
   user: E2EUser
-  // The plaintext password used at registration — only the hash is ever
-  // persisted server-side, so tests that need to drive the login UI (rather
-  // than just seeding a token) have to carry this from registration time.
+  // The plaintext password used at registration — tests that drive the login
+  // UI (or re-login a browser context) need it since only the hash is stored.
   password: string
 }
 
@@ -37,7 +36,10 @@ export function uniqueEmail(prefix = 'e2e') {
   return `${prefix}-${Date.now()}-${process.pid}-${counter}@dolang.test`
 }
 
-async function assertOk(res: { ok: () => boolean; status: () => number; text: () => Promise<string> }, label: string) {
+async function assertOk(
+  res: { ok: () => boolean; status: () => number; text: () => Promise<string> },
+  label: string,
+) {
   if (!res.ok()) {
     throw new Error(`${label} failed: ${res.status()} ${await res.text()}`)
   }
@@ -54,14 +56,15 @@ export async function registerUser(
   }
   const res = await request.post(`${API_BASE}/auth/register`, { data })
   await assertOk(res, 'registerUser')
-  const body = await res.json()
-  return { ...body, password: data.password }
+  const body = (await res.json()) as { user: E2EUser }
+  // `request` now holds the dolang_session cookie for subsequent calls.
+  return { user: body.user, password: data.password }
 }
 
 // GermanLevel/UserProfile/UserGoal enum values from packages/db/prisma/schema.prisma.
+// Relies on the session cookie stored in `request` by a prior registerUser call.
 export async function completeOnboarding(
   request: APIRequestContext,
-  accessToken: string,
   overrides: Partial<{ level: string; profile: string; goal: string; dailyMinutes: number }> = {},
 ): Promise<E2EUser> {
   const data = {
@@ -70,18 +73,13 @@ export async function completeOnboarding(
     goal: overrides.goal ?? 'fun_learning',
     dailyMinutes: overrides.dailyMinutes ?? 30,
   }
-  const res = await request.patch(`${API_BASE}/users/onboarding`, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-    data,
-  })
+  const res = await request.patch(`${API_BASE}/users/onboarding`, { data })
   await assertOk(res, 'completeOnboarding')
   return res.json()
 }
 
-export async function getMe(request: APIRequestContext, accessToken: string): Promise<E2EUser> {
-  const res = await request.get(`${API_BASE}/users/me`, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  })
+export async function getMe(request: APIRequestContext): Promise<E2EUser> {
+  const res = await request.get(`${API_BASE}/users/me`)
   await assertOk(res, 'getMe')
   return res.json()
 }

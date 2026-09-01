@@ -1,10 +1,15 @@
 import 'reflect-metadata'
 import { NestFactory } from '@nestjs/core'
 import { ValidationPipe } from '@nestjs/common'
+import cookieParser from 'cookie-parser'
 import { AppModule } from './app.module'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { rawBody: true })
+
+  // Session lives in an HttpOnly cookie (see auth/session-cookie.ts); the JWT
+  // strategy reads it off `req.cookies`.
+  app.use(cookieParser())
 
   // WEB_URL may be a single origin or a comma-separated list (e.g. a custom
   // domain + Vercel's own *.vercel.app URL). Localhost is always allowed so
