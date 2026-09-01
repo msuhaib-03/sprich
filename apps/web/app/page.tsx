@@ -111,20 +111,24 @@ export default function LandingPage() {
       {/* Nav */}
       <nav className="fixed top-0 inset-x-0 z-50 border-b border-[var(--border)] bg-[var(--bg)]/90 backdrop-blur-md">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <span className="text-xl font-bold tracking-tight gold-text">
-            doLang
-          </span>
-          <div className="flex items-center gap-4">
+          <img
+            src="/doLang.svg"
+            alt="doLang"
+            width={107}
+            height={31}
+            className="h-9 w-auto"
+          />
+          <div className="flex items-center gap-2 sm:gap-4">
             <ThemeToggle />
             <Link
               href="/login"
-              className="text-sm text-[var(--muted)] hover:text-[var(--text)]"
+              className="text-sm text-[var(--muted)] hover:text-[var(--text)] whitespace-nowrap"
             >
               Log in
             </Link>
             <Link
               href="/signup"
-              className="text-sm px-4 py-2 rounded-lg gold-gradient text-black font-semibold hover:opacity-90"
+              className="text-sm px-3 sm:px-4 py-2 rounded-lg gold-gradient text-black font-semibold hover:opacity-90 whitespace-nowrap shrink-0"
             >
               Start free
             </Link>
@@ -134,17 +138,17 @@ export default function LandingPage() {
 
       {/* Hero */}
       <section className="pt-40 pb-24 px-6 text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#d4a843]/30 bg-[#d4a843]/5 text-[var(--gold)] text-xs font-medium mb-8">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[var(--gold)]/40 bg-[var(--gold)]/10 text-[var(--gold-contrast)] text-xs font-semibold mb-8">
           The Language app that teaches you WHY
         </div>
 
-        <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-[1.05] mb-6 max-w-4xl mx-auto">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.05] mb-6 max-w-4xl mx-auto">
           Stop memorizing.
           <br />
           <span className="gold-text">Start understanding.</span>
         </h1>
 
-        <p className="text-lg md:text-xl text-[var(--muted)] max-w-2xl mx-auto mb-10 leading-relaxed">
+        <p className="text-base sm:text-lg lg:text-xl text-[var(--muted)] max-w-2xl mx-auto mb-10 leading-relaxed">
           Duolingo gives you sentences. We give you the grammar logic behind
           them. From complete beginner to C2 — with real reasoning, AI speaking
           practice, and the confidence to use German in public.
@@ -159,7 +163,7 @@ export default function LandingPage() {
           </Link>
           <Link
             href="#how-it-works"
-            className="px-8 py-4 rounded-xl border border-[var(--border)] text-[var(--muted)] hover:text-[var(--text)] hover:border-[var(--border-strong)] text-lg w-full sm:w-auto"
+            className="px-8 py-4 rounded-xl border border-[var(--border-strong)] bg-[var(--surface)] text-[var(--text)] font-semibold hover:bg-[var(--surface-hover)] hover:border-[var(--gold)]/50 text-lg w-full sm:w-auto transition-colors"
           >
             See how it works
           </Link>
@@ -170,7 +174,7 @@ export default function LandingPage() {
           {LEVELS.map((l) => (
             <span
               key={l}
-              className="px-3 py-1 rounded-full border border-[var(--border)] text-xs font-mono text-[var(--muted)]"
+              className="px-3 py-1 rounded-full border border-[var(--gold)]/40 bg-[var(--gold)]/10 text-xs font-mono font-semibold text-[var(--gold-contrast)] transition-colors hover:bg-[var(--gold)]/20 hover:border-[var(--gold)]/60"
             >
               {l}
             </span>
@@ -181,7 +185,7 @@ export default function LandingPage() {
       {/* Problem Section */}
       <section className="py-20 px-6 bg-[var(--surface)]">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-4">
             What other apps won&apos;t tell you
           </h2>
           <p className="text-[var(--muted)] text-center mb-12 max-w-xl mx-auto">
@@ -211,7 +215,7 @@ export default function LandingPage() {
       <section id="how-it-works" className="py-24 px-6">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
               This is what we show you
             </h2>
             <p className="text-[var(--muted)] max-w-xl mx-auto">
@@ -355,7 +359,7 @@ export default function LandingPage() {
       {/* Features */}
       <section className="py-24 px-6 bg-[var(--surface)]">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-4">
             Built different. Actually.
           </h2>
           <p className="text-[var(--muted)] text-center mb-16 max-w-xl mx-auto">
@@ -381,7 +385,7 @@ export default function LandingPage() {
       {/* Comparison */}
       <section className="py-24 px-6">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-4">
             How we compare
           </h2>
           <p className="text-[var(--muted)] text-center mb-12">
@@ -446,7 +450,7 @@ export default function LandingPage() {
       {/* CTA */}
       <section className="py-24 px-6 text-center">
         <div className="max-w-2xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-black mb-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-4">
             doLang.
             <br />
             <span className="text-[var(--faint)]">
@@ -469,7 +473,13 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="border-t border-[var(--border)] py-8 px-6">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <span className="font-bold gold-text">doLang</span>
+          <img
+            src="/doLang.svg"
+            alt="doLang"
+            width={107}
+            height={31}
+            className="h-5 w-auto sm:h-6 md:h-6 lg:h-7"
+          />
           <p className="text-[var(--faint)] text-sm">
             © {new Date().getFullYear()} doLang. Built for every Pakistani going
             to Germany.

@@ -25,6 +25,8 @@
   --gold: #d4a843;
   --gold-light: #f0c96a;
   --gold-dark: #a07820;
+  /* WCAG AA-safe gold for text on --bg (badges/pills). 8.4:1 in dark, 5.5:1 in light. */
+  --gold-contrast: #d4a843;
 }
 
 .light {
@@ -47,6 +49,7 @@
   --gold: #b5891f;
   --gold-light: #d4a843;
   --gold-dark: #8a6714;
+  --gold-contrast: #7a5c12;
 }
 
 /* Grammar color coding — used in lesson breakdowns (vivid, works on both themes) */
