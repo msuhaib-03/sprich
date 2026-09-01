@@ -11,7 +11,7 @@ import { GoogleButton } from "@/components/ui/google-button";
 
 export default function LoginPage() {
   const router = useRouter();
-  const setAuth = useAuthStore((s) => s.setAuth);
+  const setUser = useAuthStore((s) => s.setUser);
 
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
@@ -22,13 +22,10 @@ export default function LoginPage() {
     setError("");
     setLoading(true);
     try {
-      const res = await api.post<{ accessToken: string; user: User }>(
-        "/auth/login",
-        form,
-      );
-      setAuth(res.accessToken, res.user);
+      const { user } = await api.post<{ user: User }>("/auth/login", form);
+      setUser(user);
       // If onboarding not done, send there; otherwise dashboard
-      const needsOnboarding = !res.user.profile || !res.user.goal;
+      const needsOnboarding = !user.profile || !user.goal;
       router.push(needsOnboarding ? "/onboarding" : "/dashboard");
     } catch (err: unknown) {
       setError(

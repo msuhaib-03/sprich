@@ -10,9 +10,6 @@ export class UsersController {
 
   @Get('me')
   getMe(@Request() req: { user: { id: string } }) {
-    // TEMP DIAGNOSTIC — which user's verified token reached /users/me. Correlate
-    // with the Vercel [REQUEST] line. Remove once the callback issue is fixed.
-    console.log('[USERS_ME]', JSON.stringify({ userId: req.user?.id ?? null }))
     return this.usersService.findById(req.user.id)
   }
 

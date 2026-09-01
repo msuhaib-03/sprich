@@ -26,13 +26,10 @@ export async function getTtsUrl(text: string): Promise<string | null> {
   const hit = memoryCache.get(text)
   if (hit) return hit
   try {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('dolang_token') : null
     const res = await fetch(`${BASE}/speaking/tts`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      },
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text }),
     })
     if (!res.ok) return null

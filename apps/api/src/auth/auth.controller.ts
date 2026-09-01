@@ -1,27 +1,47 @@
-import { Controller, Post, Body, UseGuards, Request, Get, Query, Res, BadRequestException } from '@nestjs/common'
+import { Controller, Post, Body, UseGuards, Request, Get, Query, Res } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import { ThrottlerGuard } from '@nestjs/throttler'
+import { ConfigService } from '@nestjs/config'
 import type { Response } from 'express'
 import { AuthService } from './auth.service'
 import { RegisterDto } from './dto/register.dto'
 import { LoginDto } from './dto/login.dto'
 import { ForgotPasswordDto } from './dto/forgot-password.dto'
 import { ResetPasswordDto } from './dto/reset-password.dto'
-import { ExchangeOAuthCodeDto } from './dto/exchange-oauth-code.dto'
+import { setSessionCookie, clearSessionCookie } from './session-cookie'
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private config: ConfigService,
+  ) {}
 
   @Post('register')
-  register(@Body() dto: RegisterDto) {
-    return this.authService.register(dto)
+  async register(@Body() dto: RegisterDto, @Res({ passthrough: true }) res: Response) {
+    const { accessToken, user } = await this.authService.register(dto)
+    setSessionCookie(res, accessToken, this.config)
+    return { user }
   }
 
   @UseGuards(AuthGuard('local'))
   @Post('login')
-  login(@Request() req: { user: { id: string; email: string } }, @Body() _dto: LoginDto) {
-    return this.authService.login(req.user)
+  async login(
+    @Request() req: { user: { id: string; email: string } },
+    @Body() _dto: LoginDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { accessToken, user } = await this.authService.login(req.user)
+    setSessionCookie(res, accessToken, this.config)
+    return { user }
+  }
+
+  @Post('logout')
+  logout(@Res({ passthrough: true }) res: Response) {
+    // Stateless JWT — clearing the cookie is the logout. Safe to call
+    // unauthenticated (idempotent).
+    clearSessionCookie(res, this.config)
+    return { ok: true }
   }
 
   @UseGuards(AuthGuard('jwt'))
@@ -60,40 +80,19 @@ export class AuthController {
     @Request() req: { user: Awaited<ReturnType<AuthService['login']>> },
     @Res() res: Response,
   ) {
-    // Don't put the real token in the URL — it would end up in browser
-    // history. Send a one-time code instead; the frontend trades it for
-    // the login result right away via POST /auth/oauth/exchange.
-    const code = this.authService.createOAuthExchangeCode(req.user)
-    // TEMP DIAGNOSTIC — confirms the API resolved a real DB user and minted a
-    // code. No token/code logged. Remove once the callback issue is fixed.
-    console.log(
-      '[OAUTH_CALLBACK]',
-      JSON.stringify({
-        stage: 'api_google_callback',
-        userId: req.user?.user?.id ?? null,
-        hasToken: Boolean(req.user?.accessToken),
-        redirectTo: `${this.authService.getWebUrl()}/callback`,
-      }),
-    )
-    res.redirect(`${this.authService.getWebUrl()}/callback?code=${code}`)
-  }
+    // Set the session cookie straight onto the redirect response — no one-time
+    // code, no exchange hop. The cookie is Domain=.dolang.website, so the
+    // dolang.website page we redirect to (and its api.dolang.website calls)
+    // carry it immediately.
+    const { accessToken, user } = req.user
+    setSessionCookie(res, accessToken, this.config)
 
-  @Post('oauth/exchange')
-  exchangeOAuthCode(@Body() dto: ExchangeOAuthCodeDto) {
-    // Same { accessToken, user } shape as POST /auth/login, so the callback
-    // page can finish sign-in without a follow-up GET /users/me.
-    const result = this.authService.exchangeOAuthCode(dto.code)
-    // TEMP DIAGNOSTIC — did the one-time code resolve on this instance? Remove
-    // once the callback issue is fixed. No token/code logged.
+    const needsOnboarding = !user?.profile || !user?.goal
+    const target = `${this.authService.getWebUrl()}${needsOnboarding ? '/onboarding' : '/dashboard'}`
     console.log(
       '[OAUTH_CALLBACK]',
-      JSON.stringify({
-        stage: 'api_exchange',
-        resolved: Boolean(result),
-        userId: result?.user?.id ?? null,
-      }),
+      JSON.stringify({ stage: 'api_google_callback', userId: user?.id ?? null, target }),
     )
-    if (!result) throw new BadRequestException('Invalid or expired code')
-    return result
+    res.redirect(target)
   }
 }

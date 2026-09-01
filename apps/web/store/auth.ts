@@ -1,13 +1,16 @@
 'use client'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { api } from '@/lib/api'
 
 interface AuthState {
-  token: string | null
   user: User | null
-  setAuth: (token: string, user: User) => void
+  // `true` once we've checked the session (via /users/me) at least once this
+  // load — lets route guards tell "not logged in" from "not checked yet".
+  ready: boolean
   setUser: (user: User) => void
-  logout: () => void
+  setReady: (ready: boolean) => void
+  logout: () => Promise<void>
 }
 
 export interface User {
@@ -26,18 +29,27 @@ export interface User {
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
-      token: null,
       user: null,
-      setAuth: (token, user) => {
-        localStorage.setItem('dolang_token', token)
-        set({ token, user })
-      },
-      setUser: (user) => set({ user }),
-      logout: () => {
-        localStorage.removeItem('dolang_token')
-        set({ token: null, user: null })
+      ready: false,
+      setUser: (user) => set({ user, ready: true }),
+      setReady: (ready) => set({ ready }),
+      logout: async () => {
+        // Clears the HttpOnly session cookie server-side.
+        try {
+          await api.post('/auth/logout', {})
+        } catch {
+          // best effort — still drop local state
+        }
+        set({ user: null, ready: true })
+        // Hard nav so no in-memory state survives into the logged-out app.
+        if (typeof window !== 'undefined') window.location.href = '/login'
       },
     }),
-    { name: 'dolang-auth', partialize: (s) => ({ token: s.token, user: s.user }) },
+    {
+      name: 'dolang-auth',
+      // Cache the profile for a flash-free reload; the cookie is the real
+      // source of truth and is re-verified on mount.
+      partialize: (s) => ({ user: s.user }),
+    },
   ),
 )

@@ -280,10 +280,9 @@ export default function SpeakPage() {
         try {
           const form = new FormData()
           form.append('audio', blob, 'speech.webm')
-          const token = localStorage.getItem('dolang_token')
           const res = await fetch(`${API_BASE}/speaking/stt`, {
             method: 'POST',
-            headers: token ? { Authorization: `Bearer ${token}` } : {},
+            credentials: 'include',
             body: form,
           })
           if (!res.ok) throw new Error()
