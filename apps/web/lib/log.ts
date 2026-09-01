@@ -18,6 +18,7 @@ export function logRequest(entry: RequestLogEntry) {
   console.log(
     '[REQUEST]',
     JSON.stringify({
+      event: 'request',
       userId: entry.userId ?? 'anonymous',
       email: entry.email ?? null,
       route: entry.route,

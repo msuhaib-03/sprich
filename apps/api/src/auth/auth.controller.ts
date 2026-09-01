@@ -57,20 +57,22 @@ export class AuthController {
   @UseGuards(AuthGuard('google'))
   @Get('google/callback')
   googleCallback(
-    @Request() req: { user: { accessToken: string } },
+    @Request() req: { user: Awaited<ReturnType<AuthService['login']>> },
     @Res() res: Response,
   ) {
     // Don't put the real token in the URL — it would end up in browser
     // history. Send a one-time code instead; the frontend trades it for
-    // the real token right away via POST /auth/oauth/exchange.
-    const code = this.authService.createOAuthExchangeCode(req.user.accessToken)
+    // the login result right away via POST /auth/oauth/exchange.
+    const code = this.authService.createOAuthExchangeCode(req.user)
     res.redirect(`${this.authService.getWebUrl()}/callback?code=${code}`)
   }
 
   @Post('oauth/exchange')
   exchangeOAuthCode(@Body() dto: ExchangeOAuthCodeDto) {
-    const accessToken = this.authService.exchangeOAuthCode(dto.code)
-    if (!accessToken) throw new BadRequestException('Invalid or expired code')
-    return { accessToken }
+    // Same { accessToken, user } shape as POST /auth/login, so the callback
+    // page can finish sign-in without a follow-up GET /users/me.
+    const result = this.authService.exchangeOAuthCode(dto.code)
+    if (!result) throw new BadRequestException('Invalid or expired code')
+    return result
   }
 }

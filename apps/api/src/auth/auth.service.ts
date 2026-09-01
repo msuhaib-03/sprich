@@ -13,12 +13,15 @@ const OAUTH_CODE_TTL_MS = 60 * 1000 // 1 minute — just long enough for one red
 
 @Injectable()
 export class AuthService {
-  // One-time codes used to hand a freshly-issued OAuth token to the browser
+  // One-time codes used to hand a freshly-issued login result to the browser
   // without ever putting the real token in a URL (URLs end up in browser
   // history). Each code is random, works once, and expires in a minute.
   // Plain in-memory Map is enough here — this app runs as one server
   // process and the codes only need to live for a few seconds.
-  private oauthCodes = new Map<string, { accessToken: string; expiresAt: number }>()
+  private oauthCodes = new Map<
+    string,
+    { payload: Awaited<ReturnType<AuthService['login']>>; expiresAt: number }
+  >()
 
   constructor(
     private usersService: UsersService,
@@ -80,21 +83,23 @@ export class AuthService {
     return this.login(user)
   }
 
-  // Step 1 of the OAuth redirect: turn a real access token into a one-time
-  // code that's safe to put in a URL.
-  createOAuthExchangeCode(accessToken: string) {
+  // Step 1 of the OAuth redirect: stash the full login result (token +
+  // profile) behind a one-time code that's safe to put in a URL. Returning
+  // the profile here too means the callback page mirrors email/password
+  // login exactly — no extra GET /users/me round-trip after redirect.
+  createOAuthExchangeCode(payload: Awaited<ReturnType<AuthService['login']>>) {
     const code = randomBytes(32).toString('hex')
-    this.oauthCodes.set(code, { accessToken, expiresAt: Date.now() + OAUTH_CODE_TTL_MS })
+    this.oauthCodes.set(code, { payload, expiresAt: Date.now() + OAUTH_CODE_TTL_MS })
     return code
   }
 
-  // Step 2: the frontend trades the code for the real token. Works only
-  // once — we delete it immediately whether it was valid or not.
+  // Step 2: the frontend trades the code for the real login result. Works
+  // only once — we delete it immediately whether it was valid or not.
   exchangeOAuthCode(code: string) {
     const entry = this.oauthCodes.get(code)
     this.oauthCodes.delete(code)
     if (!entry || entry.expiresAt < Date.now()) return null
-    return entry.accessToken
+    return entry.payload
   }
 
   // First of a possibly comma-separated WEB_URL list, trailing slash stripped.
