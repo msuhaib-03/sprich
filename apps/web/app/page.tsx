@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 const LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"];
 
@@ -119,7 +118,6 @@ export default function LandingPage() {
             className="h-9 w-auto"
           />
           <div className="flex items-center gap-2 sm:gap-4">
-            <ThemeToggle />
             <Link
               href="/login"
               className="text-sm text-[var(--muted)] hover:text-[var(--text)] whitespace-nowrap"
@@ -137,7 +135,7 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero */}
-      <section className="pt-40 pb-24 px-6 text-center">
+      <section className="min-h-svh flex flex-col items-center justify-center px-6 pt-28 pb-20 text-center">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[var(--gold)]/40 bg-[var(--gold)]/10 text-[var(--gold-contrast)] text-xs font-semibold mb-8">
           The Language app that teaches you WHY
         </div>
@@ -183,8 +181,8 @@ export default function LandingPage() {
       </section>
 
       {/* Problem Section */}
-      <section className="py-20 px-6 bg-[var(--surface)]">
-        <div className="max-w-4xl mx-auto">
+      <section className="min-h-svh flex flex-col items-center justify-center py-20 px-6 bg-[var(--surface)]">
+        <div className="max-w-4xl w-full mx-auto">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-4">
             What other apps won&apos;t tell you
           </h2>
@@ -192,7 +190,7 @@ export default function LandingPage() {
             People are expiring their visas because they can&apos;t learn German
             properly.
           </p>
-          <div className="grid gap-4">
+          <div className="grid gap-4"> 
             {PROBLEMS.map((p) => (
               <div
                 key={p.app}
@@ -212,8 +210,11 @@ export default function LandingPage() {
       </section>
 
       {/* Grammar Preview — The WHY */}
-      <section id="how-it-works" className="py-24 px-6">
-        <div className="max-w-4xl mx-auto">
+      <section
+        id="how-it-works"
+        className="min-h-svh flex flex-col items-center justify-center py-24 px-6"
+      >
+        <div className="max-w-4xl w-full mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
               This is what we show you
@@ -357,8 +358,8 @@ export default function LandingPage() {
       </section>
 
       {/* Features */}
-      <section className="py-24 px-6 bg-[var(--surface)]">
-        <div className="max-w-6xl mx-auto">
+      <section className="min-h-svh flex flex-col items-center justify-center py-24 px-6 bg-[var(--surface)]">
+        <div className="max-w-6xl w-full mx-auto">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-4">
             Built different. Actually.
           </h2>
@@ -383,8 +384,8 @@ export default function LandingPage() {
       </section>
 
       {/* Comparison */}
-      <section className="py-24 px-6">
-        <div className="max-w-3xl mx-auto">
+      <section className="min-h-svh flex flex-col items-center justify-center py-24 px-6">
+        <div className="max-w-3xl w-full mx-auto">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-4">
             How we compare
           </h2>
@@ -448,12 +449,17 @@ export default function LandingPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-24 px-6 text-center">
-        <div className="max-w-2xl mx-auto">
+      <section className="min-h-svh flex flex-col items-center justify-center py-24 px-6 text-center">
+        <div className="max-w-2xl w-full mx-auto">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-4">
-            doLang.
-            <br />
-            <span className="text-[var(--faint)]">
+            <img
+              src="/doLang.svg"
+              alt="doLang"
+              width={107}
+              height={31}
+              className="h-10 sm:h-12 md:h-14 w-auto mx-auto"
+            />
+            <span className="mt-3 block text-[var(--faint)]">
               German for people who mean it.
             </span>
           </h2>
@@ -472,7 +478,7 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer className="border-t border-[var(--border)] py-8 px-6">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
           <img
             src="/doLang.svg"
             alt="doLang"
@@ -481,8 +487,8 @@ export default function LandingPage() {
             className="h-5 w-auto sm:h-6 md:h-6 lg:h-7"
           />
           <p className="text-[var(--faint)] text-sm">
-            © {new Date().getFullYear()} doLang. Built for every Pakistani going
-            to Germany.
+            © {new Date().getFullYear()} doLang. Built for language learners
+            worldwide.
           </p>
           <div className="flex gap-4 text-sm text-[var(--faint)]">
             <Link href="/privacy" className="hover:text-[var(--text)]">

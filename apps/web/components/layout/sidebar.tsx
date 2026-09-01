@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { LogOut } from 'lucide-react'
 import { useAuthStore } from '@/store/auth'
-import { ThemeToggle } from '@/components/ui/theme-toggle'
 
 const NAV = [
   { href: '/dashboard', label: 'Home', icon: '🏠' },
@@ -24,7 +23,13 @@ export function Sidebar() {
     <aside className="hidden md:flex w-60 shrink-0 h-full flex-col border-r border-[var(--border)] bg-[var(--surface-2)] px-3 py-6">
       {/* Logo */}
       <Link href="/dashboard" className="px-3 mb-8 block">
-        <span className="text-xl font-black gold-text">doLang</span>
+        <img
+          src="/doLang.svg"
+          alt="doLang"
+          width={107}
+          height={31}
+          className="h-7 w-auto"
+        />
       </Link>
 
       {/* Nav */}
@@ -61,7 +66,6 @@ export function Sidebar() {
               <p className="text-xs text-[var(--faint)] truncate">{user?.level ?? 'A1'} · {user?.xp ?? 0} XP</p>
             </div>
           </div>
-          <ThemeToggle />
         </div>
         <button
           onClick={logout}
