@@ -64,6 +64,17 @@ export class AuthController {
     // history. Send a one-time code instead; the frontend trades it for
     // the login result right away via POST /auth/oauth/exchange.
     const code = this.authService.createOAuthExchangeCode(req.user)
+    // TEMP DIAGNOSTIC — confirms the API resolved a real DB user and minted a
+    // code. No token/code logged. Remove once the callback issue is fixed.
+    console.log(
+      '[OAUTH_CALLBACK]',
+      JSON.stringify({
+        stage: 'api_google_callback',
+        userId: req.user?.user?.id ?? null,
+        hasToken: Boolean(req.user?.accessToken),
+        redirectTo: `${this.authService.getWebUrl()}/callback`,
+      }),
+    )
     res.redirect(`${this.authService.getWebUrl()}/callback?code=${code}`)
   }
 
@@ -72,6 +83,16 @@ export class AuthController {
     // Same { accessToken, user } shape as POST /auth/login, so the callback
     // page can finish sign-in without a follow-up GET /users/me.
     const result = this.authService.exchangeOAuthCode(dto.code)
+    // TEMP DIAGNOSTIC — did the one-time code resolve on this instance? Remove
+    // once the callback issue is fixed. No token/code logged.
+    console.log(
+      '[OAUTH_CALLBACK]',
+      JSON.stringify({
+        stage: 'api_exchange',
+        resolved: Boolean(result),
+        userId: result?.user?.id ?? null,
+      }),
+    )
     if (!result) throw new BadRequestException('Invalid or expired code')
     return result
   }
