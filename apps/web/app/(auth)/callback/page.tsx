@@ -18,18 +18,14 @@ function OAuthCallback() {
     }
     // The URL only ever carries a one-time code, never the real token (a
     // real token in the URL would end up in browser history). Trade the
-    // code for the real token first, then continue like a normal login.
+    // code for the login result — same { accessToken, user } shape as
+    // email/password login, so we finish here without a GET /users/me hop.
     api
-      .post<{ accessToken: string }>("/auth/oauth/exchange", { code })
-      .then(({ accessToken }) => {
-        // lib/api.ts reads the token from here on every request, so it has
-        // to land in localStorage before the /users/me call below.
-        localStorage.setItem("dolang_token", accessToken);
-        return api.get<User>("/users/me").then((user) => {
-          setAuth(accessToken, user);
-          const needsOnboarding = !user.profile || !user.goal;
-          router.push(needsOnboarding ? "/onboarding" : "/dashboard");
-        });
+      .post<{ accessToken: string; user: User }>("/auth/oauth/exchange", { code })
+      .then(({ accessToken, user }) => {
+        setAuth(accessToken, user);
+        const needsOnboarding = !user.profile || !user.goal;
+        router.push(needsOnboarding ? "/onboarding" : "/dashboard");
       })
       .catch(() => {
         localStorage.removeItem("dolang_token");
