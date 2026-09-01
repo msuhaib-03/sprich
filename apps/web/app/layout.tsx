@@ -26,8 +26,10 @@ export const viewport: Viewport = {
   themeColor: '#0b0b0e',
 }
 
-// Runs before paint: apply the saved theme (default: dark) to avoid a flash.
-const themeScript = `(function(){try{var t=localStorage.getItem('dolang-theme')||'dark';document.documentElement.classList.add(t==='light'?'light':'dark');}catch(e){document.documentElement.classList.add('dark');}})();`
+// Dark-only for now — the light theme + toggle (components/ui/theme-toggle.tsx)
+// stay in the codebase for a later release, but until then force dark
+// regardless of any 'dolang-theme' value left in localStorage from before.
+const themeScript = `document.documentElement.classList.add('dark');`
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

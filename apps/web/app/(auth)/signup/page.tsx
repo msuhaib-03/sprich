@@ -40,8 +40,14 @@ export default function SignupPage() {
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="text-center mb-8">
-          <Link href="/" className="text-2xl font-black gold-text">
-            doLang
+          <Link href="/" className="inline-block">
+            <img
+              src="/doLang.svg"
+              alt="doLang"
+              width={107}
+              height={31}
+              className="h-7 w-auto"
+            />
           </Link>
           <p className="text-[var(--faint)] text-sm mt-1">
             Start Your Language Journey
