@@ -12,25 +12,26 @@ the API, **not** in `localStorage` and **never** in a URL or in JS reach.
 
 ```
 dolang_session = <JWT>
-  HttpOnly; Secure; SameSite=Lax; Domain=.dolang.website; Path=/; Max-Age=604800
+  HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=604800     (host-only — no Domain)
 ```
 
-`SameSite=Lax` is sufficient because the web app and the API are the **same
-site**:
+The browser only ever talks to **one origin** (`dolang.website`). API calls go
+through a same-origin proxy — `next.config.ts` rewrites `/api/v1/*` to the real
+API host:
 
 | | Production | Local dev |
 |---|---|---|
-| web | `https://dolang.website` (Vercel) | `http://localhost:3000` |
-| api | `https://api.dolang.website` (Render) | `http://localhost:4000` |
+| web + API origin (browser) | `https://dolang.website` | `http://localhost:3000` |
+| proxy forwards to (`API_PROXY_TARGET`) | `https://api.dolang.website/api/v1/*` (Render) | `http://localhost:4000/api/v1/*` |
 
-Both sides share the registrable domain (`dolang.website` / `localhost`), so the
-cookie is first-party. The only cross-site step — the Google OAuth redirect — is
-a top-level GET, which `SameSite=Lax` allows, and the cookie is set on our own
-`api.dolang.website` callback response anyway. **No `SameSite=None`.**
+So `dolang_session` is a plain **first-party** cookie on `dolang.website`.
+`SameSite=Lax` + first-party is what iOS Safari keeps — a **cross-subdomain**
+cookie set via `fetch()` (`dolang.website` page ← `api.dolang.website` response)
+is dropped by Safari's tracking protection, which is why the proxy exists. **No
+`SameSite=None`, no `Domain`.**
 
 Where it's defined: `apps/api/src/auth/session-cookie.ts`
-(`setSessionCookie` / `clearSessionCookie`, `secure` and `domain` from
-`NODE_ENV` + `COOKIE_DOMAIN`).
+(`setSessionCookie` / `clearSessionCookie`; `secure` from `NODE_ENV`).
 
 ### Login paths (all set the cookie, return `{ user }`)
 
@@ -55,8 +56,8 @@ Where it's defined: `apps/api/src/auth/session-cookie.ts`
 
 ## 2. Request logging (`/api/log`)
 
-The browser calls the API directly (`dolang.website` → `api.dolang.website`), so
-those requests never pass through Vercel. To make them visible in Vercel's logs,
+API calls are proxied through `dolang.website`, so the API's own logs sit on the
+Render side. To also see them in Vercel's logs (one place, with the acting user),
 `apps/web/lib/api.ts` fires a fire-and-forget `navigator.sendBeacon` to
 `apps/web/app/api/log/route.ts` for every `api.*` call. It emits one line:
 
@@ -67,10 +68,10 @@ those requests never pass through Vercel. To make them visible in Vercel's logs,
 ```
 
 **Identity is server-verified, never client-supplied.** The beacon body is only
-`{ route, method }`. The `dolang_session` cookie rides the same-origin beacon
-automatically (`Domain=.dolang.website`); the route handler verifies its HS256
-signature against `JWT_SECRET` (`verifyJwt`, zero-dep `node:crypto`) and takes
-`userId`/`email` from the verified `sub`/`email`.
+`{ route, method }`. The `dolang_session` cookie rides the same-origin beacon to
+`/api/log` automatically; the route handler verifies its HS256 signature against
+`JWT_SECRET` (`verifyJwt`, zero-dep `node:crypto`) and takes `userId`/`email`
+from the verified `sub`/`email`.
 
 | Cookie on the beacon | Logged identity |
 |---|---|
@@ -88,27 +89,38 @@ Files: `apps/web/lib/api.ts` (`reportCall`), `apps/web/app/api/log/route.ts`
 
 ## 3. Deployment / infra runbook
 
-Nothing works until the API is same-site with the web app.
+The browser must only ever see `dolang.website`. `api.dolang.website` still
+exists — it's the proxy's upstream, not something the browser hits.
 
-1. **Render** → the API service → add custom domain **`api.dolang.website`**.
-2. **DNS** → `CNAME api.dolang.website → <render target host>`; wait for the TLS
-   cert to issue.
-3. **Google Cloud Console** → OAuth client → Authorized redirect URIs → add
-   `https://api.dolang.website/api/v1/auth/google/callback`.
-4. **Render env:**
-   - `GOOGLE_CALLBACK_URL=https://api.dolang.website/api/v1/auth/google/callback`
+1. **Render** — custom domain `api.dolang.website` on the API service + DNS
+   `CNAME` (already done).
+2. **Google Cloud Console** → OAuth client → Authorized redirect URIs → add
+   **`https://dolang.website/api/v1/auth/google/callback`** (keep the
+   `api.dolang.website` one during the transition).
+3. **Render env:**
+   - `GOOGLE_CALLBACK_URL=https://dolang.website/api/v1/auth/google/callback`
    - `WEB_URL=https://dolang.website`
-   - `COOKIE_DOMAIN=.dolang.website`
    - `NODE_ENV=production` (makes the cookie `Secure`)
+   - **remove `COOKIE_DOMAIN`** (cookie is host-only now)
    - `JWT_SECRET` — unchanged
-5. **Vercel env:**
-   - `NEXT_PUBLIC_API_URL=https://api.dolang.website/api/v1`
+4. **Vercel env:**
+   - `NEXT_PUBLIC_API_URL=/api/v1`  *(relative — same origin)*
+   - `API_PROXY_TARGET=https://api.dolang.website/api/v1/:path*`  *(must end `/:path*`)*
    - `JWT_SECRET` — same value as Render (used by `/api/log`)
-6. Redeploy **both**. Existing `localStorage` sessions are dead — users log in
-   once more.
+5. Redeploy **both**. Existing sessions are dead — users log in once more.
 
-Local dev needs no new vars: `COOKIE_DOMAIN` unset → host-only cookie on
-`localhost`; `NODE_ENV !== 'production'` → cookie not `Secure`.
+Local dev: `apps/web/.env.local` → `NEXT_PUBLIC_API_URL=/api/v1`; leave
+`API_PROXY_TARGET` unset (defaults to `http://localhost:4000/api/v1/:path*`);
+no `COOKIE_DOMAIN`; `NODE_ENV !== 'production'` → cookie not `Secure`.
+
+### Why the proxy
+
+A cookie set on `api.dolang.website` and returned to a `fetch()` on a
+`dolang.website` page is a **cross-origin** `Set-Cookie`. iOS Safari's tracking
+protection drops it (desktop browsers keep it). Routing every API call under
+`dolang.website/api/v1/*` makes `dolang_session` first-party, which Safari keeps.
+CORS also stops mattering (same-origin), though the API keeps its allow-list for
+direct hits.
 
 ---
 
@@ -131,11 +143,15 @@ unrelated to this work).
 the API (`page.request` shares the cookie jar); no `localStorage` seeding.
 
 **Production** (after the runbook + deploy):
-- `curl -I https://api.dolang.website/api/v1/` → reachable over TLS.
-- Desktop **and iPhone Safari**: Google login lands on `/dashboard`
-  authenticated; hard refresh persists; incognito behaves the same; Vercel
-  `[REQUEST]` shows the real `userId` for both email/pw and Google.
-- `Set-Cookie` shows `Domain=.dolang.website; SameSite=Lax; Secure; HttpOnly`.
+- `curl -i https://dolang.website/api/v1/auth/login -d '{"email":"x","password":"y"}' -H 'content-type: application/json'`
+  → the proxy forwards to Render; response comes back through `dolang.website`.
+- A real login `curl -i` shows `Set-Cookie: dolang_session=…; Secure; SameSite=Lax;
+  HttpOnly` with **no `Domain`** attribute.
+- Desktop **and iPhone Safari**: email/pw, register, and Google login all land on
+  `/dashboard` authenticated; hard refresh persists; incognito behaves the same;
+  Vercel `[REQUEST]` shows the real `userId`.
+- DevTools → Application → Cookies → `https://dolang.website`: `dolang_session`
+  present, `HttpOnly ✓ Secure ✓`, not visible in `document.cookie`.
 
 ---
 
@@ -147,9 +163,12 @@ the API (`page.request` shares the cookie jar); no `localStorage` seeding.
 - That map did not survive Render restarts / cold starts, so the exchange could
   hang (→ iPhone stuck on the callback spinner) or the client never stored a
   token (→ every request logged `anonymous`).
-- Moving to a first-party HttpOnly cookie set directly on the OAuth redirect
-  removed the exchange step, the in-memory state, and the `localStorage` token
-  entirely.
+- Moving to an HttpOnly cookie set directly on the OAuth redirect removed the
+  exchange step, the in-memory state, and the `localStorage` token entirely.
+- First attempt kept the API on `api.dolang.website` with a
+  `Domain=.dolang.website` cookie. That works on desktop but iOS Safari drops a
+  cross-subdomain `Set-Cookie` from `fetch()` — so the API moved behind a
+  same-origin proxy (`dolang.website/api/v1/*`) and the cookie became host-only.
 
 ---
 

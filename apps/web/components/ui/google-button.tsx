@@ -14,7 +14,7 @@ function GoogleIcon() {
 // Plain top-level navigation, not a fetch — OAuth redirects to Google
 // require a real page navigation, an AJAX call can't do this.
 export function GoogleButton() {
-  const apiBase = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api/v1";
+  const apiBase = process.env.NEXT_PUBLIC_API_URL ?? "/api/v1";
   return (
     <a
       href={`${apiBase}/auth/google`}

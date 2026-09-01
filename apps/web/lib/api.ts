@@ -1,4 +1,4 @@
-const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1'
+const BASE = process.env.NEXT_PUBLIC_API_URL ?? '/api/v1'
 
 // Fire-and-forget beacon so Vercel logs capture "user X called endpoint Y".
 // Identity is resolved server-side in /api/log from the HttpOnly `dolang_session`
