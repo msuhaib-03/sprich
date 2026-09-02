@@ -100,17 +100,18 @@ exists — it's the proxy's upstream, not something the browser hits.
    - `GOOGLE_CALLBACK_URL=https://dolang.website/api/v1/auth/google/callback`
    - `WEB_URL=https://dolang.website`
    - `NODE_ENV=production` (makes the cookie `Secure`)
-   - **remove `COOKIE_DOMAIN`** (cookie is host-only now)
+   - `COOKIE_DOMAIN` can be removed — it's no longer read
    - `JWT_SECRET` — unchanged
-4. **Vercel env:**
-   - `NEXT_PUBLIC_API_URL=/api/v1`  *(relative — same origin)*
-   - `API_PROXY_TARGET=https://api.dolang.website/api/v1/:path*`  *(must end `/:path*`)*
-   - `JWT_SECRET` — same value as Render (used by `/api/log`)
+4. **Vercel — no env change required.** `next.config.ts` defaults the proxy
+   target to `https://api.dolang.website/api/v1/:path*` when `NODE_ENV=production`,
+   and the frontend hardcodes the relative `/api/v1` base (any stale
+   `NEXT_PUBLIC_API_URL` on Vercel is ignored). `JWT_SECRET` stays as-is (used by
+   `/api/log`). To point the proxy elsewhere later, set `API_PROXY_TARGET`
+   (must end `/:path*`).
 5. Redeploy **both**. Existing sessions are dead — users log in once more.
 
-Local dev: `apps/web/.env.local` → `NEXT_PUBLIC_API_URL=/api/v1`; leave
-`API_PROXY_TARGET` unset (defaults to `http://localhost:4000/api/v1/:path*`);
-no `COOKIE_DOMAIN`; `NODE_ENV !== 'production'` → cookie not `Secure`.
+Local dev: nothing to set — `next.config.ts` defaults the proxy to
+`http://localhost:4000/api/v1/:path*`; cookie is host-only and not `Secure`.
 
 ### Why the proxy
 

@@ -5,11 +5,15 @@ import type { NextConfig } from "next";
 // (ITP / "Prevent Cross-Site Tracking") keeps — a cross-subdomain cookie set
 // via fetch() / accepted from a cross-origin response is dropped there.
 //
-// API_PROXY_TARGET points at the real API and MUST end with `/:path*`.
-//   prod:  https://api.dolang.website/api/v1/:path*
-//   local: the default below (the NestJS dev server)
+// Where the proxy forwards to. Defaults are baked in so no env var is required:
+//   prod  (NODE_ENV=production, e.g. Vercel) -> the Render API
+//   local -> the NestJS dev server
+// `API_PROXY_TARGET` overrides both; it MUST end with `/:path*`.
 const API_PROXY_TARGET =
-  process.env.API_PROXY_TARGET ?? "http://localhost:4000/api/v1/:path*";
+  process.env.API_PROXY_TARGET ??
+  (process.env.NODE_ENV === "production"
+    ? "https://api.dolang.website/api/v1/:path*"
+    : "http://localhost:4000/api/v1/:path*");
 
 const nextConfig: NextConfig = {
   async rewrites() {

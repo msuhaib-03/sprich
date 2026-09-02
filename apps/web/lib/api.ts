@@ -1,8 +1,9 @@
-// Relative by default: API calls go through a same-origin proxy
-// (next.config.ts rewrites /api/v1/* to the real API). The browser only ever
-// talks to this origin, so `dolang_session` is a first-party cookie — which
-// iOS Safari keeps and a cross-subdomain cookie is not.
-const BASE = process.env.NEXT_PUBLIC_API_URL ?? '/api/v1'
+// Always same-origin: API calls go through a proxy (next.config.ts rewrites
+// /api/v1/* to the real API). Keeping the browser on one origin makes
+// `dolang_session` a first-party cookie, which iOS Safari keeps — a
+// cross-subdomain cookie is not. Not configurable per-env on purpose; the
+// proxy target lives in next.config.ts.
+const BASE = '/api/v1'
 
 // Fire-and-forget beacon so Vercel logs capture "user X called endpoint Y".
 // Identity is resolved server-side in /api/log from the HttpOnly `dolang_session`

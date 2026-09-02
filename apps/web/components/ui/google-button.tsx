@@ -14,10 +14,10 @@ function GoogleIcon() {
 // Plain top-level navigation, not a fetch — OAuth redirects to Google
 // require a real page navigation, an AJAX call can't do this.
 export function GoogleButton() {
-  const apiBase = process.env.NEXT_PUBLIC_API_URL ?? "/api/v1";
   return (
     <a
-      href={`${apiBase}/auth/google`}
+      // Same-origin proxy path — see apps/web/next.config.ts rewrites.
+      href="/api/v1/auth/google"
       className="w-full flex items-center justify-center gap-3 px-5 py-3 rounded-xl border border-[var(--border)] bg-[var(--surface)] text-[var(--text)] font-semibold text-sm hover:bg-[var(--surface-hover)] transition-colors"
     >
       <GoogleIcon />
