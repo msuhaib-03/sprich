@@ -1,4 +1,5 @@
-const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1'
+// Same-origin proxy path (see apps/web/lib/api.ts).
+const BASE = '/api/v1'
 
 // In-memory cache: replaying the same text in a session never re-hits the API.
 // Capped FIFO so long conversations don't hold unbounded audio blobs.

@@ -50,7 +50,7 @@ interface Message {
   meta?: TurnMeta
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1'
+const API_BASE = '/api/v1' // same-origin proxy — see apps/web/next.config.ts
 
 // ─── Component ───────────────────────────────────────────────────────────────
 

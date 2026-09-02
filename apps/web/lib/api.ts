@@ -1,4 +1,9 @@
-const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1'
+// Always same-origin: API calls go through a proxy (next.config.ts rewrites
+// /api/v1/* to the real API). Keeping the browser on one origin makes
+// `dolang_session` a first-party cookie, which iOS Safari keeps — a
+// cross-subdomain cookie is not. Not configurable per-env on purpose; the
+// proxy target lives in next.config.ts.
+const BASE = '/api/v1'
 
 // Fire-and-forget beacon so Vercel logs capture "user X called endpoint Y".
 // Identity is resolved server-side in /api/log from the HttpOnly `dolang_session`
@@ -18,8 +23,7 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   reportCall(path, (init.method ?? 'GET').toUpperCase())
   const res = await fetch(`${BASE}${path}`, {
     ...init,
-    // Send/receive the session cookie. Web app and API are the same site
-    // (dolang.website / api.dolang.website), so this is a first-party cookie.
+    // Send/receive the session cookie (same-origin via the proxy).
     credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
