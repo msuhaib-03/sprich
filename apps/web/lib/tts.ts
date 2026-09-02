@@ -1,4 +1,4 @@
-const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1'
+const BASE = process.env.NEXT_PUBLIC_API_URL ?? '/api/v1'
 
 // In-memory cache: replaying the same text in a session never re-hits the API.
 // Capped FIFO so long conversations don't hold unbounded audio blobs.
