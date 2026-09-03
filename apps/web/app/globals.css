@@ -120,3 +120,36 @@ input[type="password"]::-ms-reveal,
 input[type="password"]::-ms-clear {
   display: none;
 }
+
+/* ─── iOS 15 / Safari < 16.2 compat shim ────────────────────────────────────
+   Tailwind v4 emits color-mix() for every opacity utility (bg-[var(--gold)]/10,
+   border-[var(--gold)]/40, …). WebKit < 16.2 has no color-mix(), so those
+   declarations are dropped — tinted backgrounds/borders vanish and the dim
+   --faint label gets hard to read. Restore the spots that surface on the
+   landing page with plain values.
+
+   Unlayered and last in the file on purpose, so it outranks Tailwind's
+   @layer utilities. Known-partial stopgap — not a comprehensive Safari-15
+   fix (other tints/@property gaps remain); accepted given the audience. */
+@supports not (color: color-mix(in srgb, red, blue)) {
+  :root {
+    --faint: #9ca3af; /* brighter than the #6d6a63 design value — legible on old screens */
+  }
+
+  [class*="bg-[var(--gold)]"] {
+    background-color: rgba(212, 168, 67, 0.12) !important;
+  }
+
+  /* Scoped to elements that explicitly ask for a gold border — not every
+     gold-background element. */
+  [class*="border-[var(--gold)]"] {
+    border-color: rgba(212, 168, 67, 0.3) !important;
+  }
+
+  /* --gold-contrast is already an unlayered #d4a843, so badge/pill *text*
+     should resolve fine here; the badge's problem is the missing background
+     above. Enable this only if a real iOS 15 device shows that text
+     mis-coloured too:
+  [class*="text-[var(--gold-contrast)]"] { color: #d4a843 !important; }
+  */
+}
