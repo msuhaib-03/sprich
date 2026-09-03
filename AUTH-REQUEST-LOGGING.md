@@ -102,15 +102,15 @@ exists — it's the proxy's upstream, not something the browser hits.
    - `NODE_ENV=production` (makes the cookie `Secure`)
    - `COOKIE_DOMAIN` can be removed — it's no longer read
    - `JWT_SECRET` — unchanged
-4. **Vercel — no env change required.** `next.config.ts` defaults the proxy
-   target to `https://api.dolang.website/api/v1/:path*` when `NODE_ENV=production`,
-   and the frontend hardcodes the relative `/api/v1` base (any stale
-   `NEXT_PUBLIC_API_URL` on Vercel is ignored). `JWT_SECRET` stays as-is (used by
-   `/api/log`). To point the proxy elsewhere later, set `API_PROXY_TARGET`
-   (must end `/:path*`).
+4. **Vercel env:**
+   - `API_PROXY_TARGET=https://api.dolang.website/api/v1/:path*` — **required**
+     (must end `/:path*`); the build throws without it in production.
+   - `JWT_SECRET` — unchanged (used by `/api/log`).
+   - `NEXT_PUBLIC_API_URL` is no longer read — the frontend hardcodes the
+     relative `/api/v1` base — so any stale value is harmless.
 5. Redeploy **both**. Existing sessions are dead — users log in once more.
 
-Local dev: nothing to set — `next.config.ts` defaults the proxy to
+Local dev: nothing to set — `API_PROXY_TARGET` defaults to
 `http://localhost:4000/api/v1/:path*`; cookie is host-only and not `Secure`.
 
 ### Why the proxy
