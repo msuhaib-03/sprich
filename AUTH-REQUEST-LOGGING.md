@@ -17,12 +17,13 @@ dolang_session = <JWT>
 
 The browser only ever talks to **one origin** (`dolang.website`). API calls go
 through a same-origin proxy — `apps/web/next.config.ts` rewrites `/api/v1/*` to
-the real API host:
+the real API host (`API_PROXY_TARGET`, also declared in `turbo.json` so Turbo
+passes it to the build):
 
 | | Production | Local dev |
 |---|---|---|
 | origin the browser sees | `https://dolang.website` | `http://localhost:3000` |
-| proxy forwards to (`API_PROXY_TARGET`) | `https://api.dolang.website/api/v1/*` (Render) | `http://localhost:4000/api/v1/*` |
+| proxy forwards to (`API_PROXY_TARGET`) | `https://api.dolang.website` (Render) | `http://localhost:4000` (default) |
 
 So `dolang_session` is a plain **first-party host-only** cookie. `SameSite=Lax` +
 first-party is what iOS Safari keeps — a **cross-subdomain** cookie
@@ -102,16 +103,21 @@ exists — it's the proxy's upstream, not something the browser hits.
    - `NODE_ENV=production` (makes the cookie `Secure`)
    - `COOKIE_DOMAIN` can be removed — it's no longer read
    - `JWT_SECRET` — unchanged
-4. **Vercel — no env change required.** `next.config.ts` defaults the proxy
-   target to `https://api.dolang.website/api/v1/:path*` when `NODE_ENV=production`,
-   and the frontend hardcodes the relative `/api/v1` base (any stale
-   `NEXT_PUBLIC_API_URL` on Vercel is ignored). `JWT_SECRET` stays as-is (used by
-   `/api/log`). To point the proxy elsewhere later, set `API_PROXY_TARGET`
-   (must end `/:path*`).
+4. **Vercel env:**
+   - `API_PROXY_TARGET` — the API, e.g. `https://api.dolang.website` (a bare
+     origin *or* the full `…/api/v1/:path*` template; `next.config.ts`
+     normalises both). Read at build time by the `/api/v1/*` rewrite.
+   - `JWT_SECRET` — unchanged (used by `/api/log`).
+   - **Both must also be listed in `turbo.json`'s `build.env`** — Turborepo
+     strips any env var not declared there before `next build` runs, so a
+     Vercel var that's missing from `turbo.json` is invisible to the build
+     (this is what broke the earlier deploys). Already done.
+   - The frontend hardcodes the relative `/api/v1` base, so a stale
+     `NEXT_PUBLIC_API_URL` is harmless.
 5. Redeploy **both**. Existing sessions are dead — users log in once more.
 
-Local dev: nothing to set — `next.config.ts` defaults the proxy to
-`http://localhost:4000/api/v1/:path*`; cookie is host-only and not `Secure`.
+Local dev: nothing to set — `API_PROXY_TARGET` falls back to
+`http://localhost:4000`; cookie is host-only and not `Secure`.
 
 ### Why the proxy
 
