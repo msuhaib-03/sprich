@@ -14,6 +14,7 @@
   "dependencies": {
     "@dolang/types": "*",
     "@tanstack/react-query": "^5.64.1",
+    "@vercel/speed-insights": "^2.0.0",
     "axios": "^1.7.9",
     "clsx": "^2.1.1",
     "framer-motion": "^11.15.0",
