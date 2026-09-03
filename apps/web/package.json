@@ -27,6 +27,14 @@
     "tailwind-merge": "^2.6.0",
     "zustand": "^5.0.14"
   },
+  "browserslist": [
+    "chrome >= 111",
+    "edge >= 111",
+    "firefox >= 111",
+    "safari >= 15.6",
+    "ios_saf >= 15.6",
+    "not dead"
+  ],
   "devDependencies": {
     "@playwright/test": "^1.62.1",
     "@tailwindcss/postcss": "^4",
