@@ -6,7 +6,7 @@
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"],
-      "env": ["NEXT_PUBLIC_API_URL"]
+      "env": ["API_PROXY_TARGET", "JWT_SECRET", "NEXT_PUBLIC_*"]
     },
     "dev": {
       "cache": false,
