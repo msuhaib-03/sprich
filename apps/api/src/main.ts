@@ -7,6 +7,8 @@ import { AppModule } from './app.module'
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { rawBody: true })
 
+  app.getHttpAdapter().getInstance().disable('x-powered-by')
+
   // Session lives in an HttpOnly cookie (see auth/session-cookie.ts); the JWT
   // strategy reads it off `req.cookies`.
   app.use(cookieParser())
