@@ -8,6 +8,12 @@ import { SESSION_COOKIE } from '../session-cookie'
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(config: ConfigService) {
+    const secret = config.get<string>('JWT_SECRET')
+    if (!secret) {
+      // Fail fast at boot rather than silently signing/verifying with a known
+      // fallback (which would be a full auth bypass in production).
+      throw new Error('JWT_SECRET is not set')
+    }
     super({
       // Cookie-only: the session JWT rides in an HttpOnly cookie, never a
       // header or the URL.
@@ -15,7 +21,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         (req: Request) => req?.cookies?.[SESSION_COOKIE] ?? null,
       ]),
       ignoreExpiration: false,
-      secretOrKey: config.get<string>('JWT_SECRET') ?? 'fallback-secret',
+      secretOrKey: secret,
     })
   }
 
