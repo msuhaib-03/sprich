@@ -3,22 +3,23 @@ import {
   ServiceUnavailableException,
   HttpException,
   BadRequestException,
-} from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
-import { PrismaService } from '../prisma/prisma.service'
-import { AiService } from '../ai/ai.service'
-import { SpeakingScenario } from '@prisma/client'
-import * as fs from 'fs'
-import * as path from 'path'
-import * as os from 'os'
-import * as crypto from 'crypto'
+} from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { PrismaService } from "../prisma/prisma.service";
+import { AiService } from "../ai/ai.service";
+import { SpeakingScenario } from "@prisma/client";
+import * as fs from "fs";
+import * as path from "path";
+import * as os from "os";
+import * as crypto from "crypto";
 
-// A current PREMADE ElevenLabs voice (George). IMPORTANT: the free tier can
-// only use premade voices via the API — Voice Library voices return HTTP 402.
-// Override with ELEVENLABS_VOICE_ID using another *premade* voice id.
-const DEFAULT_VOICE_ID = 'JBFqnCBsd6RMkjVDRZzb'
+// Voice ids come from env. ELEVENLABS_VOICE_ID is the active voice;
+// ELEVENLABS_DEFAULT_VOICE_ID is the fallback when the active one is unset.
+// Both must be *premade* voice ids — the free tier rejects Voice Library
+// voices with HTTP 402. A stock premade id (George: JBFqnCBsd6RMkjVDRZzb)
+// is a safe value for ELEVENLABS_DEFAULT_VOICE_ID.
 
-const TTS_MODEL = 'eleven_multilingual_v2'
+const TTS_MODEL = "eleven_multilingual_v2";
 
 @Injectable()
 export class SpeakingService {
@@ -28,7 +29,7 @@ export class SpeakingService {
   // optimization — if the disk isn't writable for any reason (read-only
   // container, permissions), the app must still boot and TTS must still
   // work, just without the cache.
-  private cacheDir: string | null
+  private cacheDir: string | null;
 
   constructor(
     private config: ConfigService,
@@ -41,13 +42,17 @@ export class SpeakingService {
     // app at boot on Render, because a constructor throw fails Nest's
     // dependency injection for every route, including the health check.
     const dir =
-      this.config.get<string>('AUDIO_CACHE_DIR') || path.join(os.tmpdir(), 'dolang-audio-cache')
+      this.config.get<string>("AUDIO_CACHE_DIR") ||
+      path.join(os.tmpdir(), "dolang-audio-cache");
     try {
-      fs.mkdirSync(dir, { recursive: true })
-      this.cacheDir = dir
+      fs.mkdirSync(dir, { recursive: true });
+      this.cacheDir = dir;
     } catch (err) {
-      console.warn(`⚠️  Audio cache directory unavailable (${dir}) — TTS will not be cached.`, err)
-      this.cacheDir = null
+      console.warn(
+        `⚠️  Audio cache directory unavailable (${dir}) — TTS will not be cached.`,
+        err,
+      );
+      this.cacheDir = null;
     }
   }
 
@@ -60,57 +65,71 @@ export class SpeakingService {
     text: string,
     voiceId?: string,
   ): Promise<{ audio: Buffer; cached: boolean }> {
-    const voice = voiceId || this.config.get<string>('ELEVENLABS_VOICE_ID') || DEFAULT_VOICE_ID
+    const voice =
+      voiceId ||
+      this.config.get<string>("ELEVENLABS_VOICE_ID") ||
+      this.config.get<string>("ELEVENLABS_DEFAULT_VOICE_ID");
+
+    if (!voice) {
+      throw new ServiceUnavailableException(
+        "No ElevenLabs voice configured — set ELEVENLABS_VOICE_ID or ELEVENLABS_DEFAULT_VOICE_ID.",
+      );
+    }
 
     const cachePath = this.cacheDir
       ? path.join(
           this.cacheDir,
-          `${crypto.createHash('sha256').update(`${voice}|${TTS_MODEL}|${text}`).digest('hex')}.mp3`,
+          `${crypto.createHash("sha256").update(`${voice}|${TTS_MODEL}|${text}`).digest("hex")}.mp3`,
         )
-      : null
+      : null;
 
     // Cache first — works even if the key/quota is dead for already-heard audio.
     if (cachePath) {
       try {
-        const audio = await fs.promises.readFile(cachePath)
-        return { audio, cached: true }
+        const audio = await fs.promises.readFile(cachePath);
+        return { audio, cached: true };
       } catch {
         /* miss — generate below */
       }
     }
 
-    const apiKey = this.config.get<string>('ELEVENLABS_API_KEY')
+    const apiKey = this.config.get<string>("ELEVENLABS_API_KEY");
     if (!apiKey) {
-      throw new ServiceUnavailableException('Text-to-speech is not configured yet.')
+      throw new ServiceUnavailableException(
+        "Text-to-speech is not configured yet.",
+      );
     }
 
-    const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voice}`, {
-      method: 'POST',
-      headers: {
-        'xi-api-key': apiKey,
-        'Content-Type': 'application/json',
-        Accept: 'audio/mpeg',
+    const res = await fetch(
+      `https://api.elevenlabs.io/v1/text-to-speech/${voice}`,
+      {
+        method: "POST",
+        headers: {
+          "xi-api-key": apiKey,
+          "Content-Type": "application/json",
+          Accept: "audio/mpeg",
+        },
+        body: JSON.stringify({
+          text,
+          // Multilingual model so German is pronounced correctly.
+          model_id: TTS_MODEL,
+          voice_settings: { stability: 0.5, similarity_boost: 0.75 },
+        }),
       },
-      body: JSON.stringify({
-        text,
-        // Multilingual model so German is pronounced correctly.
-        model_id: TTS_MODEL,
-        voice_settings: { stability: 0.5, similarity_boost: 0.75 },
-      }),
-    })
+    );
 
     if (!res.ok) {
-      const detail = await res.text().catch(() => '')
+      const detail = await res.text().catch(() => "");
       throw new HttpException(
         `Text-to-speech failed (${res.status}). ${detail.slice(0, 200)}`,
         502,
-      )
+      );
     }
 
-    const audio = Buffer.from(await res.arrayBuffer())
+    const audio = Buffer.from(await res.arrayBuffer());
     // Persist for next time — fire and forget; a failed write only means a miss later.
-    if (cachePath) fs.promises.writeFile(cachePath, audio).catch(() => {})
-    return { audio, cached: false }
+    if (cachePath) fs.promises.writeFile(cachePath, audio).catch(() => {});
+    return { audio, cached: false };
   }
 
   /**
@@ -119,62 +138,65 @@ export class SpeakingService {
    * Google servers and often fails silently.
    */
   async speechToText(audio: Buffer, mimeType: string): Promise<string> {
-    const apiKey = this.config.get<string>('GROQ_API_KEY')
+    const apiKey = this.config.get<string>("GROQ_API_KEY");
     if (!apiKey) {
       throw new ServiceUnavailableException(
-        'Speech-to-text is not configured (GROQ_API_KEY missing).',
-      )
+        "Speech-to-text is not configured (GROQ_API_KEY missing).",
+      );
     }
 
-    const ext = mimeType.includes('ogg')
-      ? 'ogg'
-      : mimeType.includes('mp4')
-        ? 'mp4'
-        : mimeType.includes('wav')
-          ? 'wav'
-          : 'webm'
+    const ext = mimeType.includes("ogg")
+      ? "ogg"
+      : mimeType.includes("mp4")
+        ? "mp4"
+        : mimeType.includes("wav")
+          ? "wav"
+          : "webm";
 
-    const form = new FormData()
+    const form = new FormData();
     form.append(
-      'file',
-      new Blob([new Uint8Array(audio)], { type: mimeType || 'audio/webm' }),
+      "file",
+      new Blob([new Uint8Array(audio)], { type: mimeType || "audio/webm" }),
       `speech.${ext}`,
-    )
-    form.append('model', 'whisper-large-v3-turbo')
-    form.append('language', 'de')
+    );
+    form.append("model", "whisper-large-v3-turbo");
+    form.append("language", "de");
     // verbose_json exposes per-segment no_speech_prob so we can drop
     // hallucinations — Whisper invents phrases like "Vielen Dank" on silence.
-    form.append('response_format', 'verbose_json')
-    form.append('temperature', '0')
+    form.append("response_format", "verbose_json");
+    form.append("temperature", "0");
 
-    const res = await fetch('https://api.groq.com/openai/v1/audio/transcriptions', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${apiKey}` },
-      body: form,
-    })
+    const res = await fetch(
+      "https://api.groq.com/openai/v1/audio/transcriptions",
+      {
+        method: "POST",
+        headers: { Authorization: `Bearer ${apiKey}` },
+        body: form,
+      },
+    );
 
     if (!res.ok) {
-      const detail = await res.text().catch(() => '')
+      const detail = await res.text().catch(() => "");
       throw new HttpException(
         `Speech-to-text failed (${res.status}). ${detail.slice(0, 200)}`,
         502,
-      )
+      );
     }
 
     const data = (await res.json()) as {
-      text?: string
-      segments?: { text?: string; no_speech_prob?: number }[]
-    }
+      text?: string;
+      segments?: { text?: string; no_speech_prob?: number }[];
+    };
 
     if (data.segments?.length) {
-      const spoken = data.segments.filter((s) => (s.no_speech_prob ?? 0) < 0.6)
+      const spoken = data.segments.filter((s) => (s.no_speech_prob ?? 0) < 0.6);
       return spoken
-        .map((s) => s.text ?? '')
-        .join(' ')
-        .replace(/\s+/g, ' ')
-        .trim()
+        .map((s) => s.text ?? "")
+        .join(" ")
+        .replace(/\s+/g, " ")
+        .trim();
     }
-    return (data.text ?? '').trim()
+    return (data.text ?? "").trim();
   }
 
   /**
@@ -184,32 +206,37 @@ export class SpeakingService {
   async createSession(
     userId: string,
     params: {
-      scenario: SpeakingScenario
-      messages: { role: string; content: string }[]
-      durationSeconds: number
-      level: string
+      scenario: SpeakingScenario;
+      messages: { role: string; content: string }[];
+      durationSeconds: number;
+      level: string;
     },
   ) {
-    const userTurns = params.messages.filter((m) => m.role === 'user')
+    const userTurns = params.messages.filter((m) => m.role === "user");
     if (userTurns.length === 0) {
-      throw new BadRequestException('Say something first — then finish the session.')
+      throw new BadRequestException(
+        "Say something first — then finish the session.",
+      );
     }
 
     const userWords = userTurns.reduce(
       (sum, m) => sum + m.content.trim().split(/\s+/).filter(Boolean).length,
       0,
-    )
+    );
     const wordsPerMinute =
       params.durationSeconds > 0
         ? Math.round((userWords / (params.durationSeconds / 60)) * 10) / 10
-        : 0
+        : 0;
 
     const transcript = params.messages
-      .map((m) => `${m.role === 'user' ? 'USER' : 'PARTNER'}: ${m.content}`)
-      .join('\n')
+      .map((m) => `${m.role === "user" ? "USER" : "PARTNER"}: ${m.content}`)
+      .join("\n");
 
-    const scores = await this.ai.evaluateSession({ level: params.level, transcript })
-    const xpEarned = Math.min(50, 20 + userTurns.length * 3)
+    const scores = await this.ai.evaluateSession({
+      level: params.level,
+      transcript,
+    });
+    const xpEarned = Math.min(50, 20 + userTurns.length * 3);
 
     const [session] = await Promise.all([
       this.prisma.speakingSession.create({
@@ -233,7 +260,7 @@ export class SpeakingService {
         data: { xp: { increment: xpEarned } },
         select: { id: true },
       }),
-    ])
+    ]);
 
     return {
       id: session.id,
@@ -244,6 +271,6 @@ export class SpeakingService {
       wordsPerMinute: session.wordsPerMinute,
       aiFeedback: session.aiFeedback,
       xpEarned,
-    }
+    };
   }
 }
