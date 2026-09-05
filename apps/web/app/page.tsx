@@ -190,7 +190,7 @@ export default function LandingPage() {
             People are expiring their visas because they can&apos;t learn German
             properly.
           </p>
-          <div className="grid gap-4"> 
+          <div className="grid gap-4">
             {PROBLEMS.map((p) => (
               <div
                 key={p.app}

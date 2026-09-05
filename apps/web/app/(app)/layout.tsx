@@ -1,48 +1,48 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { api } from '@/lib/api'
-import { useAuthStore, type User } from '@/store/auth'
-import { Sidebar } from '@/components/layout/sidebar'
-import { MobileHeader, MobileBottomNav } from '@/components/layout/mobile-nav'
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { api } from "@/lib/api";
+import { useAuthStore, type User } from "@/store/auth";
+import { Sidebar } from "@/components/layout/sidebar";
+import { MobileHeader, MobileBottomNav } from "@/components/layout/mobile-nav";
 
-type Status = 'checking' | 'authed' | 'error'
+type Status = "checking" | "authed" | "error";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-  const router = useRouter()
-  const user = useAuthStore((s) => s.user)
-  const setUser = useAuthStore((s) => s.setUser)
+  const router = useRouter();
+  const user = useAuthStore((s) => s.user);
+  const setUser = useAuthStore((s) => s.setUser);
 
   // The session lives in an HttpOnly cookie we can't read, so ask the API who
   // we are. Every branch reaches a terminal state — never an endless spinner.
-  const [status, setStatus] = useState<Status>('checking')
+  const [status, setStatus] = useState<Status>("checking");
 
   useEffect(() => {
-    let cancelled = false
+    let cancelled = false;
     api
-      .get<User>('/users/me')
+      .get<User>("/users/me")
       .then((me) => {
-        if (cancelled) return
-        setUser(me)
-        setStatus('authed')
+        if (cancelled) return;
+        setUser(me);
+        setStatus("authed");
       })
       .catch((err: unknown) => {
-        if (cancelled) return
-        const message = err instanceof Error ? err.message : ''
+        if (cancelled) return;
+        const message = err instanceof Error ? err.message : "";
         // 401/403 come back as thrown "Unauthorized"/"Forbidden" from api.ts.
         if (/unauthor|forbidden|401|403/i.test(message)) {
-          router.replace('/login')
+          router.replace("/login");
         } else {
-          setStatus('error')
+          setStatus("error");
         }
-      })
+      });
     return () => {
-      cancelled = true
-    }
-  }, [router, setUser])
+      cancelled = true;
+    };
+  }, [router, setUser]);
 
-  if (status === 'error') {
+  if (status === "error") {
     return (
       <div className="flex flex-col items-center justify-center gap-4 h-screen bg-[var(--bg)] px-6 text-center">
         <p className="text-[var(--faint)] text-sm">
@@ -55,15 +55,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           Retry
         </button>
       </div>
-    )
+    );
   }
 
-  if (status === 'checking' && !user) {
+  if (status === "checking" && !user) {
     return (
       <div className="flex items-center justify-center h-screen bg-[var(--bg)]">
         <span className="w-6 h-6 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin" />
       </div>
-    )
+    );
   }
 
   // Fixed-height shell: on mobile the header sits above and the tab bar below
@@ -79,5 +79,5 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <MobileBottomNav />
       </div>
     </div>
-  )
+  );
 }

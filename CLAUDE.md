@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-doLang (formerly "Sprich") — a German learning app that teaches grammar *rules* with the underlying WHY, not just rote sentences. See `README.md` for the product pitch and `Architecture.txt` for the full curriculum design doc (chapter-by-chapter lesson plan, the psychological engagement loop, free-vs-premium matrix).
+doLang (formerly "Sprich") — a German learning app that teaches grammar _rules_ with the underlying WHY, not just rote sentences. See `README.md` for the product pitch and `Architecture.txt` for the full curriculum design doc (chapter-by-chapter lesson plan, the psychological engagement loop, free-vs-premium matrix).
 
 npm workspaces + Turborepo monorepo:
 
@@ -67,6 +67,7 @@ Windows-specific gotcha noted in `Architecture.txt`: if the API port hangs on re
 **Module layout.** Each domain is a self-contained Nest module under `apps/api/src/<domain>/` (`auth`, `users`, `lessons`, `vocabulary`, `speaking`, `progress`, `subscriptions`, `ai`), wired into `AppModule`. `PrismaModule`/`PrismaService` (a thin `PrismaClient` wrapper) is injected wherever DB access is needed — there's no repository layer.
 
 **Auth.** JWT-based (`@nestjs/passport` + `passport-jwt`), plus Google OAuth (`passport-google-oauth20`). Passwords are optional on `User` (`passwordHash?`) since Google-only accounts have none. Two points to know before touching auth:
+
 - Google login only trusts `profile.emails[0].value` after checking `verified === true` — an unverified email must never be used to match/link an existing account.
 - Post-OAuth redirects never put the real JWT in the URL. The callback carries a short-lived, single-use exchange code; the frontend trades it for a token via `POST /auth/oauth/exchange` (an in-memory `Map` on the API — fine for a single-server deployment, would need a shared store like Redis if scaled to multiple instances).
 - The web app stores the JWT in `localStorage` (`dolang_token`) via `store/auth.ts` (Zustand + persist), attached as `Authorization: Bearer` in `apps/web/lib/api.ts`'s `request()` helper. All frontend API calls should go through the `api.get/post/patch` helpers there, not raw `fetch`.
@@ -77,7 +78,7 @@ Windows-specific gotcha noted in `Architecture.txt`: if the API port hangs on re
 
 **Curriculum content pipeline.** Authoring happens in `content/curriculum/*.json` (one file per chapter, shape defined inline in `packages/db/src/seed.ts`'s `CurriculumFile`/`CurriculumLesson` types). `prisma db seed` reads that directory and upserts into `Chapter`/`Lesson`/`Exercise`/`VocabWord`/`LessonVocab`. The app never reads these JSON files at runtime — only the seed script does. When adding/editing lessons, edit the JSON and re-seed; don't hand-write DB rows.
 
-**Shared types (`packages/types`).** `@dolang/types` is consumed by both `apps/web` and `apps/api` (path-mapped in each `tsconfig.json`) but is *not* generated from the Prisma schema — it's a hand-maintained mirror. When you change a Prisma model that has a frontend-visible shape, update `packages/types/src/index.ts` too.
+**Shared types (`packages/types`).** `@dolang/types` is consumed by both `apps/web` and `apps/api` (path-mapped in each `tsconfig.json`) but is _not_ generated from the Prisma schema — it's a hand-maintained mirror. When you change a Prisma model that has a frontend-visible shape, update `packages/types/src/index.ts` too.
 
 **Grammar color coding.** Nominative=blue, Accusative=orange, Dative=green, Genitive=purple; article genders der=blue, die=pink, das=green (see README for exact hex-adjacent semantics). This mapping is core to the product's differentiator and shows up in curriculum JSON (`breakdown[].color`), lesson UI components, and the color table in `README.md` — keep new UI consistent with it rather than inventing new colors.
 
