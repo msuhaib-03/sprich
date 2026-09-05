@@ -13,11 +13,10 @@ import * as path from "path";
 import * as os from "os";
 import * as crypto from "crypto";
 
-// Voice ids come from env. ELEVENLABS_VOICE_ID is the active voice;
-// ELEVENLABS_DEFAULT_VOICE_ID is the fallback when the active one is unset.
-// Both must be *premade* voice ids — the free tier rejects Voice Library
-// voices with HTTP 402. A stock premade id (George: JBFqnCBsd6RMkjVDRZzb)
-// is a safe value for ELEVENLABS_DEFAULT_VOICE_ID.
+// The app uses a single ElevenLabs voice (George — a stock premade voice).
+// Override with ELEVENLABS_VOICE_ID, but it MUST be another *premade* voice:
+// the free tier rejects Voice Library voices via the API with HTTP 402.
+const DEFAULT_VOICE_ID = "JBFqnCBsd6RMkjVDRZzb";
 
 const TTS_MODEL = "eleven_multilingual_v2";
 
@@ -68,13 +67,7 @@ export class SpeakingService {
     const voice =
       voiceId ||
       this.config.get<string>("ELEVENLABS_VOICE_ID") ||
-      this.config.get<string>("ELEVENLABS_DEFAULT_VOICE_ID");
-
-    if (!voice) {
-      throw new ServiceUnavailableException(
-        "No ElevenLabs voice configured — set ELEVENLABS_VOICE_ID or ELEVENLABS_DEFAULT_VOICE_ID.",
-      );
-    }
+      DEFAULT_VOICE_ID;
 
     const cachePath = this.cacheDir
       ? path.join(
