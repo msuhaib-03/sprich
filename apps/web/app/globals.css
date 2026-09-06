@@ -105,10 +105,12 @@ body {
 
 a, button { transition: all 0.15s ease; }
 
-/* Faint micro-dot grid behind the speaking-practice transcript. Uses the
-   theme border token so it stays subtle in both dark and light. */
+/* Micro-dot grid behind the speaking-practice transcript. `--border` (9%) was
+   too faint to read as texture, so use the stronger token; still subtle, but
+   visible on the near-black background. Theme-aware for light mode. */
 .speak-dot-grid {
-  background-image: radial-gradient(var(--border) 1px, transparent 1px);
+  background-color: var(--bg);
+  background-image: radial-gradient(var(--border-strong) 1px, transparent 1px);
   background-size: 16px 16px;
   background-position: -1px -1px;
 }

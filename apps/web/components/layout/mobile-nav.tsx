@@ -65,7 +65,7 @@ export function MobileBottomNav() {
 
   return (
     <nav
-      className="md:hidden shrink-0 bg-[var(--surface-2)] pb-[env(safe-area-inset-bottom)]"
+      className="md:hidden shrink-0 border-t border-[var(--border)] bg-[var(--surface-2)] pb-[env(safe-area-inset-bottom)]"
       aria-label="Primary"
     >
       <div className="flex">

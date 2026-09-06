@@ -41,7 +41,16 @@ export function Composer({
   };
 
   return (
-    <footer className="shrink-0 border-t border-[var(--border)] bg-[var(--surface-2)] pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+    // Upward scrim mirroring the header: transparent at the top edge, opaque by
+    // 2rem down. -mt-8 slides it up over the transcript so the last messages
+    // fade into the composer instead of ending on a line.
+    <footer
+      className="relative z-10 shrink-0 -mt-8 pb-[max(0.75rem,env(safe-area-inset-bottom))]"
+      style={{
+        background:
+          "linear-gradient(to top, var(--bg), var(--bg) calc(100% - 2rem), transparent)",
+      }}
+    >
       <div className="max-w-2xl mx-auto w-full px-4 sm:px-6 pt-3">
         {recording && <RecordingMeter level={micLevel} />}
 

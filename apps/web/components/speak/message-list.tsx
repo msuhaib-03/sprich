@@ -45,13 +45,16 @@ export function MessageList({
   }, [messages, loading, onSync]);
 
   return (
-    <div className="speak-dot-grid relative flex-1 min-h-0">
+    <div className="relative flex-1 min-h-0">
       <div
         ref={scrollRef}
         onScroll={onSync}
         className="chat-scroll h-full overflow-y-auto overflow-x-hidden w-full"
       >
-        <div className="max-w-2xl mx-auto w-full px-4 sm:px-6 py-6 space-y-4">
+        {/* pt/pb clear the header + composer scrims that overlap this region
+            (each -mb-8 / -mt-8) so the first and last messages sit fully in
+            view at rest, then dissolve into the scrim as they scroll. */}
+        <div className="max-w-2xl mx-auto w-full px-4 sm:px-6 pt-10 pb-10 space-y-4">
           {messages.map((m, i) => (
             <MessageBubble
               key={i}

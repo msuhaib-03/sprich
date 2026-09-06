@@ -71,6 +71,22 @@ export class VocabularyService {
   }
 
   /**
+   * The whole deck (every SRS card), soonest review first — for the "your
+   * words" browser where the learner can open the words they're studying,
+   * not just the ones due right now.
+   */
+  async getDeck(userId: string) {
+    await this.ensureCardsForLearnedVocab(userId)
+
+    return this.prisma.sRSCard.findMany({
+      where: { userId },
+      orderBy: { nextReview: 'asc' },
+      include: { vocab: true },
+      take: 500,
+    })
+  }
+
+  /**
    * Apply the SM-2 spaced-repetition algorithm to a single card.
    * quality: 0–5 (UI maps Again=1, Hard=3, Good=4, Easy=5).
    */
@@ -172,6 +188,17 @@ export class VocabularyService {
       update: {},
     })
     return { added: true, vocabId }
+  }
+
+  /**
+   * Drop a word's SRS card from the user's deck. Idempotent (no error if it
+   * isn't there). Note: words attached to a *completed lesson* are lazily
+   * re-added by `ensureCardsForLearnedVocab` on the next review fetch — only
+   * standalone words (Word of the Day, dictionary adds) stay removed.
+   */
+  async removeWordFromDeck(userId: string, vocabId: string) {
+    await this.prisma.sRSCard.deleteMany({ where: { userId, vocabId } })
+    return { removed: true, vocabId }
   }
 
   /**

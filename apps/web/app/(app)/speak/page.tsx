@@ -77,9 +77,11 @@ export default function SpeakPage() {
   return (
     // Fill the immersive <main> exactly (it's already sized to the dynamic
     // viewport, which shrinks for the soft keyboard). overflow-hidden pins the
-    // header/footer so only the chat body scrolls; the dot grid is a faint
-    // texture behind the transcript.
-    <div className="flex flex-col h-full w-full overflow-hidden bg-[var(--bg)]">
+    // header/footer so only the chat body scrolls. Header + composer sit above
+    // the transcript (z-10) with a gradient scrim so messages dissolve into the
+    // chrome at both ends instead of ending on a hard edge; the dot-grid shell
+    // shows through the transparent tail of each scrim.
+    <div className="speak-dot-grid relative flex flex-col h-full w-full overflow-hidden bg-[var(--bg)]">
       <ConversationHeader
         scenario={currentScenario}
         level={level}
