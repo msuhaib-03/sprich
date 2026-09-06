@@ -14,8 +14,8 @@ test.describe('vocabulary', () => {
     // Word of the day is independent of the user's deck — always safe.
     await expect(onboardedPage.getByText('Word of the day')).toBeVisible()
 
-    // Empty review queue, no crash.
-    await expect(onboardedPage.getByText('Nothing due right now')).toBeVisible()
+    // Fresh user has no deck yet — the review tab shows its empty state, no crash.
+    await expect(onboardedPage.getByText('Your review deck is empty')).toBeVisible()
   })
 
   test('dictionary tab renders its empty state before a search', async ({ onboardedPage }) => {
