@@ -7,6 +7,20 @@ const DAY_MS = 86_400_000
 /** A card is "mastered" once it has survived several successful reviews. */
 const MASTERED_REPETITIONS = 5
 
+/**
+ * Split a leading article off a German headword so `german` stores the bare
+ * noun ("das Kino" -> { article: "das", noun: "Kino" }). Keeps an explicitly
+ * provided article; falls back to the stripped prefix.
+ */
+function splitArticle(
+  german: string,
+  article?: string | null,
+): { german: string; article: string | null } {
+  const match = german.trim().match(/^(der|die|das)\s+(.+)$/i)
+  if (!match) return { german: german.trim(), article: article ?? null }
+  return { german: match[2].trim(), article: article ?? match[1].toLowerCase() }
+}
+
 /** der/die/das from a grammatical-gender string (for saved dictionary words). */
 function articleFromGender(gender?: string | null): string | null {
   switch (gender) {
@@ -173,8 +187,13 @@ export class VocabularyService {
       select: { level: true },
     })
 
+    const { german: germanNoun, article } = splitArticle(
+      entry.german,
+      articleFromGender(entry.gender),
+    )
+
     let word = await this.prisma.vocabWord.findFirst({
-      where: { german: entry.german, english: entry.english },
+      where: { german: germanNoun, english: entry.english },
       select: { id: true },
     })
 
@@ -182,10 +201,10 @@ export class VocabularyService {
       const gender = (entry.gender as Prisma.VocabWordCreateInput['gender']) ?? null
       word = await this.prisma.vocabWord.create({
         data: {
-          german: entry.german,
+          german: germanNoun,
           english: entry.english,
           gender,
-          article: articleFromGender(entry.gender),
+          article,
           exampleSentence: entry.example ?? '',
           exampleTranslation: '',
           level: user.level,

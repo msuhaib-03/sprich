@@ -24,6 +24,11 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   themeColor: '#0b0b0e',
+  // Make the soft keyboard shrink the layout viewport (and 100dvh) instead of
+  // overlaying it. Without this, a bottom-pinned chat composer on the /speak
+  // view sits behind the keyboard on Chrome Android. Ignored by browsers that
+  // don't support it (they keep the overlay behaviour).
+  interactiveWidget: 'resizes-content',
 }
 
 // One blocking inline script, run before the framework bundle:

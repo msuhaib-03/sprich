@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { api } from '@/lib/api'
 import { playTts } from '@/lib/tts'
+import { splitGermanNoun } from '@/lib/vocab'
 import { Skeleton } from '@/components/ui/skeleton'
 
 // ─── Types ─────────────────────────────────────────────────────────────────
@@ -191,6 +192,13 @@ export default function VocabularyPage() {
 
   const current = queue[0]
 
+  // Split "das Kino" + article "das" into { article, noun } so the article
+  // isn't printed (or spoken) twice. See lib/vocab.ts.
+  const wotdParts = wotd ? splitGermanNoun(wotd.article, wotd.german) : null
+  const currentParts = current
+    ? splitGermanNoun(current.vocab.article, current.vocab.german)
+    : null
+
   return (
     <div className="max-w-3xl mx-auto px-6 py-10">
       <div className="mb-8">
@@ -222,11 +230,17 @@ export default function VocabularyPage() {
           <p className="text-[var(--gold)] text-xs uppercase tracking-wider mb-2 font-medium">✨ Word of the day</p>
           <p className="text-2xl font-black flex items-center gap-3">
             <span>
-              {wotd.article && <span className={articleColor(wotd.article)}>{wotd.article} </span>}
-              {wotd.german}
+              {wotdParts?.article && (
+                <span className={articleColor(wotdParts.article)}>{wotdParts.article} </span>
+              )}
+              {wotdParts?.noun}
             </span>
             <button
-              onClick={() => playTts(`${wotd.article ?? ''} ${wotd.german}. ${wotd.exampleSentence}`)}
+              onClick={() =>
+                playTts(
+                  `${wotdParts?.article ?? ''} ${wotdParts?.noun ?? ''}. ${wotd.exampleSentence}`,
+                )
+              }
               className="text-base text-[var(--gold)] hover:opacity-80"
               title="Hear it spoken"
             >
@@ -309,15 +323,17 @@ export default function VocabularyPage() {
                 </p>
                 <p className="text-4xl font-black mb-2 flex items-center gap-3">
                   <span>
-                    {current.vocab.article && (
-                      <span className={articleColor(current.vocab.article)}>{current.vocab.article} </span>
+                    {currentParts?.article && (
+                      <span className={articleColor(currentParts.article)}>
+                        {currentParts.article}{' '}
+                      </span>
                     )}
-                    {current.vocab.german}
+                    {currentParts?.noun}
                   </span>
                   <button
                     onClick={(e) => {
                       e.stopPropagation()
-                      playTts(`${current.vocab.article ?? ''} ${current.vocab.german}`)
+                      playTts(`${currentParts?.article ?? ''} ${currentParts?.noun ?? ''}`)
                     }}
                     className="text-lg text-[var(--gold)] hover:opacity-80"
                     title="Hear the word"
@@ -393,7 +409,7 @@ export default function VocabularyPage() {
             <>
               <div className="space-y-2">
                 {dict.map((w, i) => {
-                  const article = genderArticle(w.gender)
+                  const { article, noun } = splitGermanNoun(genderArticle(w.gender), w.german)
                   const isAdded = added.has(`${w.german}|${w.english}`)
                   return (
                     <div
@@ -403,7 +419,7 @@ export default function VocabularyPage() {
                       <div className="flex-1 min-w-0">
                         <p className="font-bold">
                           {article && <span className={articleColor(article)}>{article} </span>}
-                          {w.german}
+                          {noun}
                           <span className="text-[var(--muted)] font-normal"> — {w.english}</span>
                         </p>
                         {w.example && (

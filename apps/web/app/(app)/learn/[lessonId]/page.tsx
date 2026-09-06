@@ -4,6 +4,7 @@ import { useEffect, useState, useMemo, use } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { api } from '@/lib/api'
+import { splitGermanNoun } from '@/lib/vocab'
 import { useAuthStore } from '@/store/auth'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -202,15 +203,18 @@ export default function LessonPlayer({ params }: { params: Promise<{ lessonId: s
             <h2 className="text-2xl font-bold mb-2">Key vocabulary</h2>
             <p className="text-[var(--muted)] mb-6">These go into your spaced-repetition deck.</p>
             <div className="space-y-3 mb-8">
-              {lesson.vocabulary.map((v, i) => (
+              {lesson.vocabulary.map((v, i) => {
+                // "das Kino" + article "das" would otherwise render "das das Kino".
+                const { article, noun } = splitGermanNoun(v.vocab.article, v.vocab.german)
+                return (
                 <div key={i} className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4">
                   <div className="flex items-baseline gap-2 mb-1">
                     <span className={`font-bold text-lg ${
-                      v.vocab.article === 'der' ? 'text-blue-400'
-                      : v.vocab.article === 'die' ? 'text-pink-400'
-                      : v.vocab.article === 'das' ? 'text-green-400' : 'text-[var(--text)]'
+                      article === 'der' ? 'text-blue-400'
+                      : article === 'die' ? 'text-pink-400'
+                      : article === 'das' ? 'text-green-400' : 'text-[var(--text)]'
                     }`}>
-                      {v.vocab.article ? `${v.vocab.article} ` : ''}{v.vocab.german}
+                      {article ? `${article} ` : ''}{noun}
                     </span>
                     <span className="text-[var(--muted)]">— {v.vocab.english}</span>
                   </div>
@@ -219,7 +223,8 @@ export default function LessonPlayer({ params }: { params: Promise<{ lessonId: s
                     <p className="text-[var(--gold)] text-xs mt-2">💡 {v.vocab.memoryHook}</p>
                   )}
                 </div>
-              ))}
+                )
+              })}
             </div>
             <Button onClick={nextStage} className="w-full">Practice now →</Button>
           </div>

@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuthStore } from "@/store/auth";
+import { useUiStore } from "@/store/ui";
 import { scenarioById } from "@/lib/speaking";
 import { useSpeakingSession } from "@/hooks/use-speaking-session";
 import { useEdgeShadow } from "@/hooks/use-edge-shadow";
@@ -36,6 +37,16 @@ export default function SpeakPage() {
     onNote: session.setTtsNote,
   });
 
+  // The live conversation runs full-screen: tell the app shell to drop the
+  // mobile header + bottom tab bar so the keyboard can't squish the chat. The
+  // scenario picker and the score summary keep the normal chrome.
+  const inConversation = !!session.scenario && !session.sessionResult;
+  const setImmersive = useUiStore((s) => s.setImmersive);
+  useEffect(() => {
+    setImmersive(inConversation);
+    return () => setImmersive(false);
+  }, [inConversation, setImmersive]);
+
   const currentScenario = scenarioById(session.scenario);
 
   // ── Session summary (after Finish) ──
@@ -64,9 +75,11 @@ export default function SpeakPage() {
   };
 
   return (
-    // Fixed-height column: fills <main> exactly and never grows it.
-    // overflow-hidden is the safety net — only the chat list scrolls.
-    <div className="flex flex-col h-full w-full overflow-hidden">
+    // Fill the immersive <main> exactly (it's already sized to the dynamic
+    // viewport, which shrinks for the soft keyboard). overflow-hidden pins the
+    // header/footer so only the chat body scrolls; the dot grid is a faint
+    // texture behind the transcript.
+    <div className="flex flex-col h-full w-full overflow-hidden bg-[var(--bg)]">
       <ConversationHeader
         scenario={currentScenario}
         level={level}
