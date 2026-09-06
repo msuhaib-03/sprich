@@ -4,6 +4,20 @@ import * as path from 'path'
 
 const prisma = new PrismaClient()
 
+// A lot of curriculum entries bake the article into `german` ("das Kino") and
+// *also* set an `article` field — which renders as "das das Kino" in the app.
+// Store the bare noun in `german`, and backfill `article` from the prefix when
+// it wasn't given explicitly.
+function normalizeVocab(vocab: CurriculumVocab): CurriculumVocab {
+  const match = vocab.german.trim().match(/^(der|die|das)\s+(.+)$/i)
+  if (!match) return vocab
+  return {
+    ...vocab,
+    german: match[2].trim(),
+    article: vocab.article ?? match[1].toLowerCase(),
+  }
+}
+
 // ─── Types matching the curriculum JSON shape ──────────────────────────────
 
 interface CurriculumFile {
@@ -117,7 +131,8 @@ async function main() {
       }
 
       // Vocabulary words + lesson links
-      for (const vocab of lesson.vocabulary) {
+      for (const raw of lesson.vocabulary) {
+        const vocab = normalizeVocab(raw)
         const word = await prisma.vocabWord.create({
           data: {
             german: vocab.german,
