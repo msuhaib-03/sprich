@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Check, Volume2, VolumeX } from "lucide-react";
 import type { Scenario } from "@/lib/speaking";
 
 /**
@@ -27,7 +27,16 @@ export function ConversationHeader({
   onBack: () => void;
 }) {
   return (
-    <header className="shrink-0 border-b border-[var(--border)] bg-[var(--surface-2)] pt-[calc(0.75rem+env(safe-area-inset-top))]">
+    // Sits above the transcript with a downward scrim: opaque until 2rem from
+    // the bottom, then fades — and -mb-8 pulls the message list up under that
+    // fade so scrolled messages dissolve instead of ending on a line.
+    <header
+      className="relative z-10 shrink-0 -mb-8 pt-[calc(0.75rem+env(safe-area-inset-top))]"
+      style={{
+        background:
+          "linear-gradient(to bottom, var(--bg), var(--bg) calc(100% - 2rem), transparent)",
+      }}
+    >
       <div className="max-w-2xl mx-auto w-full px-2 sm:px-4 pb-3 flex items-center gap-1.5">
         <button
           onClick={onBack}
@@ -50,24 +59,27 @@ export function ConversationHeader({
           <button
             onClick={onToggleAutoplay}
             aria-pressed={autoplay}
+            aria-label={autoplay ? "Autoplay on" : "Autoplay off"}
             title="Automatically play audio for replies"
-            className={`min-h-[40px] rounded-lg border px-2 sm:px-2.5 text-xs transition active:scale-95 ${
+            className={`inline-flex items-center gap-1 h-7 rounded-md border px-1.5 sm:px-2 text-[11px] font-medium leading-none transition active:scale-95 ${
               autoplay
                 ? "border-[var(--gold)]/40 text-[var(--gold)]"
-                : "border-transparent text-[var(--faint)] hover:text-[var(--text)]"
+                : "border-[var(--border)] text-[var(--faint)] hover:text-[var(--text)]"
             }`}
           >
-            🔊<span className="hidden sm:inline"> Auto {autoplay ? "on" : "off"}</span>
+            {autoplay ? <Volume2 size={13} /> : <VolumeX size={13} />}
+            <span className="hidden sm:inline">Auto {autoplay ? "on" : "off"}</span>
           </button>
           {canFinish && (
             <button
               onClick={onFinish}
               disabled={finishing}
               aria-label="Finish"
-              className="min-h-[40px] rounded-lg gold-gradient px-3 text-xs font-bold text-black transition active:scale-95 disabled:opacity-50"
               title="End the session — get your scores and XP"
+              className="inline-flex items-center gap-1 h-7 rounded-md gold-gradient px-1.5 sm:px-2.5 text-[11px] font-semibold leading-none text-black transition active:scale-95 disabled:opacity-50"
             >
-              {finishing ? "Scoring…" : "✓ Finish"}
+              <Check size={13} strokeWidth={3} />
+              <span className="hidden sm:inline">{finishing ? "Scoring…" : "Finish"}</span>
             </button>
           )}
         </div>
