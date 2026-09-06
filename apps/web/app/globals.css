@@ -96,6 +96,13 @@ body {
   background-clip: text;
 }
 
+.gold-text-bright {
+  background: linear-gradient(135deg, var(--gold-light), #ffe6a8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 a, button { transition: all 0.15s ease; }
 
 /* Chrome/Edge/Safari force a white background + their own text color on
