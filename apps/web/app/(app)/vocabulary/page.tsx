@@ -43,15 +43,16 @@ interface Stats {
 
 // ─── Helpers ───────────────────────────────────────────────────────────────
 
-// der = masculine (blue), die = feminine (rose), das = neuter (green)
+// Gender color code (see CLAUDE.md): der = masculine (blue), die = feminine
+// (pink), das = neuter (green). Keep this identical everywhere gender is taught.
 function articleColor(article: string | null) {
   switch (article) {
     case 'der':
-      return 'text-sky-400'
+      return 'text-blue-400'
     case 'die':
-      return 'text-rose-400'
+      return 'text-pink-400'
     case 'das':
-      return 'text-emerald-400'
+      return 'text-green-400'
     default:
       return 'text-[var(--muted)]'
   }

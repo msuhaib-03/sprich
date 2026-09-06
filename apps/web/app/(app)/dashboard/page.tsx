@@ -40,15 +40,18 @@ export default function DashboardPage() {
       {/* Stats row */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         {[
-          { label: 'Current level', value: level, sub: 'German level', accent: true, testid: 'stat-level' },
-          { label: 'Streak', value: `${user?.streak ?? 0}`, sub: 'days in a row', accent: false, testid: 'stat-streak' },
-          { label: 'XP earned', value: `${user?.xp ?? 0}`, sub: 'total experience', accent: false, testid: 'stat-xp' },
-          { label: 'Daily goal', value: `${user?.dailyMinutes ?? 30}m`, sub: 'per day', accent: false, testid: 'stat-daily-goal' },
+          { icon: '🎓', label: 'Current level', value: level, sub: 'German level', accent: true, testid: 'stat-level' },
+          { icon: '🔥', label: 'Streak', value: `${user?.streak ?? 0}`, sub: 'days in a row', accent: false, testid: 'stat-streak' },
+          { icon: '⚡', label: 'XP earned', value: `${user?.xp ?? 0}`, sub: 'total experience', accent: false, testid: 'stat-xp' },
+          { icon: '⏱️', label: 'Daily goal', value: `${user?.dailyMinutes ?? 30}m`, sub: 'per day', accent: false, testid: 'stat-daily-goal' },
         ].map((stat) => (
-          <div key={stat.label} className={`p-5 rounded-2xl border ${stat.accent ? 'border-[#d4a843]/30 bg-[#d4a843]/5' : 'border-[var(--border)] bg-[var(--surface)]'}`}>
-            <p className="text-[var(--faint)] text-xs mb-2">{stat.label}</p>
-            <p data-testid={stat.testid} className={`text-2xl font-black ${stat.accent ? 'gold-text' : 'text-[var(--text)]'}`}>{stat.value}</p>
-            <p className="text-[var(--faint-2)] text-xs mt-1">{stat.sub}</p>
+          <div key={stat.label} className={`p-5 rounded-2xl border ${stat.accent ? 'border-[#f0c96a]/50 bg-[#f0c96a]/10' : 'border-[var(--border)] bg-[var(--surface)]'}`}>
+            <p className="text-[var(--text-soft)] text-xs mb-2">{stat.label}</p>
+            <div className="flex items-center gap-2">
+              <p data-testid={stat.testid} className={`text-2xl font-black ${stat.accent ? 'gold-text-bright' : 'text-[var(--text)]'}`}>{stat.value}</p>
+              <span className="text-[1.6rem] leading-none">{stat.icon}</span>
+            </div>
+            <p className="text-[var(--muted)] text-xs mt-1">{stat.sub}</p>
           </div>
         ))}
       </div>
@@ -58,7 +61,15 @@ export default function DashboardPage() {
         <div>
           <p className="text-[var(--faint)] text-xs uppercase tracking-wider mb-1 font-medium">Today&apos;s lesson</p>
           <h2 className="text-xl font-bold mb-1">
-            {level === 'A1' ? 'Gender — Der, Die, Das' : `${level} — Continue learning`}
+            {level === 'A1' ? (
+              <>
+                Gender — <span className="text-blue-400">Der</span>,{' '}
+                <span className="text-pink-400">Die</span>,{' '}
+                <span className="text-green-400">Das</span>
+              </>
+            ) : (
+              `${level} — Continue learning`
+            )}
           </h2>
           <p className="text-[var(--faint)] text-sm">~10 min · 50 XP · {level}</p>
         </div>
