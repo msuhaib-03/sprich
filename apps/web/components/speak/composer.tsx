@@ -41,8 +41,8 @@ export function Composer({
   };
 
   return (
-    <div className="shrink-0">
-      <div className="max-w-2xl mx-auto w-full px-4 sm:px-6 py-3">
+    <footer className="shrink-0 border-t border-[var(--border)] bg-[var(--surface-2)] pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+      <div className="max-w-2xl mx-auto w-full px-4 sm:px-6 pt-3">
         {recording && <RecordingMeter level={micLevel} />}
 
         {ttsNote && (
@@ -98,6 +98,6 @@ export function Composer({
           </div>
         </form>
       </div>
-    </div>
+    </footer>
   );
 }

@@ -105,6 +105,14 @@ body {
 
 a, button { transition: all 0.15s ease; }
 
+/* Faint micro-dot grid behind the speaking-practice transcript. Uses the
+   theme border token so it stays subtle in both dark and light. */
+.speak-dot-grid {
+  background-image: radial-gradient(var(--border) 1px, transparent 1px);
+  background-size: 16px 16px;
+  background-position: -1px -1px;
+}
+
 /* Chrome/Edge/Safari force a white background + their own text color on
    autofilled inputs, ignoring normal background-color rules. Repaint with
    an inset box-shadow (the one thing they don't override) so autofilled

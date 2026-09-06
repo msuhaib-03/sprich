@@ -45,7 +45,7 @@ export function MessageList({
   }, [messages, loading, onSync]);
 
   return (
-    <div className="relative flex-1 min-h-0">
+    <div className="speak-dot-grid relative flex-1 min-h-0">
       <div
         ref={scrollRef}
         onScroll={onSync}
