@@ -1,10 +1,9 @@
 import { test, expect } from './fixtures/auth'
 
 // Selecting ANY scenario immediately fires a POST to /ai/speaking/turn (the
-// AI's opening line) — apps/web/app/(app)/speak/page.tsx's startScenario()
-// calls sendTurnWith() synchronously on click. So every test past the
-// picker screen mocks this route rather than depending on a real,
-// configured ANTHROPIC/GEMINI/GROQ key.
+// AI's opening line) — useSpeakingSession.startScenario() calls it on click.
+// So every test past the picker screen mocks this route rather than
+// depending on a real, configured ANTHROPIC/GEMINI/GROQ key.
 const MOCK_TURN_RESPONSE = {
   response: 'Hallo! Wie geht es dir?',
   meta: {
@@ -36,8 +35,8 @@ test.describe('speak', () => {
     // Initial AI opening line (mocked).
     await expect(onboardedPage.getByText('Hallo! Wie geht es dir?').first()).toBeVisible()
 
-    await onboardedPage.getByPlaceholder('Type your reply in German…').fill('Hallo, ich heiße Anna.')
-    await onboardedPage.getByRole('button', { name: 'Send' }).click()
+    await onboardedPage.getByPlaceholder('Type your reply in German').fill('Hallo, ich heiße Anna.')
+    await onboardedPage.getByRole('button', { name: /Send/i }).click()
 
     await expect(onboardedPage.getByText('Hallo, ich heiße Anna.')).toBeVisible()
     await expect(onboardedPage.getByRole('button', { name: /Finish/i })).toBeVisible()
