@@ -30,3 +30,12 @@ export function splitGermanNoun(
   }
   return { article: explicit, noun };
 }
+
+/**
+ * Drop a leading der/die/das from a string — used for plural forms, which are
+ * rendered with a hard-coded "die" prefix and would otherwise double up
+ * ("plural: die die Kinos").
+ */
+export function stripLeadingArticle(text: string | null | undefined): string {
+  return splitGermanNoun(null, text).noun;
+}

@@ -18,6 +18,11 @@ class AddWordDto {
   vocabId!: string
 }
 
+class RemoveWordDto {
+  @IsString()
+  vocabId!: string
+}
+
 class AddDictionaryDto {
   @IsString()
   german!: string
@@ -44,6 +49,11 @@ export class VocabularyController {
     return this.vocabularyService.getDueCards(req.user.id)
   }
 
+  @Get('deck')
+  getDeck(@Request() req: { user: { id: string } }) {
+    return this.vocabularyService.getDeck(req.user.id)
+  }
+
   @Post('review')
   submitReview(@Request() req: { user: { id: string } }, @Body() dto: ReviewDto) {
     return this.vocabularyService.review(req.user.id, dto.vocabId, dto.quality)
@@ -52,6 +62,11 @@ export class VocabularyController {
   @Post('deck/word')
   addWordToDeck(@Request() req: { user: { id: string } }, @Body() dto: AddWordDto) {
     return this.vocabularyService.addWordToDeck(req.user.id, dto.vocabId)
+  }
+
+  @Post('deck/remove')
+  removeWordFromDeck(@Request() req: { user: { id: string } }, @Body() dto: RemoveWordDto) {
+    return this.vocabularyService.removeWordFromDeck(req.user.id, dto.vocabId)
   }
 
   @Post('deck/dictionary')

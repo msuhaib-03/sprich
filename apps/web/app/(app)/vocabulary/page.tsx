@@ -1,9 +1,18 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
+import {
+  ArrowLeft,
+  Bookmark,
+  BookmarkCheck,
+  Check,
+  ChevronDown,
+  ChevronRight,
+  Eye,
+} from 'lucide-react'
 import { api } from '@/lib/api'
 import { playTts } from '@/lib/tts'
-import { splitGermanNoun } from '@/lib/vocab'
+import { splitGermanNoun, stripLeadingArticle } from '@/lib/vocab'
 import { Skeleton } from '@/components/ui/skeleton'
 
 // ─── Types ─────────────────────────────────────────────────────────────────
@@ -25,6 +34,30 @@ interface VocabWord {
 interface SRSCard {
   vocabId: string
   vocab: VocabWord
+}
+
+// A full deck entry (from GET /vocabulary/deck) — carries the SRS progress
+// fields the "your words" browser renders.
+interface DeckCard {
+  vocabId: string
+  repetitions: number
+  nextReview: string
+  vocab: VocabWord
+}
+
+// repetitions needed before a card counts as "mastered" (mirrors the API).
+const MASTERED_REPS = 5
+
+type DeckView = 'all' | 'due' | 'learning' | 'mastered'
+
+// "Next review in …" — coarse, learner-friendly.
+function relativeReview(ms: number): string {
+  if (ms <= 0) return 'now'
+  const days = Math.round(ms / 86_400_000)
+  if (days >= 1) return days === 1 ? 'tomorrow' : `in ${days} days`
+  const hours = Math.round(ms / 3_600_000)
+  if (hours >= 1) return hours === 1 ? 'in 1 hour' : `in ${hours} hours`
+  return 'shortly'
 }
 
 interface DictEntry {
@@ -105,9 +138,20 @@ export default function VocabularyPage() {
   const [dict, setDict] = useState<DictEntry[]>([])
   const [dictLoading, setDictLoading] = useState(false)
 
-  // "Added to deck" tracking (by a german|english key) + WOTD flag
-  const [added, setAdded] = useState<Set<string>>(new Set())
+  // Dictionary "added to deck" tracking: german|english key -> the created
+  // VocabWord id (needed to remove it again). "pending" while the POST is in
+  // flight. Plus the WOTD flag.
+  const [added, setAdded] = useState<Map<string, string>>(new Map())
   const [wotdAdded, setWotdAdded] = useState(false)
+
+  // "Your words" browser — opened by tapping a stat card. `deckView` null means
+  // it's closed; otherwise it's the active filter. The deck is fetched once and
+  // filtered client-side so the segmented control switches instantly.
+  const [deckView, setDeckView] = useState<DeckView | null>(null)
+  const [deck, setDeck] = useState<DeckCard[] | null>(null)
+  const [deckLoading, setDeckLoading] = useState(false)
+  const [deckNow, setDeckNow] = useState(0)
+  const [expandedCard, setExpandedCard] = useState<string | null>(null)
 
   const loadReview = useCallback(() => {
     setReviewLoading(true)
@@ -158,39 +202,146 @@ export default function VocabularyPage() {
     }
   }
 
+  // Optimistic stat nudge. A just-added/removed card is always "learning"
+  // (never mastered), so `total` and `learning` move together.
+  const nudgeStats = (dTotal: number, dDue = 0) =>
+    setStats((s) =>
+      s
+        ? {
+            ...s,
+            total: Math.max(0, s.total + dTotal),
+            learning: Math.max(0, s.learning + dTotal),
+            due: Math.max(0, s.due + dDue),
+          }
+        : s,
+    )
+
   async function addWotdToDeck() {
     if (!wotd || wotdAdded) return
     setWotdAdded(true)
-    setStats((s) => (s ? { ...s, total: s.total + 1 } : s))
+    nudgeStats(1)
     try {
       await api.post('/vocabulary/deck/word', { vocabId: wotd.id })
     } catch {
       setWotdAdded(false)
+      nudgeStats(-1)
+    }
+  }
+
+  async function removeWotdFromDeck() {
+    if (!wotd || !wotdAdded) return
+    setWotdAdded(false)
+    nudgeStats(-1)
+    try {
+      await api.post('/vocabulary/deck/remove', { vocabId: wotd.id })
+    } catch {
+      setWotdAdded(true)
+      nudgeStats(1)
     }
   }
 
   async function addDictToDeck(w: DictEntry) {
     const key = `${w.german}|${w.english}`
     if (added.has(key)) return
-    setAdded((prev) => new Set(prev).add(key))
-    setStats((s) => (s ? { ...s, total: s.total + 1 } : s))
+    setAdded((prev) => new Map(prev).set(key, 'pending'))
+    nudgeStats(1)
     try {
-      await api.post('/vocabulary/deck/dictionary', {
+      const res = await api.post<{ vocabId: string }>('/vocabulary/deck/dictionary', {
         german: w.german,
         english: w.english,
         gender: w.gender ?? undefined,
         example: w.example ?? undefined,
       })
+      setAdded((prev) => new Map(prev).set(key, res.vocabId))
     } catch {
       setAdded((prev) => {
-        const next = new Set(prev)
+        const next = new Map(prev)
         next.delete(key)
         return next
       })
+      nudgeStats(-1)
+    }
+  }
+
+  async function removeDictFromDeck(w: DictEntry) {
+    const key = `${w.german}|${w.english}`
+    const vocabId = added.get(key)
+    if (!vocabId || vocabId === 'pending') return
+    setAdded((prev) => {
+      const next = new Map(prev)
+      next.delete(key)
+      return next
+    })
+    nudgeStats(-1)
+    try {
+      await api.post('/vocabulary/deck/remove', { vocabId })
+    } catch {
+      setAdded((prev) => new Map(prev).set(key, vocabId))
+      nudgeStats(1)
     }
   }
 
   const current = queue[0]
+
+  async function removeCurrentFromDeck() {
+    if (!current) return
+    const dropped = current
+    setQueue((q) => q.slice(1))
+    setRevealed(false)
+    nudgeStats(-1, -1)
+    try {
+      await api.post('/vocabulary/deck/remove', { vocabId: dropped.vocabId })
+    } catch {
+      setQueue((q) => [dropped, ...q])
+      nudgeStats(1, 1)
+    }
+  }
+
+  // ── "Your words" browser ──────────────────────────────────────────────────
+
+  function openDeck(view: DeckView) {
+    setDeckView(view)
+    setExpandedCard(null)
+    setDeckNow(new Date().getTime())
+    if (deck === null && !deckLoading) {
+      setDeckLoading(true)
+      api
+        .get<DeckCard[]>('/vocabulary/deck')
+        .then(setDeck)
+        .catch(() => setDeck([]))
+        .finally(() => setDeckLoading(false))
+    }
+  }
+
+  async function removeFromDeckBrowser(card: DeckCard) {
+    const prev = deck
+    setDeck((d) => d?.filter((c) => c.vocabId !== card.vocabId) ?? d)
+    setQueue((q) => q.filter((c) => c.vocabId !== card.vocabId))
+    try {
+      await api.post('/vocabulary/deck/remove', { vocabId: card.vocabId })
+      // Counts span all three stats here (learning vs mastered), so resync
+      // from the server rather than guess.
+      api.get<Stats>('/vocabulary/stats').then(setStats).catch(() => {})
+    } catch {
+      setDeck(prev)
+    }
+  }
+
+  // `deckNow` is stamped when the browser opens (see openDeck) — good enough
+  // for the day/hour-grained "next review in …" labels, and keeps Date.now()
+  // out of render.
+  const deckCounts = {
+    all: deck?.length ?? 0,
+    due: deck?.filter((c) => new Date(c.nextReview).getTime() <= deckNow).length ?? 0,
+    learning: deck?.filter((c) => c.repetitions < MASTERED_REPS).length ?? 0,
+    mastered: deck?.filter((c) => c.repetitions >= MASTERED_REPS).length ?? 0,
+  }
+  const deckFiltered = (deck ?? []).filter((c) => {
+    if (deckView === 'mastered') return c.repetitions >= MASTERED_REPS
+    if (deckView === 'due') return new Date(c.nextReview).getTime() <= deckNow
+    if (deckView === 'learning') return c.repetitions < MASTERED_REPS
+    return true
+  })
 
   // Split "das Kino" + article "das" into { article, noun } so the article
   // isn't printed (or spoken) twice. See lib/vocab.ts.
@@ -207,64 +358,316 @@ export default function VocabularyPage() {
         <p className="text-[var(--muted)] mt-2">Spaced repetition locks words into long-term memory.</p>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-3 gap-4 mb-6">
-        {[
-          { label: 'Due today', value: stats?.due ?? 0, accent: true },
-          { label: 'Learning', value: stats?.learning ?? 0, accent: false },
-          { label: 'Mastered', value: stats?.mastered ?? 0, accent: false },
-        ].map((s) => (
-          <div
+      {/* Stats — each is a button that opens the "your words" browser filtered
+          to it. The indicator only lights up while its count is non-zero
+          (gold for "Due today", blue for "Learning", green check for
+          "Mastered"); an empty deck reads as calm grey. */}
+      <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-6">
+        {(() => {
+          const due = stats?.due ?? 0
+          const learning = stats?.learning ?? 0
+          const mastered = stats?.mastered ?? 0
+          return [
+            {
+              label: 'Due today',
+              view: 'due' as DeckView,
+              value: due,
+              box: due > 0 ? 'border-[#d4a843]/40 bg-[#d4a843]/5' : 'border-[var(--border)] bg-[var(--surface)]',
+              value_cls: due > 0 ? 'gold-text' : 'text-[var(--text)]',
+              indicator: (
+                <span
+                  className={`w-2 h-2 rounded-full ${due > 0 ? 'bg-[var(--gold)]' : 'bg-[var(--faint-2)]'}`}
+                />
+              ),
+            },
+            {
+              label: 'Learning',
+              view: 'learning' as DeckView,
+              value: learning,
+              box: 'border-[var(--border)] bg-[var(--surface)]',
+              value_cls: 'text-[var(--text)]',
+              indicator: (
+                <span
+                  className={`w-2 h-2 rounded-full ${learning > 0 ? 'bg-sky-400' : 'bg-[var(--faint-2)]'}`}
+                />
+              ),
+            },
+            {
+              label: 'Mastered',
+              view: 'mastered' as DeckView,
+              value: mastered,
+              box: 'border-[var(--border)] bg-[var(--surface)]',
+              value_cls: 'text-[var(--text)]',
+              indicator: (
+                <Check
+                  size={13}
+                  strokeWidth={3}
+                  className={mastered > 0 ? 'text-emerald-400' : 'text-[var(--faint-2)]'}
+                />
+              ),
+            },
+          ]
+        })().map((s) => (
+          <button
             key={s.label}
-            className={`p-4 rounded-2xl border ${s.accent ? 'border-[#d4a843]/30 bg-[#d4a843]/5' : 'border-[var(--border)] bg-[var(--surface)]'}`}
+            onClick={() => openDeck(s.view)}
+            className={`group relative text-left p-4 rounded-2xl border transition-colors hover:border-[var(--border-strong)] active:scale-[0.99] ${s.box}`}
           >
-            <p className="text-[var(--faint)] text-xs mb-1">{s.label}</p>
-            <p className={`text-2xl font-black ${s.accent ? 'gold-text' : 'text-[var(--text)]'}`}>{s.value}</p>
-          </div>
+            <ChevronRight
+              size={14}
+              className="absolute top-3.5 right-3 text-[var(--faint-2)] group-hover:text-[var(--muted)] transition-colors"
+            />
+            <p className="flex items-center gap-1.5 text-[var(--faint)] text-xs mb-1">
+              {s.indicator}
+              {s.label}
+            </p>
+            <p className={`text-2xl font-black ${s.value_cls}`}>{s.value}</p>
+          </button>
         ))}
       </div>
 
-      {/* Word of the day */}
+      {/* Word of the day — two columns from md up: the word + meaning on the
+          left, audio and the deck toggle pinned right (stacked on mobile). */}
       {wotd && (
-        <div className="rounded-2xl border border-[#d4a843]/20 bg-gradient-to-br from-[#d4a843]/8 to-transparent p-5 mb-8">
-          <p className="text-[var(--gold)] text-xs uppercase tracking-wider mb-2 font-medium">✨ Word of the day</p>
-          <p className="text-2xl font-black flex items-center gap-3">
-            <span>
+        <div className="rounded-2xl border border-[#d4a843]/20 bg-gradient-to-br from-[#d4a843]/8 to-transparent p-5 mb-8 md:flex md:items-start md:gap-6">
+          <div className="md:flex-1 md:min-w-0">
+            <p className="text-[var(--gold)] text-xs uppercase tracking-wider mb-2 font-medium">
+              ✨ Word of the day
+            </p>
+            <p className="text-2xl font-black">
               {wotdParts?.article && (
                 <span className={articleColor(wotdParts.article)}>{wotdParts.article} </span>
               )}
               {wotdParts?.noun}
-            </span>
+            </p>
+            <p className="text-[var(--muted)] text-sm mt-1">{wotd.english}</p>
+            <p className="text-[var(--faint)] text-sm mt-3 italic">
+              &ldquo;{wotd.exampleSentence}&rdquo; — {wotd.exampleTranslation}
+            </p>
+          </div>
+
+          <div className="mt-4 md:mt-0 md:w-44 md:shrink-0 flex flex-col gap-2">
             <button
               onClick={() =>
                 playTts(
                   `${wotdParts?.article ?? ''} ${wotdParts?.noun ?? ''}. ${wotd.exampleSentence}`,
                 )
               }
-              className="text-base text-[var(--gold)] hover:opacity-80"
-              title="Hear it spoken"
+              className="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-[var(--border)] text-sm text-[var(--muted)] hover:text-[var(--text)] hover:border-[var(--border-strong)] transition-colors"
             >
-              🔊
+              🔊 Listen
             </button>
-          </p>
-          <p className="text-[var(--muted)] text-sm mt-1">{wotd.english}</p>
-          <p className="text-[var(--faint)] text-sm mt-3 italic">
-            &ldquo;{wotd.exampleSentence}&rdquo; — {wotd.exampleTranslation}
-          </p>
-          <button
-            onClick={addWotdToDeck}
-            disabled={wotdAdded}
-            className={`mt-4 px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
-              wotdAdded
-                ? 'text-emerald-400 cursor-default'
-                : 'border border-[#d4a843]/40 text-[var(--gold)] hover:bg-[#d4a843]/10'
-            }`}
-          >
-            {wotdAdded ? '✓ Added to your deck' : '+ Add to my review deck'}
-          </button>
+
+            {wotdAdded ? (
+              <button
+                onClick={removeWotdFromDeck}
+                title="Remove from your review deck"
+                className="group inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-semibold border transition-colors border-emerald-500/40 text-emerald-400 hover:border-red-500/40 hover:text-red-400 hover:bg-red-500/10 focus-visible:border-red-500/40 focus-visible:text-red-400 focus-visible:bg-red-500/10 focus-visible:outline-none"
+              >
+                <span className="group-hover:hidden group-focus-visible:hidden">✓ Added to deck</span>
+                <span className="hidden group-hover:inline group-focus-visible:inline">
+                  × Remove from deck
+                </span>
+              </button>
+            ) : (
+              <button
+                onClick={addWotdToDeck}
+                className="inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-semibold border border-[#d4a843]/40 text-[var(--gold)] hover:bg-[#d4a843]/10 transition-colors"
+              >
+                + Add to review deck
+              </button>
+            )}
+          </div>
         </div>
       )}
 
+      {deckView !== null ? (
+        /* ── "Your words" browser (opened from a stat card) ─────────── */
+        <div>
+          <div className="flex items-center gap-3 mb-4">
+            <button
+              onClick={() => setDeckView(null)}
+              aria-label="Back to review"
+              className="shrink-0 flex items-center justify-center w-10 h-10 rounded-lg text-[var(--muted)] hover:text-[var(--text)] hover:bg-[var(--overlay)] active:scale-95 transition-colors"
+            >
+              <ArrowLeft size={18} />
+            </button>
+            <div className="min-w-0">
+              <h2 className="text-xl font-black leading-tight">Your words</h2>
+              <p className="text-[var(--faint)] text-xs">
+                {deckLoading
+                  ? 'loading…'
+                  : `${deckFiltered.length} ${deckFiltered.length === 1 ? 'word' : 'words'}`}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex gap-1 p-1 rounded-xl bg-[var(--surface)] border border-[var(--border)] mb-4">
+            {(['all', 'due', 'learning', 'mastered'] as const).map((f) => (
+              <button
+                key={f}
+                onClick={() => {
+                  setDeckView(f)
+                  setExpandedCard(null)
+                }}
+                className={`flex-1 px-1.5 py-1.5 rounded-lg text-xs font-semibold capitalize transition-colors ${
+                  deckView === f
+                    ? 'bg-[var(--overlay)] text-[var(--text)]'
+                    : 'text-[var(--faint)] hover:text-[var(--text)]'
+                }`}
+              >
+                {f}
+                <span className="ml-1 text-[var(--faint-2)]">{deckCounts[f]}</span>
+              </button>
+            ))}
+          </div>
+
+          {deckLoading ? (
+            <div className="space-y-2">
+              {[0, 1, 2, 3, 4].map((i) => (
+                <Skeleton key={i} className="h-20 w-full rounded-xl" />
+              ))}
+            </div>
+          ) : deckFiltered.length === 0 ? (
+            <div className="text-center py-14 rounded-2xl border border-[var(--border)] bg-[var(--surface)]">
+              <div className="text-3xl mb-2">
+                {deckView === 'mastered' ? '🏆' : deckView === 'due' ? '☕' : '🌱'}
+              </div>
+              <p className="font-bold">
+                {deckView === 'mastered'
+                  ? 'No mastered words yet'
+                  : deckView === 'due'
+                    ? 'Nothing due right now'
+                    : deckView === 'learning'
+                      ? 'No words in progress'
+                      : 'Your deck is empty'}
+              </p>
+              <p className="text-[var(--faint)] text-sm mt-1.5 max-w-xs mx-auto">
+                {deckView === 'mastered'
+                  ? 'Keep reviewing — words land here after five clean recalls.'
+                  : deckView === 'due'
+                    ? 'Come back later, or browse the other filters.'
+                    : 'Add words from the dictionary or finish a lesson to start.'}
+              </p>
+              {deckView !== 'due' && (
+                <button
+                  onClick={() => {
+                    setDeckView(null)
+                    setTab('dictionary')
+                  }}
+                  className="mt-4 px-4 py-2 rounded-lg text-sm font-semibold border border-[var(--border)] text-[var(--text-soft)] hover:border-[var(--border-strong)] hover:text-[var(--text)] transition-colors"
+                >
+                  Browse the dictionary →
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {deckFiltered.map((card) => {
+                const { article, noun } = splitGermanNoun(card.vocab.article, card.vocab.german)
+                const mastered = card.repetitions >= MASTERED_REPS
+                const dueMs = new Date(card.nextReview).getTime() - deckNow
+                const open = expandedCard === card.vocabId
+                const reps = Math.min(Math.max(card.repetitions, 0), MASTERED_REPS)
+                return (
+                  <div
+                    key={card.vocabId}
+                    className="rounded-xl border border-[var(--border)] bg-[var(--surface)] overflow-hidden"
+                  >
+                    <button
+                      onClick={() => setExpandedCard(open ? null : card.vocabId)}
+                      className="w-full text-left p-4 flex items-start gap-3"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <p className="font-bold truncate">
+                          {article && <span className={articleColor(article)}>{article} </span>}
+                          {noun}
+                          <span className="text-[var(--muted)] font-normal"> — {card.vocab.english}</span>
+                        </p>
+                        <div className="flex items-center gap-2 mt-2">
+                          <span className="flex gap-1" aria-hidden>
+                            {[0, 1, 2, 3, 4].map((i) => (
+                              <span
+                                key={i}
+                                className={`w-1.5 h-1.5 rounded-full ${
+                                  i < reps
+                                    ? mastered
+                                      ? 'bg-emerald-400'
+                                      : 'bg-[var(--gold)]'
+                                    : 'bg-[var(--faint-2)]'
+                                }`}
+                              />
+                            ))}
+                          </span>
+                          <span
+                            className={`text-xs ${
+                              mastered
+                                ? 'text-emerald-400'
+                                : dueMs <= 0
+                                  ? 'text-[var(--gold)]'
+                                  : 'text-[var(--faint)]'
+                            }`}
+                          >
+                            {mastered
+                              ? 'Mastered'
+                              : dueMs <= 0
+                                ? 'Due now'
+                                : `Next review ${relativeReview(dueMs)}`}
+                          </span>
+                        </div>
+                      </div>
+                      <ChevronDown
+                        size={16}
+                        className={`shrink-0 mt-1 text-[var(--faint)] transition-transform ${
+                          open ? 'rotate-180' : ''
+                        }`}
+                      />
+                    </button>
+
+                    {open && (
+                      <div className="px-4 pb-4 space-y-2">
+                        {card.vocab.plural && (
+                          <p className="text-[var(--faint)] text-sm">
+                            plural: die {stripLeadingArticle(card.vocab.plural)}
+                          </p>
+                        )}
+                        {card.vocab.exampleSentence && (
+                          <p className="text-[var(--muted)] text-sm italic">
+                            &ldquo;{card.vocab.exampleSentence}&rdquo;
+                          </p>
+                        )}
+                        {card.vocab.exampleTranslation && (
+                          <p className="text-[var(--faint)] text-sm">
+                            {card.vocab.exampleTranslation}
+                          </p>
+                        )}
+                        {card.vocab.memoryHook && (
+                          <p className="text-[var(--gold)] text-sm">💡 {card.vocab.memoryHook}</p>
+                        )}
+                        <div className="flex gap-2 pt-1">
+                          <button
+                            onClick={() => playTts(`${article ?? ''} ${noun}`)}
+                            className="px-3 py-1.5 rounded-lg border border-[var(--border)] text-xs text-[var(--muted)] hover:text-[var(--text)] hover:border-[var(--border-strong)] transition-colors"
+                          >
+                            🔊 Listen
+                          </button>
+                          <button
+                            onClick={() => removeFromDeckBrowser(card)}
+                            className="px-3 py-1.5 rounded-lg border border-[var(--border)] text-xs text-[var(--faint)] hover:text-red-400 hover:border-red-500/40 hover:bg-red-500/10 transition-colors"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          )}
+        </div>
+      ) : (
+       <>
       {/* Tabs */}
       <div className="flex gap-2 mb-6 border-b border-[var(--border)]">
         {(['review', 'dictionary', 'sounds'] as const).map((t) => (
@@ -298,26 +701,65 @@ export default function VocabularyPage() {
             </div>
           ) : !current ? (
             <div className="text-center py-16 rounded-2xl border border-[var(--border)] bg-[var(--surface)]">
-              <div className="text-4xl mb-3">🎉</div>
-              <p className="font-bold text-lg">
-                {reviewedCount > 0 ? 'All caught up!' : 'Nothing due right now'}
-              </p>
-              <p className="text-[var(--faint)] text-sm mt-2 max-w-xs mx-auto">
-                {stats?.total
-                  ? `You reviewed ${reviewedCount} card${reviewedCount === 1 ? '' : 's'}. Come back tomorrow for more.`
-                  : 'Complete a lesson to start building your review deck.'}
-              </p>
+              {stats?.total ? (
+                <>
+                  <div className="text-4xl mb-3">🎉</div>
+                  <p className="font-bold text-lg">
+                    {reviewedCount > 0 ? 'All caught up!' : 'Nothing due right now'}
+                  </p>
+                  <p className="text-[var(--faint)] text-sm mt-2 max-w-xs mx-auto">
+                    {`You reviewed ${reviewedCount} card${reviewedCount === 1 ? '' : 's'}. Come back tomorrow for more.`}
+                  </p>
+                </>
+              ) : (
+                <>
+                  <div className="text-4xl mb-3">🌱</div>
+                  <p className="font-bold text-lg">Your review deck is empty</p>
+                  <p className="text-[var(--faint)] text-sm mt-2 max-w-xs mx-auto">
+                    Finish a lesson, or add a few words yourself to get spaced repetition going.
+                  </p>
+                  <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+                    {wotd && !wotdAdded && (
+                      <button
+                        onClick={addWotdToDeck}
+                        className="px-4 py-2 rounded-lg text-sm font-semibold border border-[#d4a843]/40 text-[var(--gold)] hover:bg-[#d4a843]/10 transition-colors"
+                      >
+                        + Add today&rsquo;s word
+                      </button>
+                    )}
+                    <button
+                      onClick={() => setTab('dictionary')}
+                      className="px-4 py-2 rounded-lg text-sm font-semibold border border-[var(--border)] text-[var(--text-soft)] hover:border-[var(--border-strong)] hover:text-[var(--text)] transition-colors"
+                    >
+                      Browse the dictionary →
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
           ) : (
             <div>
-              {/* Flashcard (div, not button — it contains the 🔊 button) */}
+              {/* Flashcard (div, not button — it contains the 🔊 + manage buttons) */}
               <div
                 role="button"
                 tabIndex={0}
                 onClick={() => setRevealed(true)}
                 onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setRevealed(true) }}
-                className="w-full text-left rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-8 min-h-[260px] flex flex-col justify-center transition-colors hover:border-[var(--border-strong)] cursor-pointer"
+                className="relative w-full text-left rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-8 pr-14 min-h-[260px] flex flex-col justify-center transition-colors hover:border-[var(--border-strong)] cursor-pointer"
               >
+                {/* Top-right: drop this card from the deck. */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    removeCurrentFromDeck()
+                  }}
+                  title="Remove from your review deck"
+                  aria-label="Remove from your review deck"
+                  className="absolute top-3 right-3 w-11 h-11 flex items-center justify-center rounded-lg text-[var(--faint)] hover:text-red-400 hover:bg-red-500/10 active:scale-95 transition-colors"
+                >
+                  <BookmarkCheck size={18} />
+                </button>
+
                 <p className="text-[var(--faint)] text-xs uppercase tracking-wider mb-4">
                   {current.vocab.level} · {current.vocab.grammaticalCase ?? 'vocabulary'}
                 </p>
@@ -342,7 +784,9 @@ export default function VocabularyPage() {
                   </button>
                 </p>
                 {current.vocab.plural && (
-                  <p className="text-[var(--faint)] text-sm">plural: die {current.vocab.plural}</p>
+                  <p className="text-[var(--faint)] text-sm">
+                    plural: die {stripLeadingArticle(current.vocab.plural)}
+                  </p>
                 )}
 
                 {revealed ? (
@@ -357,7 +801,17 @@ export default function VocabularyPage() {
                     )}
                   </div>
                 ) : (
-                  <p className="text-[var(--faint-2)] text-sm mt-6">Tap to reveal the meaning</p>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setRevealed(true)
+                    }}
+                    className="mt-6 self-start inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--border-strong)] bg-[var(--overlay)] text-[var(--text-soft)] text-sm font-medium hover:bg-[var(--surface-hover)] hover:text-[var(--text)] active:scale-[0.98] transition-colors"
+                  >
+                    <Eye size={15} />
+                    Tap to reveal the meaning
+                  </button>
                 )}
               </div>
 
@@ -414,7 +868,7 @@ export default function VocabularyPage() {
                   return (
                     <div
                       key={`${w.german}|${w.english}|${i}`}
-                      className="flex items-start gap-3 p-4 rounded-xl border border-[var(--border)] bg-[var(--surface)]"
+                      className="relative flex items-start gap-3 p-4 pr-14 rounded-xl border border-[var(--border)] bg-[var(--surface)]"
                     >
                       <div className="flex-1 min-w-0">
                         <p className="font-bold">
@@ -438,17 +892,19 @@ export default function VocabularyPage() {
                       >
                         🔊
                       </button>
+
+                      {/* Top-right: add to / remove from the review deck. */}
                       <button
-                        onClick={() => addDictToDeck(w)}
-                        disabled={isAdded}
-                        title={isAdded ? 'In your deck' : 'Add to review deck'}
-                        className={`shrink-0 w-8 h-8 rounded-lg text-sm font-bold transition-colors ${
+                        onClick={() => (isAdded ? removeDictFromDeck(w) : addDictToDeck(w))}
+                        title={isAdded ? 'Remove from your review deck' : 'Add to review deck'}
+                        aria-label={isAdded ? 'Remove from your review deck' : 'Add to review deck'}
+                        className={`absolute top-2 right-2 w-11 h-11 flex items-center justify-center rounded-lg transition-colors active:scale-95 ${
                           isAdded
-                            ? 'text-emerald-400 cursor-default'
-                            : 'border border-[#d4a843]/40 text-[var(--gold)] hover:bg-[#d4a843]/10'
+                            ? 'text-emerald-400 hover:text-red-400 hover:bg-red-500/10'
+                            : 'text-[var(--gold)] hover:bg-[#d4a843]/10'
                         }`}
                       >
-                        {isAdded ? '✓' : '+'}
+                        {isAdded ? <BookmarkCheck size={18} /> : <Bookmark size={18} />}
                       </button>
                     </div>
                   )
@@ -506,6 +962,8 @@ export default function VocabularyPage() {
             ))}
           </div>
         </div>
+      )}
+      </>
       )}
     </div>
   )
